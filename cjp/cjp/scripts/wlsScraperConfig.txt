@@ -1,0 +1,4 @@
+[config]
+feed_url = http://www.wlsam.com/common/more.php?m=56&r=11&mode=3&is_corp=0
+seconds_between_queries = 1
+printLog = 1

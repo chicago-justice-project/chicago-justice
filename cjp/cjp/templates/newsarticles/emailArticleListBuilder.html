@@ -1,0 +1,77 @@
+{% extends "common/base.html" %}
+
+{% block title %}
+    Email Article List Builder
+{% endblock %}
+
+{% block content %}
+    <div style="width:95%">
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var minDate = new Date({{ dateRange.minDate.year }}, {{ dateRange.minDate.month }} - 1, {{ dateRange.minDate.day }});
+                var maxDate = new Date({{ dateRange.maxDate.year }}, {{ dateRange.maxDate.month }} - 1, {{ dateRange.maxDate.day }});
+                
+		$( "#id_startDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+                $( "#id_endDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+            });
+	</script>
+        
+        <div class="search" style="margin-bottom:1em;">
+            <form action="{% url 'emailArticleListBuilder' %}" method="post">
+                <table>
+                    {{ articleListBuilderForm.as_table }}
+                    <tr>
+                        <td colspan="2" style="text-align:center;"> 
+                            {% csrf_token %}
+                            <button class="searchButton">Search</button>
+                            <button class="searchButton" onclick="this.form.reset();">Reset</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+	{% if tooManyArticles %}
+	    <p>Search returned more than 200 articles. Please limit search criteria.</p>
+	{% endif %}
+	{% if didSearch %}
+	    {% if articles %}
+		<form action="{% url 'emailArticleList' %}" method="post" target="_blank" >
+		    <div style="width:100%; text-align: right;" >
+			<button class="exportButton">Build List</button>
+		    </div>
+		     
+		    <table class="listTable" style="width:100%">
+			<tr>
+			    <th class="listTableHeadCell">Check to add<br/>to email list</th>
+			    <th class="listTableHeadCell" style="width:25%">Title</th>
+			    <th class="listTableHeadCell">Source</th>
+			    <th class="listTableHeadCell">Load Date</th>
+			    <th class="listTableHeadCell" style="width:25%">Original URL</th>
+			</tr>
+		    {% for article in articles %}
+			<tr>
+			    <td class="listTableDataCell" style="text-align: center;">
+				<input type="checkbox" name="articleId" value="{{ article.id }}" />
+			    </td>
+			    <td class="listTableDataCell">{{ article.title }}</td>
+			    <td class="listTableDataCell">{{ article.get_feedname_display }}</td>
+			    <td class="listTableDataCell">{{ article.created }}</td>
+			    <td class="listTableDataCell"><a href="{{ article.url }}">{{ article.url }}</a></td>
+			</tr>
+		    {% endfor %}
+		    </table>
+		    
+		    {% csrf_token %}
+		    
+		    <div style="width:100%; text-align: right;" >
+			<button class="exportButton">Build List</button>
+		    </div>
+		     
+		</form>
+	    {% else %}
+		<p>No articles found matching criteria.</p>
+	    {% endif %}
+	{% endif %}
+    </div>
+    
+{% endblock %}

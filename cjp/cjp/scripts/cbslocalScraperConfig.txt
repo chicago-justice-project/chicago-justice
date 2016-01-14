@@ -1,0 +1,4 @@
+[config]
+feed_url = http://chicago.cbslocal.com/feed/
+seconds_between_queries = 1
+printLog = 1

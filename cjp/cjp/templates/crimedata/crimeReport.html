@@ -1,0 +1,188 @@
+{% extends "common/base.html" %}
+
+{% block esrimap %}
+    {% include "common/map_inc.html" %}
+{% endblock %}
+
+{% block title %}
+    {% if crimeReport %}
+        Crime Report: {{ crimeReport.web_case_num }}
+    {% else %}
+        Crime Report Not Found
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <button onclick="javascript:window.location='{% url mainCrimeReportView %}'; return false;"
+                class="navigationButton">return to previous page</button>
+    </div>
+    {% if crimeReport %}
+        <div style="float:left; width:350px;">
+            <table class="crimeReportTable" style="width:100%">
+                {% if user.is_authenticated %}
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_rd</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_rd }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_dateocc</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_dateocc }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_stnum</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_stnum }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_stdir</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_stdir }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_street</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_street }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_curr_iucr</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_curr_iucr }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_fbi_descr</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_fbi_descr }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_fbi_cd</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_fbi_cd }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_description</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_description }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_status</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_status }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_location_descr</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_location_descr }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_domestic_i</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_domestic_i }}</td>
+                    </tr>            
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_ward</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_ward }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">orig_beat_num</th>
+                        <td class="crimeReportContent">{{ crimeReport.orig_beat_num }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th class="crimeReportHead leftHead">web_case_num</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_case_num }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_date</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_date }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_block</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_block }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_code</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_code }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_crime_type</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_crime_type }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_secondary</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_secondary }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_arrest</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_arrest }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_location</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_location }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_domestic</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_domestic }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_beat</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_beat }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_ward</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_ward }}</td>
+                </tr>
+                <tr>
+                    <th class="crimeReportHead leftHead">web_nibrs</th>
+                    <td class="crimeReportContent">{{ crimeReport.web_nibrs }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                {% if user.is_authenticated %}
+                    <tr>
+                        <th class="crimeReportHead leftHead">geocode_longitude</th>
+                        <td class="crimeReportContent">{{ crimeReport.geocode_longitude }}</td>
+                    </tr>
+                    <tr>
+                        <th class="crimeReportHead leftHead">geocode_latitude</th>
+                        <td class="crimeReportContent">{{ crimeReport.geocode_latitude }}</td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+        <div id="mapDiv" style="margin-left:370px; width: 400px; height:400px; border:1px solid #000;"></div>
+        
+        <script type="text/javascript">
+        /* <![CDATA[ */
+            dojo.require("esri.map");
+            var map;
+            function init() {
+                map = new esri.Map("mapDiv");
+                var basemapURL= "http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"
+                var basemap = new esri.layers.ArcGISTiledMapServiceLayer(basemapURL);
+                map.addLayer(basemap);
+                
+                
+                var point = new esri.geometry.Point({{ crimeReport.geocode_longitude }},
+                                                    {{ crimeReport.geocode_latitude }},
+                                                    new esri.SpatialReference({ wkid: 4326 }));
+                var mapPoint = esri.geometry.geographicToWebMercator(point);
+                
+                var factor = 500;
+                var extent = new esri.geometry.Extent(
+                                    mapPoint.x - factor, mapPoint.y - factor,
+                                    mapPoint.x + factor, mapPoint.y + factor,
+                                    mapPoint.spatialReference);
+                map.setExtent(extent, true);
+                    
+                dojo.connect(map, 'onLoad', function() {
+                    var shadow = new esri.symbol.PictureMarkerSymbol('{{ STATIC_URL }}msmarker.shadow.png', 59, 32);
+                    shadow.setOffset(16, 15);
+                    map.graphics.add(new esri.Graphic(mapPoint, shadow));
+                    
+                    var marker = new esri.symbol.PictureMarkerSymbol('{{ STATIC_URL }}red-pushpin.png', 32, 32);
+                    marker.setOffset(6, 15);
+                    map.graphics.add(new esri.Graphic(mapPoint, marker));
+                });
+            }
+            dojo.addOnLoad(init);
+        /* ]]> */
+        </script>
+    {% else %}
+        <p>Report not found.</p>
+    {% endif %}
+{% endblock %}

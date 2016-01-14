@@ -1,0 +1,18 @@
+{% extends "common/base.html" %}
+
+{% block title %}
+    {% if article %}
+        Article: {{ article.title }}
+    {% else %}
+        Article Not Found
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if article %}        
+        {% include "newsarticles/article_inc.html" with article=article showFunctions=1 %}
+    {% else %}
+        <p>Article not found.</p>
+    {% endif %}
+    
+{% endblock %}

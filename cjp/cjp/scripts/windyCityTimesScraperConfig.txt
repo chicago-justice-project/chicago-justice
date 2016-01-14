@@ -1,0 +1,4 @@
+[config]
+feed_url = http://www.windycitymediagroup.com/gaynewsarticles.php
+seconds_between_queries = 1
+printLog = 1

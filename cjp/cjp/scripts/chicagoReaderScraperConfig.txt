@@ -1,0 +1,4 @@
+[config]
+feed_url = http://www.chicagoreader.com/chicago/Rss.xml?section=846996
+seconds_between_queries = 1
+printLog = 1

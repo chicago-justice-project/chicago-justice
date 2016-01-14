@@ -1,0 +1,15 @@
+# Setup the web-server user's cron to collect the news articles.
+# The user from the buildout config is: www-data
+# Run the newspaper scrapers every 6 hours
+
+48 0-23/6 * * *    /usr/local/cjp_scraper_buildout/bin/cjp_python /usr/local/cjp_scraper_buildout/cjp/cjp/scripts/runScrapers.py > /dev/null
+
+
+# Run CPD scraper at 2 AM
+# On the 1st and 15th of the month, rebuild as far back 
+# as possible to retrieve any old updated information
+
+0 2 2-14,16-31 * * /usr/local/cjp_scraper_buildout/bin/cjp_python /usr/local/cjp_scraper_buildout/cjp/cjp/scripts/cpdScraper.py > /dev/null
+
+0 2 1,15 * *       /usr/local/cjp_scraper_buildout/bin/cjp_python /usr/local/cjp_scraper_buildout/cjp/cjp/scripts/cpdScraper.py --rebuild > /dev/null
+

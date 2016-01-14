@@ -1,0 +1,216 @@
+#sidebar {
+    float: left;
+    width: 160px; 
+    background: #DFDFDF;
+    padding: 20px;
+    font-size: .8em;
+    border: 1px solid black;
+}
+
+#content {
+    margin-left: 220px;
+}
+
+.sidebarSubmenu {
+    padding-left: 30px;
+}
+
+div.article {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    border: 1px solid black;
+    font-size: .8em;
+}
+div.articleHeader {
+    background-color: #ccccff;
+}
+div.articleHeaderRow {
+    border: 1px solid black;
+}
+div.articleHeaderLabel {
+    font-weight: bold;
+    display:inline;
+}
+div.articleHeaderContent {
+    position: relative;
+    display:inline;
+}
+div.articleTitle {
+    
+}
+div.articleFeed {
+    display:inline;
+    margin-right: 10px;
+}
+div.articleCreated {
+    display:inline;
+    margin-right: 10px;
+}
+div.articleModified {
+    display:inline;
+    margin-right: 10px;
+}
+div.articleRelevant {
+    display:inline;
+    margin-right: 10px;
+}
+div.articleBody {
+    white-space: pre;
+    font-family: monospace;
+}
+div.articleFunction {
+    display:inline;
+}
+button.articleButton, input.articleButton {
+    font-size: .8em;
+}
+
+div.pagination {
+    font-size: .8em;
+    width: 100%;
+    display: inline;
+}
+div.paginationTotal {
+    width: 50%;
+    float: left;
+}
+div.paginationLinks {
+    width: 100%;
+    text-align: right;
+}
+
+.scraperlogStartend {
+    background-color: #aaaaff;
+}
+.scraperlogError {
+    background-color: #ffaaaa;
+}
+table.scraperlog {
+    border-collapse: collapse;
+}
+table.scraperlog, td.scraperlog, th.scraperlog {
+    border: 1px solid black;
+    font-size: .8em;
+}
+th.scraperlog {
+    background-color: #dddddd;
+}
+td.scraperlog {
+    vertical-align: top;
+}
+
+td.scraperlogSeperator {
+    background-color: black;
+    height: 3em;
+}
+
+div.export {
+    border: 1px solid black;
+    font-size: .8em;
+    float: right;
+    margin-right: 5%;
+}
+
+.exportButton {
+    font-size: .8em;
+}
+
+div.search {
+    border: 1px solid black;
+    font-size: .8em;
+    display: table;
+    margin: auto;
+    margin-bottom: 1em;
+}
+
+button.searchButton, select {
+    font-size: .8em;
+}
+
+div.login, .loginButton {
+    font-size: .8em;
+}
+
+table.listTable {
+    border-collapse:collapse;
+}
+
+th.listTableHeadCell {
+    font-size: .8em;
+    border: 1px solid black;
+    background-color: #ccccff;
+}
+
+td.listTableDataCell {
+    font-size: .8em;
+    border: 1px solid black;   
+}
+
+th.leftHead {
+    text-align: left;
+    vertical-align: top;
+}
+
+.message {
+    text-align: center;
+    font-size: .8em;
+    font-weight: bold;
+}
+
+table.crimeReportTable {
+    border-collapse:collapse;
+}
+
+th.crimeReportHead {
+    font-size: .8em;
+    border: 1px solid black;
+    background-color: #ccccff;
+}
+
+td.crimeReportContent {
+    font-size: .8em;
+    border: 1px solid black;   
+}
+
+button.listTableAction {
+    font-size: .8em;
+}
+
+table.statTable {
+    border-collapse:collapse;
+}
+
+th.statTable {
+    font-size: .8em;
+    border: 1px solid black;
+    background-color: #ccccff;
+    text-align: left;
+}
+
+td.statTable {
+    font-size: .8em;
+    border: 1px solid black;
+    text-align: right;
+}
+
+.statTableBlank {
+    border: 0px;
+}
+
+.statTableTitle {
+    margin-top: 1em;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.countButton {
+    font-size: .8em;
+}
+
+button.navigationButton {
+    background-color: transparent;
+    border-width: 0px;
+    color: blue;
+    padding: 0px;
+    font-family: serif;
+}

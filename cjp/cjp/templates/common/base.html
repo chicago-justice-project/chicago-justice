@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <title>Data</title>
+        <link href="{{ STATIC_URL }}site.css" rel="stylesheet" type="text/css" />
+        <link type="text/css" href="{{ STATIC_URL }}css/custom-theme/jquery-ui-1.8.15.custom.css" rel="Stylesheet" />	
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.15.custom.min.js"></script>
+
+        
+        <script type="text/javascript">
+        /* <![CDATA[ */
+            function markArticleRelevant(articleId, relevant, pageNum) {
+                window.location = "?page=" + pageNum + "&articleId=" + articleId +
+                                  "&relevant=" + relevant + "&action=markRelevant";
+            }
+        /* ]]> */
+        </script>
+        {% block esrimap %}{% endblock %}
+    </head>
+    <body>
+        <div id="sidebar">
+            {% block sidebar %}
+                {% if user.is_authenticated %}
+                    <p><b>Articles</b></p>
+                    <ul>
+                        <li><a href="{% url 'mainArticleView' %}">Articles</a></li>
+                        {% if user.is_superuser %}
+                            <li><a href="{% url 'manageCategoryView' %}">Manage Article Categories</a></li>
+                            <li><a href="{% url 'emailArticleListBuilder' %}">Email Article List Builder</a></li>
+                        {% endif %}
+                    </ul>
+                {% else %}
+                    <p><a href="{% url 'mainArticleView' %}">Articles</a></p>
+                {% endif %}
+                
+                
+                {% if user.is_authenticated %}
+                    <p><b>Crime Reports</b></p>
+                    <ul>
+                        <li><a href="{% url 'mainCrimeReportView' %}">Crime Reports</a></li>
+                    </ul>
+                {% else %}
+                    <p><a href="{% url 'mainCrimeReportView' %}">Crime Reports</a></p>
+                {% endif %}
+                
+                <p><b>Scraper Stats</b></p>
+                <ul>
+                    <li><a href="{% url 'statsTotalCounts' %}">Total Counts</a></li>
+                    <li><a href="{% url 'statsYearlyCounts' %}">Yearly Counts</a></li>
+                    <li><a href="{% url 'statsMonthlyCounts' %}">Monthly Counts</a></li>
+                    <li><a href="{% url 'statsDailyCounts' %}">Daily Counts</a></li>
+                </ul>
+
+                <p><a href="{% url 'releaseNotes' %}">Release Notes</a></p>
+                
+                {% if user.is_authenticated %}
+                    <p><b>User</b></p>
+                    <ul>
+                        <li><a href="{% url 'logoutView' %}">Logout</a></li>
+                        {% if user.is_superuser %}
+                            <li><a href="{% url 'userManageView' %}">Manage Users</a></li>
+                        {% endif %}
+                    </ul>
+                {% else %}
+                    <p><a href="{% url 'loginView' %}">Login</a></p>
+                {% endif %}
+            {% endblock %}
+        </div>
+    
+        <div id="content">
+            <h1>{% block title %}{% endblock %}</h1>
+            {% block content %}{% endblock %}
+        </div>
+
+    </body>
+</html>

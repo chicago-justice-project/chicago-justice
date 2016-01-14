@@ -1,0 +1,73 @@
+{% extends "common/base.html" %}
+
+{% block title %}
+    Release Notes
+{% endblock %}
+
+{% block content %}
+    
+    <b>Version 0.9.10</b>
+    <ul>
+        <li>Added initial backend processor for automatic classifier.</li>
+    </ul>      
+    <b>Version 0.9.9</b>
+    <ul>
+        <li>Updated WGN feeds.</li>
+    </ul>   
+    <b>Version 0.9.8</b>
+    <ul>
+        <li>Removed logs.  We weren't really using them.</li>
+        <li>Limited WLS scraper to only 4 pages of the feed.  It was doing all of them - hundreds.</li>
+    </ul>
+    <b>Version 0.9.7</b>
+    <ul>
+        <li>Fox Chicago feed updated.  They changed the URL.</li>
+        <li>WBEZ feed updated.  They changed the URL.   Now referring to <a href="http://www.wbez.org/news/criminal-justice">http://www.wbez.org/news/criminal-justice</a></li>
+        <li>Chicago Journal added.</li>
+        <li>Crains feed added</li>
+        <li>Chicago Now added</li>
+        <li>Chicago Reader added</li>
+        <li>Crime and Mayhem at DNAInfo added</li>
+        <li>Windy City Times added. Not an RSS feed, parsing the HTML</li>
+        <li>WLS AM added. Not an RSS feed, parsing the HTML.  They just redesigned their website.</li>
+        <li>Chicago Reporter added.  Not an RSS feed, parsing the HTML.</li>
+        <li></li>
+    </ul>
+    <b>Version 0.9.6</b>
+    <ul>
+        <li>Three new feeds: Chicago Magazine, Chicago Defender, and Chicago Now</li>
+    </ul>
+    <b>Version 0.9.5</b>
+    <ul>
+        <li>Broke stats page into multiple pages to speed up load time</li>
+        <li>Added fix to on scraper to reduce memory usage</li>
+        <li>Added support for admin to create a list of articles to email</li>
+    </ul>
+    <b>Version 0.9.4</b>
+    <ul>
+        <li>Fixed paging bugs on Article and Crime list pages on first page.</li>
+    </ul>
+    <b>Version 0.9.3</b>
+    <ul>
+        <li>Fixed paging bugs on Article and Crime list pages.</li>
+        <li>Delete any article logs over 30 days old, to keep Article Log from choking.</li>
+    </ul>
+    <b>Version 0.9.2</b>
+    <ul>
+        <li>Fixed bug on returning to search page and searches not being updated.</li>
+        <li>Fixed bug on stats page. Dates were not sorted correctly.</li>
+        <li>Added new feeds.</li>
+    </ul>
+    <b>Version 0.9.1</b>
+    <ul>
+        <li>Fixed bug in CPD Scraper.  Rebuild was not working.</li>
+        <li>Added categories.</li>
+        <li>Added date pickers.</li>
+        <li>CPD Search Form is working.</li>
+    </ul>
+    <b>Version 0.9</b>
+    <ul>
+        <li>Site put on-line</li>
+    </ul>
+
+{% endblock %}

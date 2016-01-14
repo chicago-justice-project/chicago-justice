@@ -1,0 +1,4 @@
+[config]
+feed_url = http://www.myfoxchicago.com/category/234876/crime?clienttype=rss
+seconds_between_queries = 1
+printLog = 1

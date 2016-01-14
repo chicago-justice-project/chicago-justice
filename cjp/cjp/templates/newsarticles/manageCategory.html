@@ -1,0 +1,52 @@
+{% extends "common/base.html" %}
+
+{% block title %}
+    Manage Article Categories
+{% endblock %}
+
+{% block content %}
+    <div style="width:95%">
+        <div class="search" style="margin-bottom:1em;">
+            <form action="{% if category_id %}{% url 'editCategoryView' category_id %}{% endif %}" method="post">
+                <table>
+                    {{ categoryForm.as_table }}
+                    <tr>
+                        <td colspan="2" style="text-align:center;"> 
+                            {% csrf_token %}
+                            {% if category_id %}
+                                <input type="hidden" name="category_id" value="{{ category_id }}" />
+                                <button class="searchButton">Save Changes</button>
+                            {% else %}
+                                <button class="searchButton">Add New Category</button>
+                            {% endif %}
+                            <button class="searchButton" onclick="this.form.reset(); return false;">Reset</button>
+                            <button class="searchButton" onclick="window.location='{% url 'manageCategoryView' %}'; return false;">Cancel</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        
+        {% if categories %}
+            <table class="listTable" style="margin:auto;">
+                <tr>
+                    <th class="listTableHeadCell">&nbsp;&nbsp;&nbsp;</th>
+                    <th class="listTableHeadCell">Category Name</th>
+                    <th class="listTableHeadCell">Abbreviation</th>
+                    <th class="listTableHeadCell">&nbsp</th>
+                </tr>
+                {% for category in categories %}
+                    <tr>
+                        <td class="listTableDataCell">{{ forloop.counter }}</td>
+                        <td class="listTableDataCell">{{ category.category_name }}</td>
+                        <td class="listTableDataCell">{{ category.abbreviation }}</td>
+                        <td class="listTableDataCell"><a href="{% url 'editCategoryView' category.id %}">edit</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No categories have been created.</p>
+        {% endif %}
+    </div>
+    
+{% endblock %}

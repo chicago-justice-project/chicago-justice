@@ -1,0 +1,16 @@
+This release is a modifies the database.
+
+1. Run
+    python manage.py collectstatic
+    
+2. Run
+    python manage.py syncdb
+    
+3. Go to cjp/scripts/load_scripts and run
+    ./loadWords.py
+This will take a long time.  I've slowed it
+down in the hopes it doesn't hammer the
+database too much and the process is just slow.
+It will print a message for every 10 articles
+it processes. There are 125000 articles to
+process. I'm guestimating up to 36 hours.

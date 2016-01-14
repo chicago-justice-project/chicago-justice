@@ -1,0 +1,7 @@
+[config]
+days_backdated = 7
+days_update = 5
+days_available = 90
+seconds_between_queries = 10
+num_records_request = 100
+printLog = 1

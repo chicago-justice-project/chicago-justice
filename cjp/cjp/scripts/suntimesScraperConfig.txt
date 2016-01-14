@@ -1,0 +1,4 @@
+[config]
+feed_url = http://www.suntimes.com/rss/index.html?path=/suntimes/news/crime
+seconds_between_queries = 1
+printLog = 1

@@ -1,0 +1,77 @@
+{% extends "common/base.html" %}
+
+{% block title %}
+    Admin: Update User
+{% endblock %}
+
+{% block content %} 
+    {% if managedUser %}
+        <div class="search">
+            <form action="{% url userUpdate managedUser.id %}" method="post">
+                <table> 
+                    {% if updateSuccess %}
+                        <tr> 
+                            <th colspan="2" style="text-align:center;">
+                                User successfully updated.
+                            </th>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td>Username</td> 
+                        <td>{{ managedUser.username }}</td>
+                    </tr>
+                    <tr><td colspan="2">&nbsp;</td></tr>
+                    <tr>
+                        <td>{{ userForm.password.label }}{{ userForm.password.errors }}</td> 
+                        <td>{{ userForm.password }}</td>
+                        <td rowspan="2">
+                            To keep password<br />
+                            unchanged, leave<br />
+                            password fields<br />
+                            empty.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ userForm.password2.label }}{{ userForm.password2.errors }}</td> 
+                        <td>{{ userForm.password2 }}</td>
+                    </tr>
+                    <tr><td colspan="2">&nbsp;</td></tr>
+                    <tr>
+                        <td>{{ userForm.firstName.label }}{{ userForm.firstName.errors }}</td>
+                        <td>{{ userForm.firstName }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ userForm.lastName.label }}{{ userForm.lastName.errors }}</td>
+                        <td>{{ userForm.lastName }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ userForm.email.label }}{{ userForm.email.errors }}</td>
+                        <td>{{ userForm.email }}</td>
+                    </tr>
+                    {% if not managedUser.is_superuser %}
+                        <tr>
+                            <td style="vertical-align:top;">{{ userForm.inactive.label }}{{ userForm.inactive.errors }}</td>
+                            <td style="vertical-align:top;">{{ userForm.inactive }}</td>
+                            <td>
+                                If making user<br />
+                                active, give the<br />
+                                user a new<br />
+                                password.
+                            </td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            {% csrf_token %}
+                            <input type="hidden" name="username" value="{{ managedUser.username }}" />
+                            <button class="searchButton">Update User</button>
+                            <button class="searchButton" onclick="this.form.reset(); return false;">Reset</button>
+                        </td> 
+                    </tr>
+                </table>
+            </form>
+        </div> 
+    {% else %}
+        <p>Unknown user</p>
+    {% endif %}
+{% endblock %}

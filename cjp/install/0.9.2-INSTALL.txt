@@ -1,0 +1,12 @@
+This release is a code-only release.  The database has not been changed.
+
+You be able to put the code into production, and restart the server.
+
+One note: in settings.py.  There is now a test of the enviroment variable 
+CJP_DJANGO_DEVELOPMENT if this exists and has the value "TestConfig_1" then
+a test configuration is used.  You can put other configs in there, just add
+an elif test.  If the CJP_DJANGO_DEVELOPMENT is missing, the code assumes
+it is running in production mode.
+
+The reason for this is so that all the same settings are used in development
+and production except for a few that change.

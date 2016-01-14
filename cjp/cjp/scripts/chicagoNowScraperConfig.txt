@@ -1,0 +1,4 @@
+[config]
+feed_url = http://www.chicagonow.com/rss/global
+seconds_between_queries = 1
+printLog = 1

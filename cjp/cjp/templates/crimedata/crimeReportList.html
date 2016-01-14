@@ -1,0 +1,139 @@
+{% extends "common/base.html" %}
+
+{% block title %}
+    Crime Reports
+{% endblock %}
+
+{% block content %}
+    {% if crimeReports %}
+        
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var minDate = new Date({{ dateRange.minDate.year }}, {{ dateRange.minDate.month }} - 1, {{ dateRange.minDate.day }});
+                var maxDate = new Date({{ dateRange.maxDate.year }}, {{ dateRange.maxDate.month }} - 1, {{ dateRange.maxDate.day }});
+                
+		$( "#id_startDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+                $( "#id_endDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+            });
+	</script>
+        
+        <div class="export">
+            <b>Export Monthly Data</b>
+            <form action="{% url 'exportCrimeReport' %}" method="get" onsubmit="return (this.id_dateGroup.selectedIndex != 0);" >
+                <div>
+                    {{ exportForm.dateGroup.label }} : {{ exportForm.dateGroup }}
+                </div>
+                <div style="text-align: center;">
+                    <button class="exportButton">
+                        export as csv
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="search">
+            <form action="{% url 'mainCrimeReportView' %}" method="post">
+                <table>
+                    <tr>
+                        <td colspan="6">{{ form.non_field_errors }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.caseNum.label }}{{ form.caseNum.errors }}</td>
+                        <td>{{ form.caseNum }}</td>
+                        <td>{{ form.startDate.label }}{{ form.startDate.errors }}</td>
+                        <td>{{ form.startDate }}</td>
+                        <td>{{ form.endDate.label }}{{ form.endDate.errors }}</td>
+                        <td>{{ form.endDate }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.block.label }}{{ form.block.errors }}</td>
+                        <td>{{ form.block }}</td>
+                        <td>{{ form.location.label }}{{ form.location.errors }}</td>
+                        <td>{{ form.location }}</td>
+                        <td>{{ form.arrest.label }}{{ form.arrest.errors }}</td>
+                        <td>{{ form.arrest }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.code.label }}{{ form.code.errors }}</td>
+                        <td>{{ form.code }}</td>
+                        <td>{{ form.crimeType.label }}{{ form.crimeType.errors }}</td>
+                        <td colspan="3">{{ form.crimeType }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.domestic.label }}{{ form.domestic.errors }}</td>
+                        <td>{{ form.domestic }}</td>
+                        <td>{{ form.secondary.label }}{{ form.secondary.errors }}</td>
+                        <td colspan="3">{{ form.secondary }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.beat.label }}{{ form.beat.errors }}</td>
+                        <td>{{ form.beat }}</td>
+                        <td>{{ form.ward.label }}{{ form.ward.errors }}</td>
+                        <td>{{ form.ward }}</td>
+                        <td>{{ form.nibrs.label }}{{ form.nibrs.errors }}</td>
+                        <td>{{ form.nibrs }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="text-align:center;">
+                            {% csrf_token %}
+                            <input type="hidden" name="newSearch" value="True" />
+                            <input type="hidden" name="clearSearch" value="False" />
+                            <button class="searchButton">Search</button>
+                            <button class="searchButton" onclick="this.form.reset(); return false;">Reset</button>
+                            <button class="searchButton"
+                                    onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+      
+        <div style="width:95%"> 
+            <div style="width:100%"> 
+                {% include "common/pagination_inc.html" with objectList=crimeReports showExtra=1 objectLabel="Crime Report(s)" %}
+            </div>
+         
+            <table class="listTable" style="width:100%">
+                <tr>
+                    <th class="listTableHeadCell">case num</th>
+                    <th class="listTableHeadCell">date</th>
+                    <th class="listTableHeadCell">block</th>
+                    <th class="listTableHeadCell">code</th>
+                    <th class="listTableHeadCell">crime type</th>
+                    <th class="listTableHeadCell">secondary</th>
+                    <th class="listTableHeadCell">arrest</th>
+                    <th class="listTableHeadCell">location</th>
+                    <th class="listTableHeadCell">domestic</th>
+                    <th class="listTableHeadCell">beat</th>
+                    <th class="listTableHeadCell">ward</th>
+                    <th class="listTableHeadCell">nibrs</th>
+                    <th class="listTableHeadCell">&nbsp;</th>
+                </tr>
+                {% for report in crimeReports.object_list %}
+                    <tr>
+                        <td class="listTableDataCell">{{ report.web_case_num }}</td>
+                        <td class="listTableDataCell">{{ report.web_date }}</td>
+                        <td class="listTableDataCell">{{ report.web_block }}</td>
+                        <td class="listTableDataCell">{{ report.web_code }}</td>
+                        <td class="listTableDataCell">{{ report.web_crime_type }}</td>
+                        <td class="listTableDataCell">{{ report.web_secondary }}</td>
+                        <td class="listTableDataCell">{{ report.web_arrest }}</td>
+                        <td class="listTableDataCell">{{ report.web_location }}</td>
+                        <td class="listTableDataCell">{{ report.web_domestic }}</td>
+                        <td class="listTableDataCell">{{ report.web_beat }}</td>
+                        <td class="listTableDataCell">{{ report.web_ward }}</td>
+                        <td class="listTableDataCell">{{ report.web_nibrs }}</td>
+                        <td class="listTableDataCell">
+                            <button class="listTableAction" onclick="window.location='{% url 'viewSingleCrimeReport' report.id %}';">view</button>
+                        </td>
+                    </tr>               
+                {% endfor %}
+            </table>
+            <div style="width:100%"> 
+                {% include "common/pagination_inc.html" with objectList=crimeReports objectLabel="Crime Reports(s)" %}
+            </div>
+        </div>
+    {% else %}
+        <p>No reports are available.</p>
+    {% endif %}
+{% endblock %}

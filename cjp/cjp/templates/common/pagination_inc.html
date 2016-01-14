@@ -1,0 +1,37 @@
+<div class="pagination">
+    {% if showExtra %}
+        <div class="paginationTotal">
+            {{ objectList.paginator.count }} {{ objectLabel }}.
+        </div>
+    {% endif %}
+    <div class="paginationLinks">
+        {% if objectList.has_previous %}
+            <form action="" method="post" style="display:inline">
+                <div style="display:inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="page" value="{{ objectList.previous_page_number }}" />
+                    <button type="submit" class="navigationButton">previous</button>
+                </div>
+            </form>
+        {% endif %}
+        
+        Page
+        <form action="" method="post" style="display:inline">
+            {% csrf_token %}
+            <div style="display:inline">
+                <input name="page" value="{{ objectList.number }}" size="6" onchange="this.form.submit()" />
+            </div>
+        </form>
+        of {{ objectList.paginator.num_pages }}
+
+        {% if objectList.has_next %}
+            <form action="" method="post" style="display:inline">
+                <div style="display:inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="page" value="{{ objectList.next_page_number }}" />
+                    <button type="submit" class="navigationButton">next</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</div>

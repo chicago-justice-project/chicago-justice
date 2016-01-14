@@ -1,0 +1,111 @@
+{% extends "common/base.html" %}
+
+{% block title %}
+    Articles
+{% endblock %}
+
+{% block content %}
+    {% if articles %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var minDate = new Date({{ dateRange.minDate.year }}, {{ dateRange.minDate.month }} - 1, {{ dateRange.minDate.day }});
+                var maxDate = new Date({{ dateRange.maxDate.year }}, {{ dateRange.maxDate.month }} - 1, {{ dateRange.maxDate.day }});
+                
+		$( "#id_startDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+                $( "#id_endDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+            });
+	</script>
+
+        <div class="search">
+            <form action="{% url 'mainArticleView' %}" method="post">
+                <table>
+                    <tr>
+                        <td colspan="4">{{ form.non_field_errors }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.showAll.label }}{{ form.showAll.errors }}</td>
+                        <td>{{ form.showAll }}</td>
+                        <td>{{ form.feedname.label }}{{ form.feedname.errors }}</td>
+                        <td>{{ form.feedname }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.startDate.label }}{{ form.startDate.errors }}</td>
+                        <td>{{ form.startDate }}</td>
+                        <td rowspan="3">{{ form.category.label }}{{ form.category.errors }}</td>
+                        <td rowspan="3">{{ form.category }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.endDate.label }}{{ form.endDate.errors }}</td>
+                        <td>{{ form.endDate }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.searchTerms.label }}{{ form.searchTerms.errors }}</td>
+                        <td>{{ form.searchTerms }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align:center;">
+                            {% csrf_token %}
+                            <input type="hidden" name="newSearch" value="True" />
+                            <input type="hidden" name="clearSearch" value="False" />
+                            <button class="searchButton">Search</button>
+                            <button class="searchButton" onclick="this.form.reset(); return false;">Reset</button>
+                            <button class="searchButton"
+                                    onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        
+        <div style="width:95%">
+            <div style="width:100%">
+                {% include "common/pagination_inc.html" with objectList=articles showExtra=1 objectLabel="Article(s)" %}
+            </div>
+            <table class="listTable" style="width:100%">
+                <tr>
+                    <th class="listTableHeadCell" style="width:25%">Title</th>
+                    <th class="listTableHeadCell">Source</th>
+                    <th class="listTableHeadCell">Crime Related</th>
+                    <th class="listTableHeadCell">Categories</th>
+                    <th class="listTableHeadCell">Load Date</th>
+                    <th class="listTableHeadCell">Last Updated</th>
+                    <th class="listTableHeadCell" style="width:25%">Original URL</th>
+                    <th class="listTableHeadCell">&nbsp;</th>
+                </tr>
+                {% for article in articles.object_list %}
+                    <tr>
+                        <td class="listTableDataCell">{{ article.title }}</td>
+                        <td class="listTableDataCell">{{ article.get_feedname_display }}</td>
+                        <td class="listTableDataCell" style="text-align:center;">
+                            {% if article.relevant %}
+                                <img src="{{ STATIC_URL }}good_checkmark.png" alt="crime related" />
+                            {% else %} 
+                                <img src="{{ STATIC_URL }}bad_x.png" alt="not crime related" />
+                            {% endif %} 
+                        </td>
+                        <td class="listTableDataCell">
+                            {% for category in article.categories.all %}
+                                {{ category.abbreviation }}<br />
+                            {% endfor %}
+                        </td>
+                        <td class="listTableDataCell">{{ article.created }}</td>
+                        <td class="listTableDataCell">{{ article.last_modified }}</td>
+                        <td class="listTableDataCell"><a href="{{ article.url }}">{{ article.url }}</a></td>
+                        <td class="listTableDataCell">
+                            <form id="form_{{article.id}}" action="{% url 'viewSingleArticle' article.id %}" method="post">
+                                {% csrf_token %}
+                                <button class="searchButton">view</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div style="width:100%">
+                {% include "common/pagination_inc.html" with objectList=articles objectLabel="Article(s)" %}
+            </div>
+        </div>
+    {% else %}
+        <p>No articles are available.</p>
+    {% endif %}
+    
+{% endblock %}

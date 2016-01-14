@@ -1,0 +1,30 @@
+{% extends "common/base.html" %}
+
+{% block title %}
+    Scraper Stats
+{% endblock %}
+
+{% block content %}
+    
+    <div class="statTableTitle">Total Counts</div>
+    <table class="statTable">
+        {% for total in totals %}
+            <tr>
+                <th class="statTable">{{ total.0 }}</th>
+                <td class="statTable">{{ total.1 }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <th class="statTable">Non-relevant Article Count</th>
+            <td class="statTable">{{ articleNonRelevantCount }}</td>
+        </tr>
+        <tr>
+            <th class="statTable">Categorized Articles</th>
+            <td class="statTable">{{ categorizedArticleCount }}</td>
+        </tr>
+    </table>
+    
+{% endblock %}
