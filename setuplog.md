@@ -1,16 +1,16 @@
-Setup postgress access
-======================
-/home/cjp/.pgpass (0600)
-
-```
-chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com:5432:postgres:cjp:<password>
-```
-With <password> replaced
-
-Connect:
-`psql -h chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com postgres`
 Install apt requirements
 ========================
+
+psql (9.4 repository must be added)
+----
+```
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install postgresql-client-9.4
+```
+
 sudo apt-get update
 sudo apt-get -y install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo apt-get install git
@@ -32,8 +32,22 @@ More apts
 =========
 sudo pip install virtualenv
 sudo apt-get install libpq-dev python-dev
+sudo apt-get install libgeos-dev
 sudo apt-get install python-psycopg2
 sudo apt-get install binutils libproj-dev gdal-bin
+
+Setup postgress access
+======================
+/home/cjp/.pgpass (0600)
+
+```
+chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com:5432:postgres:cjp:<password>
+```
+With <password> replaced
+
+Connect:
+`psql -h chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com postgres`
+
 
 Setup git deployment key and repository
 =======================================
@@ -61,6 +75,7 @@ DB Server is not accessible to world. Using `cjpweb` for username and password.
 `psql -h chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com postgres`
 
 ```
+postgres=> create extension postgis;
 postgres=> create database cjpweb_prd;
 postgres=> grant all on database cjpweb_prd to cjpweb;
 ```
