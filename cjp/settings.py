@@ -63,8 +63,8 @@ else:
             #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
             'NAME': 'cjpweb_prd',
-            'USER': 'cjpweb',
-            'PASSWORD': 'cjpweb',
+            'USER': 'cjpuser',
+            'PASSWORD': 'cjpuser',
             'HOST': 'chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com',
             'PORT': '',
         }
