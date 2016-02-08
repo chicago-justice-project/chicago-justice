@@ -112,11 +112,29 @@ Create new databases
 ```
 postgres=> create database cjpweb_prd encoding 'UTF8' template template_postgis;
 postgres=> grant all on database cjpweb_prd to cjpuser;
+postgres=> \c cjpweb_prd
+postgres=> create extension postgis;
+postgres=> create extension postgis_topology;
 
 postgres=> create database cjpweb_stg encoding 'UTF8' template template_postgis;
 postgres=> grant all on database cjpweb_stg to cjpuser;
+postgres=> \c cjpweb_stg
+postgres=> create extension postgis;
+postgres=> create extension postgis_topology;
 ```
 
 Setup web application
 =====================
 Create file: `/etc/init/chicagojustice.conf`
+
+`sudo apt-get install nginx`
+
+Create file: `/etc/nginx/sites-available/chicagojustice`
+`ln -s /etc/nginx/sites-available/chicagojustice /etc/nginx/sites-enabled/chicagojustice`
+
+Source virtualenv, and migrate the databse:
+```
+. ~/env/chicagojustice/bin/activate
+cd ~/sites/chicago-justice/cjp
+./manage.py migrate
+```

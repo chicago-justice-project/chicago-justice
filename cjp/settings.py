@@ -44,6 +44,8 @@ else:
     # PRODUCTION SETTINGS
     #######################
 
+    POSTGIS_VERSION = (2, 1, 8)
+
     # 2011-12-20 use vhost with root at /
     CJP_ROOT = "/"
     CJP_ADMIN_USER = "cjpadmin"
