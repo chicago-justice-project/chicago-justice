@@ -2,7 +2,7 @@
 
 CONFIGURATION_FILENAME = "windyCityTimesScraperConfig.txt"
 
-from BeautifulSoup import BeautifulSoup, Comment
+from bs4 import BeautifulSoup, Comment
 import feedparser
 import httplib
 import scraper
@@ -51,7 +51,7 @@ class WindyCityTimesScraper(scraper.FeedScraper):
         
         mainContent = self.cleanScripts(mainContent)
         
-        soup = BeautifulSoup(mainContent)
+        soup = BeautifulSoup(mainContent, 'html.parser')
         
         results = soup.findAll("a", { "class" : 'page-c-head' })
         
@@ -85,7 +85,7 @@ class WindyCityTimesScraper(scraper.FeedScraper):
         content = re.sub("<span ", "<div ", content)
         content = re.sub("</span>", "</div>", content)
         
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
         
         def t(v):
             print "=====", v

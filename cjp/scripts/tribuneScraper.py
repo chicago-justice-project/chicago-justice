@@ -2,7 +2,7 @@
 
 CONFIGURATION_FILENAME = "tribuneScraperConfig.txt"
 
-from BeautifulSoup import BeautifulSoup, Comment
+from bs4 import BeautifulSoup, Comment
 import feedparser
 import httplib
 import html2text

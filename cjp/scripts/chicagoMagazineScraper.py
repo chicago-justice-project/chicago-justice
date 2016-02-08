@@ -2,7 +2,7 @@
 
 CONFIGURATION_FILENAME = "chicagoMagazineScraperConfig.txt"
 
-from BeautifulSoup import BeautifulSoup, Comment
+from bs4 import BeautifulSoup, Comment
 import feedparser
 import httplib
 import scraper

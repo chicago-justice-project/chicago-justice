@@ -2,7 +2,7 @@
 
 CONFIGURATION_FILENAME = "abclocalScraperConfig.txt"
 
-from BeautifulSoup import BeautifulSoup, Comment
+from bs4 import BeautifulSoup, Comment
 import feedparser
 import httplib
 import scraper
@@ -33,11 +33,11 @@ class ABCLocalScraper(scraper.FeedScraper):
             return
         
         channel = feed['channel']
-        if 'title' not in channel.keys() or 'WLS-TV ABC7' not in channel['title']:
+        if 'title' not in channel.keys() or 'abc7chicago' not in channel['title']:
             self.logError("Expected channel title missing")
             return
 
-        if 'link' not in channel.keys() or channel['link'] != 'http://abclocal.go.com/wls/channel?section=news/local&id=7098705':
+        if 'link' not in channel.keys() or channel['link'] != 'http://abc7chicago.com/feed':
             self.logError("Expected channel link missing")
             return
 
@@ -68,7 +68,6 @@ class ABCLocalScraper(scraper.FeedScraper):
 
             time.sleep(sleepTime)
 
-        self.logInfo("Inserted/updated %d ABC Local articles" % insertCount)
     
     def parseResponse(self, url, content):
         content = content.strip()
@@ -83,7 +82,7 @@ class ABCLocalScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)
         
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
         unneededText = (('div', 'tagContainer'),
                         ('div', 'tags'),
                         ('div', 'moreStories'),
@@ -92,10 +91,10 @@ class ABCLocalScraper(scraper.FeedScraper):
             results = soup.findAll(tagName, { "class" : className })
             [result.extract() for result in results]
         
-        results = soup.findAll("div", { "class" : "body" })
+        results = soup.findAll("div", { "class" : "body-text" })
         
         if len(results) != 1:
-            raise scraper.FeedException('Number of div class="body" in HTML is not 1. Count = %d' % len(results))
+            raise scraper.FeedException('Number of div class="body-text" in HTML is not 1. Count = %d' % len(results))
             
         self.saveStory(url, title, content, results[0])
             
