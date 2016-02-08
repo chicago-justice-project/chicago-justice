@@ -1,3 +1,0 @@
-* why is pg_config giving the wrong version?
-* fix and run template create script in db/
-* recreate database with the template
