@@ -33,7 +33,7 @@ class CBSLocalScraper(scraper.FeedScraper):
             return
         
         channel = feed['channel']
-        if 'title' not in channel.keys() or channel['title'] != 'CBS Chicago':
+        if 'title' not in channel.keys() or 'CBS Chicago' not in channel['title']:
             self.logError("Expected channel title missing")
             return
         
