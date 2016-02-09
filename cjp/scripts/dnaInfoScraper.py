@@ -37,7 +37,7 @@ class DnaInfoScraper(scraper.FeedScraper):
             self.logError("Expected channel title missing")
             return
 
-        if 'link' not in channel.keys() or channel['link'] != 'http://www.dnainfo.com/chicago':
+        if 'link' not in channel.keys() or channel['link'] != 'https://www.dnainfo.com/chicago':
             self.logError("Expected channel link missing")
             return
 
@@ -78,9 +78,9 @@ class DnaInfoScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)
 
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
             
-        results = soup.findAll('div', { "class" : re.compile(r'\bstory_area\b') })
+        results = soup.findAll('article', { "class" : 'story'})
         
         if len(results) != 1:
             raise scraper.FeedException('Number of primary-content ids in HTML is not 1. Count = %d' % len(results))
