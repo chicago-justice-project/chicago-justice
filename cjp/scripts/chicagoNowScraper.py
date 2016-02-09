@@ -79,7 +79,7 @@ class ChicagoNowScraper(scraper.FeedScraper):
 
         content = self.cleanScripts(content)
 
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
         
         results = soup.findAll("div", { "id" : lambda val : val is not None and val.startswith("single-post") } )
         
