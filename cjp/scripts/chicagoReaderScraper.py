@@ -33,7 +33,7 @@ class ChicagoReaderScraper(scraper.FeedScraper):
             return
         
         channel = feed['channel']
-        if 'title' not in channel.keys() or channel['title'] != 'News & Features, Chicago Reader':
+        if 'title' not in channel.keys() or channel['title'] != 'News & Politics, Chicago Reader':
             self.logError("Expected channel title missing")
             return
 
@@ -80,7 +80,7 @@ class ChicagoReaderScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)
 
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
         unneededText = (('div', 'MorebyThisAuthor'),
                         ('div', 'RelatedStories'),
                         ('div', 'Comments'),
