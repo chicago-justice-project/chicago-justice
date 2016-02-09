@@ -65,32 +65,30 @@ class FeedScraper(BasicScraper):
     def logInfo(self, message):
         super(FeedScraper, self).logInfo(message)
 
-    def processItem(self, link, withCookies=False):
+    def processItem(self, link, withCookies=False, headers=None):
         self.logInfo("Querying %s" % link)
             
         # if we recieve a good response, process it. Otherwise,
         # stop and cancel the database transaction for this day
+ 
+        if withCookies:
+            cj = CookieJar()
+            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        else:
+            opener = urllib2.build_opener()
+        if headers is not None:
+            opener.addheaders = headers 
         try:
-            if not withCookies:
-                response = urllib2.urlopen(link)
-                content = response.read()
-                self.parseResponse(link, content)
-            else:
-                cj = CookieJar()
-                opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-                response = opener.open(link)
-                content = response.read()
-                self.parseResponse(link, content)
-
+            response = opener.open(link)
+            content = response.read()
+            self.parseResponse(link, content)
             return 1
-
         except urllib2.URLError, e:
             self.logError("Bad response from server, URLError: %s" % e)
         except httplib.BadStatusLine, e:
             self.logError("Bad response from server, BadStatusLine: %s" % e)
         except FeedException, e:
             self.logError("Unexpected HTML, FeedException: %s" % e)
-            
         return 0
     
     @abc.abstractmethod
@@ -107,7 +105,13 @@ class FeedScraper(BasicScraper):
 
     def saveStory(self, url, title, orig_html, storyHTML):
         if 'prettify' in dir(storyHTML):
-            storyHTML = storyHTML.prettify().decode('utf8')
+            try:
+                storyHTML = storyHTML.prettify().decode('utf8')
+            except UnicodeEncodeError:
+                """Not sure we should be decoding utf8 anyway. BeautifulSoup should be detecting the
+                encoding. Leaving the decode for safety and adding this error check for non-UTF8
+                pages."""
+                storyHTML = storyHTML.prettify()
             
         #fix for non-utf8 characters.  Won't go in DB otherwise
         # Since just for debugging purposes, don't have to save text if this fails
@@ -167,3 +171,4 @@ def setPathToDjango(scriptFile):
     sys.path.append(topDir)
     
     os.environ['DJANGO_SETTINGS_MODULE'] ='cjp.settings'
+

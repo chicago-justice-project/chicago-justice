@@ -59,7 +59,7 @@ class ChicagoJournalScraper(scraper.FeedScraper):
                 self.logError("Item link is empty, skipping entry : %s" % item)
                 continue
             
-            cnt = self.processItem(item.link)
+            cnt = self.processItem(item.link, headers=[('User-agent', 'Mozilla/5.0')])
             insertCount += cnt
 
             time.sleep(sleepTime)
@@ -78,7 +78,7 @@ class ChicagoJournalScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)
 
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
         
         # remove footer div
         results = soup.findAll('div', { "id" : 'footer' })
