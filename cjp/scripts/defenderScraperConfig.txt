@@ -1,4 +1,4 @@
 [config]
-feed_url = http://www.chicagodefender.com/index.php?format=feed&type=rss
+feed_url = http://chicagodefender.com/feed/
 seconds_between_queries = 1
 printLog = 1

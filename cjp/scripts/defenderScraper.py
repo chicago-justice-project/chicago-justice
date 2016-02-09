@@ -33,11 +33,11 @@ class DefenderScraper(scraper.FeedScraper):
             return
         
         channel = feed['channel']
-        if 'title' not in channel.keys() or channel['title'] != 'Chicago Defender':
+        if 'title' not in channel.keys() or channel['title'] != 'The Chicago Defender':
             self.logError("Expected channel title missing")
             return
 
-        if 'link' not in channel.keys() or not channel['link'].startswith('http://www.chicagodefender.com'):
+        if 'link' not in channel.keys() or not channel['link'].startswith('http://chicagodefender.com'):
             self.logError("Expected channel link missing")
             return
 
