@@ -78,7 +78,7 @@ class CrainsScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)
 
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
         unneededText = (
             ('div', 'articleSocialBar'),
             ('div', 'pluck'),
@@ -88,7 +88,7 @@ class CrainsScraper(scraper.FeedScraper):
             [result.extract() for result in results]
         
             
-        results = soup.findAll('div', { "id" : 'article' })
+        results = soup.findAll('div', { "data-swiftype-name" : 'body' })
         
         if len(results) != 1:
             raise scraper.FeedException('Number of primary-content ids in HTML is not 1. Count = %d' % len(results))
