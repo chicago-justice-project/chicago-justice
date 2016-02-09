@@ -112,7 +112,6 @@ class FeedScraper(BasicScraper):
                 encoding. Leaving the decode for safety and adding this error check for non-UTF8
                 pages."""
                 storyHTML = storyHTML.prettify()
-            
         #fix for non-utf8 characters.  Won't go in DB otherwise
         # Since just for debugging purposes, don't have to save text if this fails
         try:
@@ -127,7 +126,6 @@ class FeedScraper(BasicScraper):
                                         "</body></html>"))
         
         storyText = html2text.html2text(extractedHTML)
-        
         lines = storyText.splitlines()
         modifiedLines = []
         MAX_LINE_LENGTH = 80

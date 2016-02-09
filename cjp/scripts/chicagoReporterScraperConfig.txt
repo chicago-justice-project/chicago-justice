@@ -1,5 +1,4 @@
 [config]
-feed_url = http://www.chicagoreporter.com/story-tags/criminal-justice
-           http://www.chicagoreporter.com/story-tags/criminal-justice?page=1
+feed_url = http://chicagoreporter.com/feed/
 seconds_between_queries = 1
 printLog = 1

@@ -26,49 +26,35 @@ class ChicagoReporterScraper(scraper.FeedScraper):
         
     def run(self):
         self.logInfo("START Chicago Reporter Feed Scraper")
-        
-        feedUrls = self.getConfig('config', 'feed_url').split('\n')
-
-        for feedUrl in feedUrls:
-            self.processFeed(feedUrl)
-        
-        self.logInfo("END Chicago Reporter Feed Scraper")
-    
-    def processFeed(self, feedUrl):
-        
-        urlParts = urlparse(feedUrl)
-        baseUrl = "%s://%s" % (urlParts[0], urlParts[1])
-        
-        try:
-            response = urllib2.urlopen(feedUrl)
-            html = response.read()
-        except Exception, e:
-            self.logError("Error downloading Feed URL Page: %s" % e)
+        feedUrl = self.getConfig('config', 'feed_url')
+        feed = feedparser.parse(feedUrl)
+        if 'channel' not in feed:
+            self.logError("Expected channel missing in RSS Feed")
             return
-
+        channel = feed['channel']
+        if 'title' not in channel.keys() or channel['title'] != 'Chicago Reporter':
+            self.logError("Expected channel title missing")
+            return
+        if 'link' not in channel.keys() or channel['link'] != 'http://chicagoreporter.com':
+            self.logError("Expected channel link missing")
+            return
+        if len(feed.entries) == 0:
+            self.logError("No entries in RSS feed")
+            return
+        self.processFeed(feed)
+        self.logInfo("END Chicago Reporter Feed Scraper")
+        
+    def processFeed(self, feed):
         insertCount = 0
-        
         sleepTime = int(self.getConfig('config', 'seconds_between_queries'))
-        
-        html = self.cleanScripts(html)
-        
-        soup = BeautifulSoup(html)
-        
-        results = soup.findAll("div", { "class" : lambda val: val != None and "views-field-view-node" in val})
-
-        for result in results:
-            anchor = result.findAll('a')
-            if len(anchor) != 1:
-                self.logError("Error extracting anchor.  Count expect is 1, result was %s" % len(anchor))
+        for item in feed.entries:
+            if len(item.link) == 0:
+                self.logError("Item link is empty, skipping entry : %s" % item)
                 continue
-            link = "%s%s" % (baseUrl, anchor[0]['href'])
-
-            cnt = self.processItem(link)
+            cnt = self.processItem(item.link, headers=[('User-agent', 'Mozilla/5.0')])
             insertCount += cnt
-
             time.sleep(sleepTime)
-
-        self.logInfo("Inserted/updated %d Chicago Reporter articles" % (insertCount,))       
+        self.logInfo("Inserted/updated %d Chicago Reporter articles" % insertCount)
     
     def parseResponse(self, url, content):
         content = content.strip()
@@ -82,8 +68,9 @@ class ChicagoReporterScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)            
 
-        soup = BeautifulSoup(content)
-        results = soup.findAll("div", {'class' : lambda val: val != None and re.search(r"\bcol-center\b", val)})
+        soup = BeautifulSoup(content, 'html.parser')
+        #results = soup.findAll("div", {'class' : lambda val: val != None and re.search(r"\bcol-center\b", val)})
+        results = soup.findAll('div', {'class': 'entry-content'})
         
         if len(results) != 1:
             raise scraper.FeedException('Number of story-body ids in HTML is not 1. Count = %d URL = %s' % (len(results), url))
