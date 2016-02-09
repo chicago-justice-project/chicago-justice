@@ -1,5 +1,4 @@
 [config]
-feed_url = http://feeds.feedburner.com/ChicagoMagazineArticles?format=xml
-           http://www.chicagomag.com/feeds/The+312
+feed_url = http://www.chicagomag.com/rss/main/
 seconds_between_queries = 1
 printLog = 1

@@ -45,12 +45,12 @@ class ChicagoMagazineScraper(scraper.FeedScraper):
             return
 
         if 'links' not in channel.keys():
-            self.logError("Expected channel link missing")
+            self.logError("Expected channel link missing.")
             return
         else:
             found=False
             for link in channel['links']:
-                if link['href'].startswith('http://www.chicagomag.com/Chicago-Magazine/'):
+                if link['href'].startswith('http://chicagomag.com'):
                     found=True
             if not found:
                 self.logError("Expected channel link missing")
@@ -89,14 +89,31 @@ class ChicagoMagazineScraper(scraper.FeedScraper):
 
         content = self.cleanScripts(content)
 
-        soup = BeautifulSoup(content)
-        unneededText = (('div', 'commentsform'),
-            )
-        for tagName, className in unneededText:
+        soup = BeautifulSoup(content, 'html.parser')
+
+        unneededClassText = (
+            ('div', 'commentsform'),
+            ('section', 'clearfix'),
+            ('h5', 'add-comment'),
+            ('p', 'comments-disclaimer'),
+            ('a', 'edit_from_site'),
+            ('h2', ''),
+            ('link', ''),
+        )
+        for tagName, className in unneededClassText:
             results = soup.findAll(tagName, { "class" : className })
             [result.extract() for result in results]
+
+
+        unneededIdText = (
+            ('span', 'topic'),
+        )
+        for tagName, idName in unneededIdText:
+            results = soup.findAll(tagName, { "id" : idName })
+            [result.extract() for result in results]
             
-        results = soup.findAll("div", { "id" : "article" })
+        #results = soup.findAll("article", { "class" : "container" })
+        results = soup.findAll("div", { "class" : "post" })
         
         if len(results) != 1:
             raise scraper.FeedException('Number of div class="body" in HTML is not 1. Count = %d' % len(results))

@@ -140,7 +140,6 @@ class FeedScraper(BasicScraper):
             else:
                 modifiedLines.append(line)
         storyText = "\n".join(modifiedLines)
-        
         try:
             article = self.model.Article.objects.get(url=url,
                                                      feedname=self.__feedName)
