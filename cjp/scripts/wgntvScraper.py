@@ -79,9 +79,9 @@ class WGNTVScraper(scraper.FeedScraper):
 
         content = self.cleanScripts(content)
         
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
         
-        results = soup.findAll('div', { "class" : 'post-entry' })
+        results = soup.findAll('div', { "class" : 'entry-content' })
         
         if len(results) != 1:
             raise scraper.FeedException('Number of primary-content ids in HTML is not 1. Count = %d' % len(results))
