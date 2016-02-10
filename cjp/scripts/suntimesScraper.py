@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 CONFIGURATION_FILENAME = "suntimesScraperConfig.txt"
 
@@ -33,11 +34,11 @@ class SunTimeScraper(scraper.FeedScraper):
             return
         
         channel = feed['channel']
-        if 'title' not in channel.keys() or channel['title'] != 'Chicago Sun-Times':
+        if 'title' not in channel.keys():
             self.logError("Expected channel title missing")
             return
 
-        if 'link' not in channel.keys() or channel['link'] != 'http://www.suntimes.com':
+        if 'link' not in channel.keys() or channel['link'] != 'http://chicago.suntimes.com':
             self.logError("Expected channel link missing")
             return
 
@@ -82,8 +83,11 @@ class SunTimeScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)
 
-        soup = BeautifulSoup(content)
-        results = soup.findAll(id=re.compile(r'\bprimary-content\b'))
+        soup = BeautifulSoup(content, 'html.parser')
+        #results = soup.findAll(id=re.compile(r'\bprimary-content\b'))
+        results = soup.findAll('div', { 'class': 'postContent', 'itemprop':'articleBody' })
+        if not results:
+            results = soup.findAll('div', { 'id': 'bw-share' })
         
         if len(results) != 1:
             raise scraper.FeedException('Number of primary-content ids in HTML is not 1. Count = %d' % len(results))

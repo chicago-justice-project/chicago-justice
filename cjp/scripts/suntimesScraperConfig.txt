@@ -1,4 +1,4 @@
 [config]
-feed_url = http://www.suntimes.com/rss/index.html?path=/suntimes/news/crime
+feed_url = http://chicago.suntimes.com/category/7/71/news/crime/feed/
 seconds_between_queries = 1
 printLog = 1
