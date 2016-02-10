@@ -1,4 +1,4 @@
 [config]
-feed_url = http://feeds.feedburner.com/MoreOnTheStory?format=xml
+feed_url = http://feeds.feedburner.com/ChicagoTonight
 seconds_between_queries = 1
 printLog = 1

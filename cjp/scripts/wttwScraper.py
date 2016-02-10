@@ -34,7 +34,7 @@ class WTTWScraper(scraper.FeedScraper):
         
         channel = feed['channel']
 
-        if 'link' not in channel.keys() or channel['link'] != 'http://chicagotonight.wttw.com/feed':
+        if 'link' not in channel.keys() or channel['link'] != 'http://chicagotonight.wttw.com':
             self.logError("Expected channel link missing")
             return
 
@@ -51,6 +51,7 @@ class WTTWScraper(scraper.FeedScraper):
         
         sleepTime = int(self.getConfig('config', 'seconds_between_queries'))
 
+        """
         for item in feed.entries:
             if len(item.guid) == 0:
                 self.logError("Item guid is empty, skipping entry : %s" % item)
@@ -65,18 +66,37 @@ class WTTWScraper(scraper.FeedScraper):
                 continue
             
             html = item.description
+            print item.description
             
             self.saveStory(item.link, item.title, html, html)
             
             insertCount += 1
 
             time.sleep(sleepTime)
-
+        """
+        for item in feed.entries:
+            if 'guid' not in item.keys() or len(item.link) == 0:
+                self.logError("item guid is empty, skipping. Feed URL = %s" % feedUrl)
+                continue
+            cnt = self.processItem(item.guid)
+            insertCount += cnt
+            time.sleep(sleepTime)
         self.logInfo("Inserted/updated %d WTTW articles" % insertCount)
     
     def parseResponse(self, url, content):
-        """ Not called because the text is contained in the URL feed."""
-        pass
+        content = content.strip()
+        content = re.sub(re.compile(r"^\s+$",  flags=re.MULTILINE), "", content)
+        title = re.search(r"<title>(.*)</title>", content)
+        if title == None:
+            title = "Missing"
+        else:
+            title = title.group(1)
+        content = self.cleanScripts(content)            
+        soup = BeautifulSoup(content, 'html.parser')
+        results = soup.findAll('div', { 'class': 'main-container' })
+        if len(results) != 1:
+            raise scraper.FeedException('Number of story-body ids in HTML is not 1. Count = %d URL = %s' % (len(results), url))
+        self.saveStory(url, title, content, results[0])
             
 
 def main():
