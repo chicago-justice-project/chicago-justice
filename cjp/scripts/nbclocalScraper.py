@@ -33,7 +33,7 @@ class NBCLocalScraper(scraper.FeedScraper):
             return
         
         channel = feed['channel']
-        if 'title' not in channel.keys() or channel['title'] != 'NBC Chicago - Chicago Local News and Breaking News':
+        if 'title' not in channel.keys() or channel['title'] != 'NBC Chicago - Chicago News':
             self.logError("Expected channel title missing")
             return
 
@@ -83,8 +83,8 @@ class NBCLocalScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)
 
-        soup = BeautifulSoup(content)
-        results = soup.findAll(id='articleText')
+        soup = BeautifulSoup(content, 'html.parser')
+        results = soup.findAll('div', {'class':'articleText'})
         
         if len(results) != 1:
             raise scraper.FeedException('Number of primary-content ids in HTML is not 1. Count = %d' % len(results))

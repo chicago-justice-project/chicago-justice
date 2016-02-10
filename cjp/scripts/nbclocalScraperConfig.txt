@@ -1,4 +1,4 @@
 [config]
-feed_url = http://feeds.nbcchicago.com/nbcchicago/news/local-beat
+feed_url = http://www.nbcchicago.com/news/local/?rss=y
 seconds_between_queries = 1
 printLog = 1
