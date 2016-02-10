@@ -12,7 +12,6 @@ import crainsScraper
 import defenderScraper
 import dnaInfoScraper
 import nbclocalScraper
-import newscoopScraper
 import suntimesScraper
 import tribuneScraper
 import wbezScraper
@@ -25,9 +24,8 @@ scrapers = (chicagoReporterScraper,
             windyCityTimesScraper, wlsScraper, dnaInfoScraper,
             chicagoReaderScraper, crainsScraper, chicagoJournalScraper,
             chicagoMagazineScraper, defenderScraper, chicagoNowScraper,
-            wttwScraper, cbslocalScraper, newscoopScraper,
-            wbezScraper, nbclocalScraper, abclocalScraper,
-            wgntvScraper, beachwoodScraper,
+            wttwScraper, cbslocalScraper, wbezScraper, nbclocalScraper,
+            abclocalScraper, wgntvScraper, beachwoodScraper,
             tribuneScraper, suntimesScraper, 
            )
 
