@@ -1,26 +1,4 @@
 [config]
-feed_url = http://rss.chicagotribune.com/rss/topic/crime-law-justice/crimes/02001000.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/crimes/kidnapping/amber-alert-ORGOV000034.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/police/chicago-police-department-ORGOV000080.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/laws/civil-laws/02006002.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/justice-rights/civil-rights/02007001.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/trials/court-preliminary/02008003.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/crimes/crime-victims/01010001708.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/laws/criminal-laws/02006001.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/crimes/criminals/01010001709.topic
-           http://rss.chicagotribune.com/rss/topic/health/human-body/dna-HHA000078.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/crimes/drug-trafficking/02001004.topic
-           http://rss.chicagotribune.com/rss/topic/lifestyle-leisure/recreational-substance-use/drug-use/15019009772.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/crimes/fbi-ORGOV000008.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/justice-system/illinois-supreme-court-ORGOV000036.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/justice-rights/02007000.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/justice-system/02002000.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/police/law-enforcement/02003001.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/police/police-arrests/02003003.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/police/police-investigations/02003002.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/prosecution/02009000.topic
-           http://rss.chicagotribune.com/rss/topic/social-issues/prostitution/14013000.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/sex-crimes/0200100076.topic
-           http://rss.chicagotribune.com/rss/topic/crime-law-justice/sex-crimes/sexual-assault/02001005.topic
+feed_url = http://www.chicagotribune.com/rss2.0.xml
 seconds_between_queries = 1
 printLog = 1

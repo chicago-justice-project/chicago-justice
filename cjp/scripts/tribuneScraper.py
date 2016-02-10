@@ -46,7 +46,7 @@ class TribuneScraper(scraper.FeedScraper):
             self.logError("Channel title missing. URL = %s" % feedUrl)
             return
 
-        if 'link' not in channel.keys() or not channel['link'].startswith('http://www.chicagotribune.com/topic/'):
+        if 'link' not in channel.keys() or not channel['link'].startswith('http://www.chicagotribune.com/'):
             self.logError("Expected channel link missing. URL = %s" % feedUrl)
             return
 
@@ -88,8 +88,9 @@ class TribuneScraper(scraper.FeedScraper):
             
         content = self.cleanScripts(content)            
 
-        soup = BeautifulSoup(content)
-        results = soup.findAll(	attrs={'id' : re.compile(r'^story-body(-parent)?$')})
+        soup = BeautifulSoup(content, 'html.parser')
+        #results = soup.findAll(	attrs={'id' : re.compile(r'^story-body(-parent)?$')})
+        results = soup.findAll('div', { 'itemprop': 'articleBody' })
         
         if len(results) != 1:
             raise scraper.FeedException('Number of story-body ids in HTML is not 1. Count = %d URL = %s' % (len(results), url))
