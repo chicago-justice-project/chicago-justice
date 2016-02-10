@@ -51,34 +51,11 @@ class WTTWScraper(scraper.FeedScraper):
         
         sleepTime = int(self.getConfig('config', 'seconds_between_queries'))
 
-        """
         for item in feed.entries:
-            if len(item.guid) == 0:
-                self.logError("Item guid is empty, skipping entry : %s" % item)
+            if 'feedburner_origlink' not in item.keys() or len(item.feedburner_origlink) == 0:
+                self.logError("item guid is empty, skipping")
                 continue
-
-            if len(item.link) == 0:
-                self.logError("Item link is empty, skipping entry : %s" % item)
-                continue
-
-            if len(item.description) == 0:
-                self.logError("Item description is empty, skipping entry : %s" % item)
-                continue
-            
-            html = item.description
-            print item.description
-            
-            self.saveStory(item.link, item.title, html, html)
-            
-            insertCount += 1
-
-            time.sleep(sleepTime)
-        """
-        for item in feed.entries:
-            if 'guid' not in item.keys() or len(item.link) == 0:
-                self.logError("item guid is empty, skipping. Feed URL = %s" % feedUrl)
-                continue
-            cnt = self.processItem(item.guid)
+            cnt = self.processItem(item.feedburner_origlink)
             insertCount += cnt
             time.sleep(sleepTime)
         self.logInfo("Inserted/updated %d WTTW articles" % insertCount)
