@@ -89,7 +89,6 @@ class TribuneScraper(scraper.FeedScraper):
         content = self.cleanScripts(content)            
 
         soup = BeautifulSoup(content, 'html.parser')
-        #results = soup.findAll(	attrs={'id' : re.compile(r'^story-body(-parent)?$')})
         results = soup.findAll('div', { 'itemprop': 'articleBody' })
         
         if len(results) != 1:

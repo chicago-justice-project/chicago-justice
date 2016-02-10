@@ -24,62 +24,37 @@ class WLSScraper(scraper.FeedScraper):
                                              configFile, models)
         
     def run(self):
-        """ NOT an RSS feed. Just an HTML Page """
         self.logInfo("START WLS Feed Scraper")
-        
-        feedUrl = self.getConfig('config', 'feed_url')
-        
-        try:
-            response = urllib2.urlopen(feedUrl)
-            html = response.read()
-        except Exception, e:
-            self.logError("Error downloading main HTML Page: %s" % e)
-            return
-        
-        self.processFeed(feedUrl, html)
-        
+        feedUrls = self.getConfig('config', 'feed_url').split('\n')
+        for feedUrl in feedUrls:
+            self.processFeed(feedUrl)
         self.logInfo("END WLS Feed Scraper")
         
-    def processFeed(self, feedUrl, mainContent):
-        
-        urlParts = urlparse(feedUrl)
-        baseUrl = "%s://%s" % (urlParts[0], urlParts[1])
-        if baseUrl[-1] == '/':
-            baseUrl = baseUrl[:-1]
-        
+    def processFeed(self, feedUrl):
+        feed = feedparser.parse(feedUrl)
+        if 'channel' not in feed:
+            self.logError("Expected channel title missing. URL = %s" % feedUrl)
+            return
+        channel = feed['channel']
+        if 'title' not in channel.keys() :
+            self.logError("Channel title missing. URL = %s" % feedUrl)
+            return
+        if 'link' not in channel.keys():
+            self.logError("Expected channel link missing. URL = %s" % feedUrl)
+            return
+        if len(feed.entries) == 0:
+            self.logError("No entries in RSS feed. URL = %s" % feedUrl)
+            return
         insertCount = 0
-        
         sleepTime = int(self.getConfig('config', 'seconds_between_queries'))
-        
-        soup = BeautifulSoup(mainContent)
-        
-        results = soup.findAll("div", {"class" : "pagination"})
-    
-        maxPage = 4
-              
-        # They use paging      
-        for page in range(1, maxPage+1):
-            pageUrl = "%s&page=%s" % (feedUrl, page)
-            try:
-                response = urllib2.urlopen(pageUrl)
-                pageHtml = response.read()
-                time.sleep(sleepTime)
-            except Exception as e:
-                self.logError("Error downloading page HTML: %s %s" % (pageUrl, e))
+        for item in feed.entries:
+            if 'link' not in item.keys() or len(item.link) == 0:
+                self.logError("item link is empty, skipping. Feed URL = %s" % feedUrl)
                 continue
-        
-            soup = BeautifulSoup(pageHtml)
-            
-            results = soup.findAll("a", {"class" : "more"})
-    
-            for tag in results:
-                newUrl = "%s%s" % (baseUrl, tag['href'])
-                cnt = self.processItem(newUrl)
-                insertCount += cnt
-    
-                time.sleep(sleepTime)
-
-        self.logInfo("Inserted/updated %d WLS articles" % insertCount)
+            cnt = self.processItem(item.link)
+            insertCount += cnt
+            time.sleep(sleepTime)
+        self.logInfo("Inserted/updated %d Tribune articles" % (insertCount,))       
     
     def parseResponse(self, url, content):
         content = content.strip()
@@ -88,9 +63,9 @@ class WLSScraper(scraper.FeedScraper):
         
         content = self.cleanScripts(content)
         
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'html.parser')
         
-        results = soup.findAll("div", { "id" : "cumulus_content_details" })
+        results = soup.findAll('article')
         
         if len(results) != 1:
             raise scraper.FeedException('Number of div class="body" in HTML is not 1. Count = %d' % len(results))
