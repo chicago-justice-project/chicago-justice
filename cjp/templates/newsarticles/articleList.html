@@ -74,7 +74,7 @@
                 </tr>
                 {% for article in articles.object_list %}
                     <tr>
-                        <td class="listTableDataCell">{{ article.title }}</td>
+                        <td class="listTableDataCell">{{ article.title|safe }}</td>
                         <td class="listTableDataCell">{{ article.get_feedname_display }}</td>
                         <td class="listTableDataCell" style="text-align:center;">
                             {% if article.relevant %}
