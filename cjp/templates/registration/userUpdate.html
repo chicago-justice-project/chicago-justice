@@ -7,7 +7,7 @@
 {% block content %} 
     {% if managedUser %}
         <div class="search">
-            <form action="{% url userUpdate managedUser.id %}" method="post">
+            <form action="{% url 'userUpdate' managedUser.id %}" method="post">
                 <table> 
                     {% if updateSuccess %}
                         <tr> 
