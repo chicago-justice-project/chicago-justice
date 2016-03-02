@@ -8,12 +8,12 @@
                 
                 {% if showFunctions %}
                     <div class="articleFunction" style="float: left">
-                        <button onclick="javascript:window.location='{% url mainArticleView %}'; return false;"
+                        <button onclick="javascript:window.location='{% url 'mainArticleView' %}'; return false;"
                                 class="navigationButton">return to previous page</button>
                     </div>
                     <div class="articleFunction" style="float: right">
                         <button class="navigationButton" type="button"
-                                onclick="window.open('{% url printSingleArticle article.id %}', '_blank');">print</button>
+                                onclick="window.open('{% url 'printSingleArticle' article.id %}', '_blank');">print</button>
                     </div>
                 {% endif %}
             </td>
@@ -32,7 +32,7 @@
         <td class="crimeReportContent">
             {{  article.relevant }}
             {% if showFunctions and user.is_authenticated %}
-                <form action="{% url updateArticleRelevant article.id %}" method="post">
+                <form action="{% url 'updateArticleRelevant' article.id %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="relevant" value="{{ article.relevant }}" />
                 
@@ -50,7 +50,7 @@
         <td class="crimeReportContent">
             {% if showFunctions and user.is_authenticated %}
                 
-                <form action="{% url updateArticleCategories article.id %}" method="post">
+                <form action="{% url 'updateArticleCategories' article.id %}" method="post">
                     {% for category in categories %}
                         <input type="checkbox" name="category_{{ forloop.counter }}" value="{{ category.id }}" 
                         {% if category in article.categories.all %}
