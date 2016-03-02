@@ -60,7 +60,7 @@ class CPDScraper(scraper.BasicScraper):
             self.__addLatest()
 
         # create lookup tables
-        with transaction.commit_manually():
+        with transaction.atomic():
             models.LookupCRCrimeDateMonth.createLookup()
             models.LookupCRCode.createLookup()
             models.LookupCRCrimeType.createLookup()
@@ -68,7 +68,6 @@ class CPDScraper(scraper.BasicScraper):
             models.LookupCRBeat.createLookup()
             models.LookupCRWard.createLookup()
             models.LookupCRNibrs.createLookup()
-            transaction.commit()
 
         tables = (
             models.CrimeReport,
