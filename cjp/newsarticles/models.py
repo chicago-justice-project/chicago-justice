@@ -21,7 +21,7 @@ FEED_WINDYCITYTIMES   = 'V'
 FEED_WTTW             = 'W'
 FEED_CHICAGOREPORTER  = 'X'
 FEED_WBEZ             = 'Z'
-FEED_NAMES = (    
+FEED_NAMES = (
     (FEED_ABCLOCAL       , 'ABC Local'),
     (FEED_BEACHWOOD      , 'Beachwood Reporter'),
     (FEED_CBSLOCAL       , 'CBS Local'),
@@ -49,10 +49,10 @@ class Category(models.Model):
     category_name = models.CharField(max_length=256)
     abbreviation = models.CharField(max_length=5)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
-    
+
     def __unicode__(self):
         return u"%s (%s)" % (self.category_name, self.abbreviation)
-        
+
     class Meta:
         ordering = ['abbreviation']
 
@@ -67,5 +67,5 @@ class Article(models.Model):
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     last_modified = models.DateTimeField(auto_now=True)
     objects = models.GeoManager()
-    
-    
+
+

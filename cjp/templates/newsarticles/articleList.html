@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block content %}
-    {% if articles %}
         <script type="text/javascript">
             $(document).ready(function() {
                 var minDate = new Date({{ dateRange.minDate.year }}, {{ dateRange.minDate.month }} - 1, {{ dateRange.minDate.day }});
@@ -57,6 +56,7 @@
             </form>
         </div>
         
+    {% if articles %}
         <div style="width:95%">
             <div style="width:100%">
                 {% include "common/pagination_inc.html" with objectList=articles showExtra=1 objectLabel="Article(s)" %}

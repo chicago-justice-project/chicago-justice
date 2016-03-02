@@ -152,6 +152,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+
     #'django.middleware.transaction.TransactionMiddleware',
 )
 
@@ -191,6 +192,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # 2/18/2012 JN
 # added timeout for cookies
 SESSION_COOKIE_AGE = 60 * 60 * 24
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 LOGIN_REDIRECT_URL = CJP_ROOT;
 
