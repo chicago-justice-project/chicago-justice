@@ -44,13 +44,17 @@ else:
     # PRODUCTION SETTINGS
     #######################
 
+    ALLOWED_HOSTS = [
+        'ec2-54-152-146-161.compute-1.amazonaws.com',
+        'data.chicagojustice.org',
+    ]
     POSTGIS_VERSION = (2, 1, 8)
 
     # 2011-12-20 use vhost with root at /
     CJP_ROOT = "/"
     CJP_ADMIN_USER = "cjpadmin"
 
-    DEBUG = True
+    DEBUG = False
 
     ADMINS = (
         ('Chris Shenton', 'chris@koansys.com',),
