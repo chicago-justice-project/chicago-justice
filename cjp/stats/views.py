@@ -1,21 +1,23 @@
 from crimedata.models import CrimeReport
 from newsarticles.models import Article, FEED_NAMES, Category
+from django.db import connection
 from django.db.models import Count
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 def totalCounts(request):
-    categories = Category.objects.all()
+    cursor = connection.cursor()
     
     data = {}
     data['totals'] = [ ('CrimeReport', CrimeReport.objects.count()), ] + [
                             (fullname, Article.objects.filter(feedname=feedId, relevant=True).count())
                                 for (feedId, fullname) in FEED_NAMES
                      ]
-    
     data['articleNonRelevantCount'] = Article.objects.filter(relevant=False).count()
-    data['categorizedArticleCount'] = Article.objects.filter(relevant=True, categories__in = categories).distinct().count()
-    
+    cursor.execute("""SELECT COUNT(DISTINCT article_id) AS count
+        FROM newsarticles_article a, newsarticles_article_categories nac
+        WHERE a.relevant=TRUE AND a.id=nac.article_id""")
+    data['categorizedArticleCount'] = cursor.fetchone()[0]
     return render_to_response('stats/totalCounts.html', data,
                           context_instance=RequestContext(request))
     
