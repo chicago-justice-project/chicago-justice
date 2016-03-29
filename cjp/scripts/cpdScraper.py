@@ -8,6 +8,7 @@ import httplib
 import scraper
 import sys
 import os
+import pytz
 import re
 import time
 import urllib
@@ -140,7 +141,7 @@ class CPDScraper(scraper.BasicScraper):
 
         Returns a datetime object representing the earliest date to process.
         """
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(pytz.timezone('US/Central'))
         date = now.date()
         backDays = (int(self.getConfig('config', 'days_backdated')) + dateLimit)
         duration= datetime.timedelta(days = backDays)
