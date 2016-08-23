@@ -45,7 +45,7 @@ else:
     #######################
 
     ALLOWED_HOSTS = [
-        'ec2-54-152-146-161.compute-1.amazonaws.com',
+        'ec2-54-88-218-235.compute-1.amazonaws.com',
         'data.chicagojustice.org',
     ]
     POSTGIS_VERSION = (2, 1, 8)
