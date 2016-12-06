@@ -43,4 +43,33 @@ https://aws.amazon.com/premiumsupport/knowledge-center/account-transfer-ec2-inst
 
 https://aws.amazon.com/premiumsupport/knowledge-center/account-transfer-rds/
 
+# Deployment
+
+This is a standard Django project. Current deployment is done via reverse-proxied Nginx with gunicorn running the application. To acheive this, be sure gunicorn is running the application on a port. How you do this will vary according to your system. On Ubuntu, consider using Upstart to manage Gunicorn.
+
+Your Nginx configuration should contain information to proxy requests to the application port. E.g. (if running on port 9000):
+
+```
+server {
+    listen 80;
+    server_name http://data.chicagojustice.org/;
+    access_log  /var/log/nginx/chicagojustice.log;
+    client_max_body_size 5M;
+    root /usr/share/nginx/chicagojustice;
+
+    location / {
+        try_files $uri @proxy_to_chicagojustice;
+    }
+
+    location @proxy_to_chicagojustice {
+      proxy_pass http://127.0.0.1:9000;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+See the Django deployment docs for more details: https://docs.djangoproject.com/en/1.10/howto/deployment/
+
 
