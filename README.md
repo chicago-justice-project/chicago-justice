@@ -95,4 +95,8 @@ server {
 
 Note, the paths, users, groups, and all system specific information in the files above are for example purposes. Please check these against your system configuration.
 
+## Code updates to the existing deployment
 
+The code is deployed via git repository. Deployment of code changes should simply require `git pull` inside the application repository, and likely `sudo service chicagojustice restart` (please check the name of the service with what is in the upstart configs under `/etc/init`)
+
+In some cases (ie. model changes) a schema migration is required. Migrate via `./manage.py migrate`. Be sure to source the virtual environment before running migrations. See the Django docs for details on schema migrations: https://docs.djangoproject.com/en/1.10/topics/migrations/
