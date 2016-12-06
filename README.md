@@ -45,7 +45,29 @@ https://aws.amazon.com/premiumsupport/knowledge-center/account-transfer-rds/
 
 # Deployment
 
-This is a standard Django project. Current deployment is done via reverse-proxied Nginx with gunicorn running the application. To acheive this, be sure gunicorn is running the application on a port. How you do this will vary according to your system. On Ubuntu, consider using Upstart to manage Gunicorn.
+This is a standard Django project. The following information is specific to an Ubuntu based deployment using Nginx with Gunicorn. This information will not necessarily apply to all deployment setups. For details on deploying Django applications, see the Django deployment documentation: https://docs.djangoproject.com/en/1.10/howto/deployment/
+
+Current deployment is done via reverse-proxied Nginx with gunicorn running the application. To acheive this, be sure gunicorn is running the application on a port. How you do this will vary according to your system. On Ubuntu, consider using Upstart to manage Gunicorn.
+
+An example upstart config might look like this:
+
+```
+description "chicagojustice"
+
+start on (net-device-up and local-filesystems)
+stop on shutdown
+
+respawn
+console log
+setuid apps
+setgid apps
+
+chdir /home/apps/sites/cityhallmonitor
+script
+  . /home/apps/sites/chicagojustice/env.sh
+  exec /home/apps/env/chicagojustice/bin/gunicorn -b :9000 core.wsgi:application
+end script
+ ```
 
 Your Nginx configuration should contain information to proxy requests to the application port. E.g. (if running on port 9000):
 
@@ -70,6 +92,5 @@ server {
 }
 ```
 
-See the Django deployment docs for more details: https://docs.djangoproject.com/en/1.10/howto/deployment/
 
 
