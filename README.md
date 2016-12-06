@@ -59,15 +59,16 @@ stop on shutdown
 
 respawn
 console log
-setuid apps
-setgid apps
+setuid cjp
+setgid cjp
 
-chdir /home/apps/sites/cityhallmonitor
+chdir /home/cjp/sites/chicagojustice
 script
-  . /home/apps/sites/chicagojustice/env.sh
-  exec /home/apps/env/chicagojustice/bin/gunicorn -b :9000 core.wsgi:application
+  exec /home/cjp/env/chicagojustice/bin/gunicorn -b :9000 conf.wsgi:application
 end script
  ```
+
+The application can then be managed via: `sudo service chicagojustice [start|stop|restart]`
 
 Your Nginx configuration should contain information to proxy requests to the application port. E.g. (if running on port 9000):
 
@@ -92,5 +93,6 @@ server {
 }
 ```
 
+Note, the paths, users, groups, and all system specific information in the files above are for example purposes. Please check these against your system configuration.
 
 
