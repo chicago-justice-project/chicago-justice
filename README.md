@@ -1,4 +1,4 @@
-`install -r requirements.txt`
+`pip install -r requirements.txt`
 
 Assuming user has db privileges:
 
@@ -10,6 +10,7 @@ Or, if e.g. postgres user has db privileges:
 
 `createdb -T template_postgis cjpwebdb`
 `createuser -P cjpuser`
+
 Password: cjppassword
 
 # see: http://postgis.net/docs/PostGIS_FAQ.html
