@@ -78,8 +78,8 @@ class ChicagoMagazineScraper(scraper.FeedScraper):
     
     def parseResponse(self, url, content):
         content = content.strip()
-        content = re.sub(re.compile(r"^\s+$",  flags=re.MULTILINE), "", content)
-        content = re.sub(re.compile(r"\r",  flags=re.MULTILINE), " ", content)
+        # Compress whitespace and convert all to spaces
+        content = re.sub(re.compile(r"\s+"), " ", content)
 
         title = re.search(r"<title>(.*)</title>", content)
         if title == None:

@@ -62,7 +62,7 @@ class WindyCityTimesScraper(scraper.FeedScraper):
             if link in processedLinks: continue
             processedLinks.add(link)
             
-            cnt = self.processItem(link)
+            cnt = self.processItem(link, headers=[('User-agent', 'Mozilla/5.0')])
             insertCount += cnt
             
             # they have a long list that does back many days

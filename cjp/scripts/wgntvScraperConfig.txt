@@ -1,4 +1,4 @@
 [config]
-feed_url = http://wgntv.com/tag/crime/feed/
+feed_url = http://wgntv.com/category/news/feed/
 seconds_between_queries = 2
 printLog = 1
