@@ -11,6 +11,7 @@ import chicagoReporterScraper
 import crainsScraper
 import defenderScraper
 import dnaInfoScraper
+import foxchicagoScraper
 import nbclocalScraper
 import suntimesScraper
 import tribuneScraper
@@ -26,7 +27,7 @@ scrapers = (chicagoReporterScraper,
             chicagoMagazineScraper, defenderScraper, chicagoNowScraper,
             wttwScraper, cbslocalScraper, wbezScraper, nbclocalScraper,
             abclocalScraper, wgntvScraper, beachwoodScraper,
-            tribuneScraper, suntimesScraper, 
+            tribuneScraper, suntimesScraper, foxchicagoScraper
            )
 
 from cjp.newsarticles.models import Article
@@ -45,7 +46,7 @@ for s in scrapers:
 # remove original HTML for articles older than two weeks
 #
 # 5/13/2012 Reed's patch
-# keeps Django from loading all records into memory.  
+# keeps Django from loading all records into memory.
 # Using an iterator now
 #
 now = datetime.now()
