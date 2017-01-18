@@ -37,7 +37,7 @@ class DefenderScraper(scraper.FeedScraper):
             self.logError("Expected channel title missing")
             return
 
-        if 'link' not in channel.keys() or not channel['link'].startswith('http://chicagodefender.com'):
+        if 'link' not in channel.keys() or not channel['link'].startswith('https://chicagodefender.com'):
             self.logError("Expected channel link missing")
             return
 
