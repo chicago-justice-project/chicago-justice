@@ -3,7 +3,9 @@
 # The purpose of this script is to dump the news article data to a downloadable
 # archive for analysis purposes.
 #
-# In order to authenticate
+# In order to authenticate to the database server, a .pgpass file must be
+# present in the home directory of the user running the script. Refer to the
+# Postgres documentation for details.
 
 DATABASE_URL=chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com
 
