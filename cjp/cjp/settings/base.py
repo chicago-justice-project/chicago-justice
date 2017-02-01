@@ -1,84 +1,11 @@
-# Django settings for cjp project.
+# Common settings inherited by production, development, local, etc.
+
 import os.path
+from os.path import dirname
 from os import environ
 
-#
-# 2/18/2012 JN
-# Set the environment variable CJP_DJANGO_DEVELOPMENT to enable development mode.
-# Must also be set when testing scrapers in the scripts directory
-# Can make multiple configs if necessary
-# Raises an error if the enviromental variable exists but is not known
-#
-# If environment variable is missing, assumes production
-#
-if "CJP_DJANGO_DEVELOPMENT" in environ:
-    #######################
-    #  DEVELOPMENT SETTINGS
-    #######################
-    if environ["CJP_DJANGO_DEVELOPMENT"] == "TestConfig_1":
-        print "---Running Development Config---"
-        CJP_ROOT = "/cjpdata"
-        CJP_ADMIN_USER = "cjpadmin"
-
-        DEBUG = True
-
-        ADMINS = (
-            # ('Your Name', 'your_email@example.com'),
-        )
-
-        DATABASES = {
-            'default': {
-                #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-                'ENGINE': 'django.contrib.gis.db.backends.postgis',
-                'NAME': 'cjpwebdb',                      # Or path to database file if using sqlite3.
-                'USER': 'cjpuser',                      # Not used with sqlite3.
-                'PASSWORD': 'cjppasswd',                  # Not used with sqlite3.
-                'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-                'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-            }
-        }
-    else:
-        raise ValueError("Bad value for environment variable CJP_DJANGO_DEVELOPMENT: %s" % environ["CJP_DJANGO_DEVELOPMENT"])
-else:
-    #######################
-    # PRODUCTION SETTINGS
-    #######################
-
-    ALLOWED_HOSTS = [
-        'ec2-54-88-218-235.compute-1.amazonaws.com',
-        'data.chicagojustice.org',
-    ]
-    POSTGIS_VERSION = (2, 1, 8)
-
-    # 2011-12-20 use vhost with root at /
-    CJP_ROOT = "/"
-    CJP_ADMIN_USER = "cjpadmin"
-
-    DEBUG = False
-
-    ADMINS = (
-        ('Chris Shenton', 'chris@koansys.com',),
-        # 2012-01-22 chris@koansys.com: missing 404.html sends tons of mail, don't bother Tracy
-        #('Tracy Siska',   'tsiska@chicagojustice.org',),
-        ("Reed O'Brien", 'reed@koansys.com',),
-        # ('Your Name', 'your_email@example.com'),
-    )
-
-    DATABASES = {
-        'default': {
-            #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'cjpweb_prd',
-            'USER': 'cjpuser',
-            'PASSWORD': 'cjpuser',
-            'HOST': 'chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com',
-            'PORT': '',
-        }
-    }
-
-MANAGERS = ADMINS
-
-TEMPLATE_DEBUG = DEBUG
+# Root project dir (the one containing manage.py)
+BASE_DIR = dirname(dirname(dirname(os.path.abspath(__file__))))
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -112,15 +39,9 @@ MEDIA_ROOT = ''
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = ''
 
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/usr/share/nginx/chicagojustice'
-
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/'
+STATIC_URL = '/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -129,7 +50,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(os.path.realpath(__file__)), 'staticfiles'),
+    os.path.join(BASE_DIR, 'staticfiles'),
 )
 
 # List of finder classes that know how to find static files in
@@ -137,17 +58,17 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '#&ubnzmo6$-0nk7i&hmii=e$7y-)nv+bm#&ps)6eq@!k+n-nq5'
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
+UNUSED___TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -164,15 +85,24 @@ ATOMIC_REQUESTS = True
 # RE: deprecation of TransactionMiddleware & introduction of ATOMIC_REQUESTS
 # see: https://docs.djangoproject.com/en/1.6/topics/db/transactions/#changes-from-django-1-5-and-earlier
 
-#ROOT_URLCONF = 'cjp.urls'
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'cjp.urls'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates'),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    }
+
+]
 
 INSTALLED_APPS = (
     'newsarticles',
@@ -193,12 +123,8 @@ INSTALLED_APPS = (
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-# 2/18/2012 JN
-# added timeout for cookies
 SESSION_COOKIE_AGE = 60 * 60 * 24
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
-
-LOGIN_REDIRECT_URL = CJP_ROOT;
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -229,4 +155,7 @@ LOGGING = {
     }
 }
 
-
+# Default redirect path after login/logout
+# TODO: move to 'next' param in HTTP request
+CJP_ROOT = '/'
+LOGIN_REDIRECT_URL = CJP_ROOT

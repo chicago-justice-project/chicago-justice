@@ -1,5 +1,7 @@
 {% extends "common/base.html" %}
 
+{% load static from staticfiles %}
+
 {% block esrimap %}
     {% include "common/map_inc.html" %}
 {% endblock %}
@@ -170,11 +172,11 @@
                 map.setExtent(extent, true);
                     
                 dojo.connect(map, 'onLoad', function() {
-                    var shadow = new esri.symbol.PictureMarkerSymbol('{{ STATIC_URL }}msmarker.shadow.png', 59, 32);
+                    var shadow = new esri.symbol.PictureMarkerSymbol('{% static "msmarker.shadow.png" %}', 59, 32);
                     shadow.setOffset(16, 15);
                     map.graphics.add(new esri.Graphic(mapPoint, shadow));
                     
-                    var marker = new esri.symbol.PictureMarkerSymbol('{{ STATIC_URL }}red-pushpin.png', 32, 32);
+                    var marker = new esri.symbol.PictureMarkerSymbol('{% static "red-pushpin.png" %}', 32, 32);
                     marker.setOffset(6, 15);
                     map.graphics.add(new esri.Graphic(mapPoint, marker));
                 });

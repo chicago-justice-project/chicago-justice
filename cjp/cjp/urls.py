@@ -2,7 +2,7 @@
 from django.conf.urls import patterns, include, url
 #from django.views.generic.simple import direct_to_template
 from django.views.generic import TemplateView
-from settings import CJP_ROOT
+from settings.base import CJP_ROOT
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Uncomment the next two lines to enable the admin:
@@ -50,7 +50,7 @@ urlpatterns = [
     url(r'^crimereports/$', 'crimedata.views.crimeReportList', name='mainCrimeReportView'),
     url(r'^crimereports/export/$', 'crimedata.views.crimeReportExport', name='exportCrimeReport'),
 
-     #individual crime reports
+    # individual crime reports
     url(r'^crimereports/(\d+)/$', 'crimedata.views.crimeReportView', name='viewSingleCrimeReport'),
 
     # stats

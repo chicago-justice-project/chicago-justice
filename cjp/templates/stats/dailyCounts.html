@@ -1,5 +1,7 @@
 {% extends "common/base.html" %}
 
+{% load static from staticfiles %}
+
 {% block title %}
     Scraper Stats
 {% endblock %}
@@ -7,7 +9,7 @@
 {% block content %}
     
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/stat.js"></script>
+    <script type="text/javascript" src="{% static "js/stat.js" %}"></script>
     <script type="text/javascript">
         //<![CDATA[
         
