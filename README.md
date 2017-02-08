@@ -101,3 +101,23 @@ Note, the paths, users, groups, and all system specific information in the files
 The code is deployed via git repository. Deployment of code changes should simply require `git pull` inside the application repository, and likely `sudo service chicagojustice restart` (please check the name of the service with what is in the upstart configs under `/etc/init`)
 
 In some cases (ie. model changes) a schema migration is required. Migrate via `./manage.py migrate`. Be sure to source the virtual environment before running migrations. See the Django docs for details on schema migrations: https://docs.djangoproject.com/en/1.10/topics/migrations/
+
+## Accessing the data via SFTP
+
+The script `dumpArticleTables.sh` currently runs every 24 hours. This script exports the article and category tables in CSV format, then packs them into a tar archive in `/home/sftp_users/files`.
+
+Users in the `sftp_users` group can access `/home/sftp_users` via SFTP only. These users do not have shell access and cannot access any other directories.
+
+To create a user in this group, use the command `adduser --home /home/sftp_users/files --ingroup sftp_users`.
+
+The current SSHD config for this group is as follows:
+```
+Match Group sftp_users
+        ForceCommand internal-sftp
+        PasswordAuthentication yes
+        ChrootDirectory /home/sftp_users
+        PermitTunnel no
+        AllowAgentForwarding no
+        AllowTcpForwarding no
+        X11Forwarding no
+```
