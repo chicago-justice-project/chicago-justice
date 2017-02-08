@@ -13,10 +13,8 @@ import time
 import urllib2
 from urlparse import urlparse
 
-scraper.setPathToDjango(__file__)
-
 from django.db import transaction
-import cjp.newsarticles.models as models
+import newsarticles.models as models
 
 class WLSScraper(scraper.FeedScraper):
     def __init__(self, configFile):

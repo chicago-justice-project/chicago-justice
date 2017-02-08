@@ -12,15 +12,13 @@ import re
 import time
 import urllib2
 
-scraper.setPathToDjango(__file__)
-
 from django.db import transaction
-import cjp.newsarticles.models as models
+import newsarticles.models as models
 
 class WGNTVScraper(scraper.FeedScraper):
     def __init__(self, configFile):
         super(WGNTVScraper, self).__init__(models.FEED_WGNTV,
-                                             configFile, models)
+                                           configFile, models)
         
     def run(self):
         self.logInfo("START WGN TV Feed Scraper")

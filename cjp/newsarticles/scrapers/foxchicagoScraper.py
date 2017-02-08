@@ -14,10 +14,8 @@ import urllib2
 import urlparse
 from cookielib import CookieJar
 
-scraper.setPathToDjango(__file__)
-
 from django.db import transaction
-import cjp.newsarticles.models as models
+import newsarticles.models as models
 
 class FoxChicagoScraper(scraper.FeedScraper):
     def __init__(self, configFile):

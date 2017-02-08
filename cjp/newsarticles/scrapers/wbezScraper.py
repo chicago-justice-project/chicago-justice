@@ -12,10 +12,8 @@ import re
 import time
 import urllib2
 
-scraper.setPathToDjango(__file__)
-
 from django.db import transaction
-import cjp.newsarticles.models as models
+import newsarticles.models as models
 
 class WBEZScraper(scraper.FeedScraper):
     def __init__(self, configFile):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-CONFIGURATION_FILENAME = "nbclocalScraperConfig.txt"
+CONFIGURATION_FILENAME = "defenderScraperConfig.txt"
 
 from bs4 import BeautifulSoup, Comment
 import feedparser
@@ -12,18 +12,16 @@ import re
 import time
 import urllib2
 
-scraper.setPathToDjango(__file__)
-
 from django.db import transaction
-import cjp.newsarticles.models as models
+import newsarticles.models as models
 
-class NBCLocalScraper(scraper.FeedScraper):
+class DefenderScraper(scraper.FeedScraper):
     def __init__(self, configFile):
-        super(NBCLocalScraper, self).__init__(models.FEED_NBCLOCAL,
-                                             configFile, models)
+        super(DefenderScraper, self).__init__(models.FEED_DEFENDER,
+                                              configFile, models)
         
     def run(self):
-        self.logInfo("START NBC Local Feed Scraper")
+        self.logInfo("START Chicago Defender Feed Scraper")
         
         feedUrl = self.getConfig('config', 'feed_url')
         feed = feedparser.parse(feedUrl)
@@ -33,11 +31,11 @@ class NBCLocalScraper(scraper.FeedScraper):
             return
         
         channel = feed['channel']
-        if 'title' not in channel.keys() or channel['title'] != 'NBC Chicago - Chicago News':
+        if 'title' not in channel.keys() or channel['title'] != 'The Chicago Defender':
             self.logError("Expected channel title missing")
             return
 
-        if 'link' not in channel.keys() or channel['link'] != 'http://www.nbcchicago.com/news/local':
+        if 'link' not in channel.keys() or not channel['link'].startswith('https://chicagodefender.com'):
             self.logError("Expected channel link missing")
             return
 
@@ -47,7 +45,7 @@ class NBCLocalScraper(scraper.FeedScraper):
         
         self.processFeed(feed)
         
-        self.logInfo("END NBC Local Feed Scraper")
+        self.logInfo("END Chicago Defender Feed Scraper")
         
     def processFeed(self, feed):
         insertCount = 0
@@ -63,39 +61,33 @@ class NBCLocalScraper(scraper.FeedScraper):
                 self.logError("Item link is empty, skipping entry : %s" % item)
                 continue
             
-            cnt = self.processItem(item.link)
-            insertCount += cnt
+            if 'summary_detail' not in item.keys():
+                self.logError("Summary detaul is empty, skipping entry : %s" % item)
+                continue
+            
+            if 'value' not in item['summary_detail']:
+                self.logError("Summary detaul value is empty, skipping entry : %s" % item)
+                continue
+            
+            html = item['summary_detail']['value']
+            
+            self.saveStory(item.link, item.title, html, html)
+            
+            insertCount += 1
 
             time.sleep(sleepTime)
 
-        self.logInfo("Inserted/updated %d NBC Local articles" % insertCount)
+        self.logInfo("Inserted/updated %d Chicago Defender articles" % insertCount)
     
     def parseResponse(self, url, content):
-        content = content.strip()
-        content = re.sub(re.compile(r"^\s+$",  flags=re.MULTILINE), "", content)
-        content = re.sub(re.compile(r"\r",  flags=re.MULTILINE), " ", content)
-
-        title = re.search(r"<title>(.*)</title>", content)
-        if title == None:
-            title = "Missing"
-        else:
-            title = title.group(1)
-            
-        content = self.cleanScripts(content)
-
-        soup = BeautifulSoup(content, 'html.parser')
-        results = soup.findAll('div', {'class':'articleText'})
-        
-        if len(results) != 1:
-            raise scraper.FeedException('Number of primary-content ids in HTML is not 1. Count = %d' % len(results))
-            
-        self.saveStory(url, title, content, results[0])
+        """ Not called because text is contained in the URL feed."""
+        pass
             
 
 def main():
     configurationLocation = os.path.dirname(__file__)
     configPath = os.path.join(configurationLocation, CONFIGURATION_FILENAME)
-    scraper = NBCLocalScraper(configPath)
+    scraper = DefenderScraper(configPath)
     scraper.run() 
 
 if __name__ == '__main__':

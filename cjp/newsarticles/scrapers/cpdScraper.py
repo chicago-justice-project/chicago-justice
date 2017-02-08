@@ -18,8 +18,6 @@ import xml.dom.minidom
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application() # needed to be sure models are loaded
 
-scraper.setPathToDjango(__file__)
-
 from django.db import transaction
 import crimedata.models as models
 
@@ -483,14 +481,20 @@ def printUsage(exitValue):
         print line.lstrip()
     sys.exit(exitValue)
 
-def main():
+def main(rebuild=False):
+    configurationLocation = os.path.dirname(__file__)
+    configPath = os.path.join(configurationLocation, CONFIGURATION_FILENAME)
+    scraper = CPDScraper(configPath, rebuild)
+    scraper.run()
+
+if __name__ == '__main__':
+    rebuild = False
+
     try:
         opts, args = getopt.getopt(sys.argv[1:], "", ["rebuild"])
     except getopt.GetoptError, err:
         print str(err)
         printUsage(2)
-
-    rebuild = False
 
     for option, argument in opts:
         if option == "--rebuild":
@@ -498,10 +502,4 @@ def main():
         else:
             assert False, "unhandled command line option: " + option
 
-    configurationLocation = os.path.dirname(__file__)
-    configPath = os.path.join(configurationLocation, CONFIGURATION_FILENAME)
-    scraper = CPDScraper(configPath, rebuild)
-    scraper.run()
-
-if __name__ == '__main__':
-    main()
+    main(rebuild)

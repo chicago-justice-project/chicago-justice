@@ -2,15 +2,15 @@
 # The user from the buildout config is: www-data
 # Run the newspaper scrapers every 6 hours
 
-48 0-23/6 * * *   /home/cjp/env/chicagojustice/bin/python /home/cjp/sites/chicago-justic/cjp/scripts/runScrapers.py > /home/cjp/log/runScrapers.log
+48 0-23/6 * * *   /home/cjp/env/chicagojustice/bin/python /home/cjp/sites/chicago-justice/cjp/manage.py runscrapers > /home/cjp/log/runScrapers.log
 
 
 # Run CPD scraper at 2 AM
 # On the 1st and 15th of the month, rebuild as far back 
 # as possible to retrieve any old updated information
 
-0 2 2-14,16-31 * * /home/cjp/sites/chicago-justice/cjp/scripts/runCpdScraper.sh > /home/cjp/log/cpdScraper.log
+0 2 2-14,16-31 * * /home/cjp/env/chicagojustice/bin/python /home/cjp/sites/chicago-justice/cjp/manage.py runCpdScraper > /home/cjp/log/cpdScraper.log
 
-0 2 1,15 * *  /home/cjp/sites/chicago-justice/cjp/scripts/runCpdScraper.sh --rebuild > /home/cjp/log/cpdScraper_rebuild.log
+0 2 1,15 * *  /home/cjp/env/chicagojustice/bin/python /home/cjp/sites/chicago-justice/cjp/manage.py runCpdScraper --rebuild > /home/cjp/log/cpdScraper_rebuild.log
 ~
 ~

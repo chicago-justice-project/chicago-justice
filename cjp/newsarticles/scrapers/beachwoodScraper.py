@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-CONFIGURATION_FILENAME = "defenderScraperConfig.txt"
+CONFIGURATION_FILENAME = "beachwoodScraperConfig.txt"
 
 from bs4 import BeautifulSoup, Comment
 import feedparser
@@ -12,32 +12,30 @@ import re
 import time
 import urllib2
 
-scraper.setPathToDjango(__file__)
-
 from django.db import transaction
-import cjp.newsarticles.models as models
+import newsarticles.models as models
 
-class DefenderScraper(scraper.FeedScraper):
+class BeachwoodScraper(scraper.FeedScraper):
     def __init__(self, configFile):
-        super(DefenderScraper, self).__init__(models.FEED_DEFENDER,
-                                             configFile, models)
+        super(BeachwoodScraper, self).__init__(models.FEED_BEACHWOOD,
+                                               configFile, models)
         
     def run(self):
-        self.logInfo("START Chicago Defender Feed Scraper")
+        self.logInfo("START Beachwood Reporter Feed Scraper")
         
         feedUrl = self.getConfig('config', 'feed_url')
         feed = feedparser.parse(feedUrl)
 
         if 'channel' not in feed:
-            self.logError("Expected channel missing in RSS Feed")
+            self.logError("Expected channel missing in Feed")
             return
         
         channel = feed['channel']
-        if 'title' not in channel.keys() or channel['title'] != 'The Chicago Defender':
+        if 'title' not in channel.keys() or channel['title'] != 'Beachwood Reporter':
             self.logError("Expected channel title missing")
             return
 
-        if 'link' not in channel.keys() or not channel['link'].startswith('https://chicagodefender.com'):
+        if 'link' not in channel.keys() or channel['link'] != 'http://www.beachwoodreporter.com/':
             self.logError("Expected channel link missing")
             return
 
@@ -47,7 +45,7 @@ class DefenderScraper(scraper.FeedScraper):
         
         self.processFeed(feed)
         
-        self.logInfo("END Chicago Defender Feed Scraper")
+        self.logInfo("END Beachwood Reporter Feed Scraper")
         
     def processFeed(self, feed):
         insertCount = 0
@@ -63,23 +61,16 @@ class DefenderScraper(scraper.FeedScraper):
                 self.logError("Item link is empty, skipping entry : %s" % item)
                 continue
             
-            if 'summary_detail' not in item.keys():
-                self.logError("Summary detaul is empty, skipping entry : %s" % item)
-                continue
-            
-            if 'value' not in item['summary_detail']:
-                self.logError("Summary detaul value is empty, skipping entry : %s" % item)
-                continue
-            
-            html = item['summary_detail']['value']
+            html = item.content[0]['value']
             
             self.saveStory(item.link, item.title, html, html)
             
             insertCount += 1
 
+
             time.sleep(sleepTime)
 
-        self.logInfo("Inserted/updated %d Chicago Defender articles" % insertCount)
+        self.logInfo("Inserted/updated %d Beachwood Reporter articles" % insertCount)
     
     def parseResponse(self, url, content):
         """ Not called because text is contained in the URL feed."""
@@ -89,7 +80,7 @@ class DefenderScraper(scraper.FeedScraper):
 def main():
     configurationLocation = os.path.dirname(__file__)
     configPath = os.path.join(configurationLocation, CONFIGURATION_FILENAME)
-    scraper = DefenderScraper(configPath)
+    scraper = BeachwoodScraper(configPath)
     scraper.run() 
 
 if __name__ == '__main__':

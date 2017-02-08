@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-CONFIGURATION_FILENAME = "wttwScraperConfig.txt"
+CONFIGURATION_FILENAME = "chicagoJournalScraperConfig.txt"
 
 from bs4 import BeautifulSoup, Comment
 import feedparser
@@ -12,18 +12,16 @@ import re
 import time
 import urllib2
 
-scraper.setPathToDjango(__file__)
-
 from django.db import transaction
-import cjp.newsarticles.models as models
+import newsarticles.models as models
 
-class WTTWScraper(scraper.FeedScraper):
+class ChicagoJournalScraper(scraper.FeedScraper):
     def __init__(self, configFile):
-        super(WTTWScraper, self).__init__(models.FEED_WTTW,
+        super(ChicagoJournalScraper, self).__init__(models.FEED_CHICAGOJOURNAL,
                                              configFile, models)
         
     def run(self):
-        self.logInfo("START WTTW Feed Scraper")
+        self.logInfo("START Chicago Journal Feed Scraper")
         
         feedUrl = self.getConfig('config', 'feed_url')
         feed = feedparser.parse(feedUrl)
@@ -33,8 +31,11 @@ class WTTWScraper(scraper.FeedScraper):
             return
         
         channel = feed['channel']
+        if 'title' not in channel.keys() or channel['title'] != 'Chicago Journal RSS crime':
+            self.logError("Expected channel title missing")
+            return
 
-        if 'link' not in channel.keys() or channel['link'] != 'http://chicagotonight.wttw.com':
+        if 'link' not in channel.keys() or channel['link'] != 'http://chicagojournal.com':
             self.logError("Expected channel link missing")
             return
 
@@ -44,7 +45,7 @@ class WTTWScraper(scraper.FeedScraper):
         
         self.processFeed(feed)
         
-        self.logInfo("END WTTW Feed Scraper")
+        self.logInfo("END Chicago Journal Feed Scraper")
         
     def processFeed(self, feed):
         insertCount = 0
@@ -52,34 +53,47 @@ class WTTWScraper(scraper.FeedScraper):
         sleepTime = int(self.getConfig('config', 'seconds_between_queries'))
 
         for item in feed.entries:
-            if 'feedburner_origlink' not in item.keys() or len(item.feedburner_origlink) == 0:
-                self.logError("item guid is empty, skipping")
+            if len(item.link) == 0:
+                self.logError("Item link is empty, skipping entry : %s" % item)
                 continue
-            cnt = self.processItem(item.feedburner_origlink)
+            
+            cnt = self.processItem(item.link, headers=[('User-agent', 'Mozilla/5.0')])
             insertCount += cnt
+
             time.sleep(sleepTime)
-        self.logInfo("Inserted/updated %d WTTW articles" % insertCount)
+
+        self.logInfo("Inserted/updated %d Chicago Journal articles" % insertCount)
     
     def parseResponse(self, url, content):
         content = content.strip()
         content = re.sub(re.compile(r"^\s+$",  flags=re.MULTILINE), "", content)
+
         title = re.search(r"<title>(.*)</title>", content)
         if title == None:
             title = "Missing"
         else:
             title = title.group(1)
-        content = self.cleanScripts(content)            
+            
+        content = self.cleanScripts(content)
+
         soup = BeautifulSoup(content, 'html.parser')
-        results = soup.findAll('div', { 'class': 'main-container' })
+        
+        # remove footer div
+        results = soup.findAll('div', { "id" : 'footer' })
+        [result.extract() for result in results]
+            
+        results = soup.findAll('div', { "id" : 'left' })
+        
         if len(results) != 1:
-            raise scraper.FeedException('Number of story-body ids in HTML is not 1. Count = %d URL = %s' % (len(results), url))
+            raise scraper.FeedException('Number of primary-content ids in HTML is not 1. Count = %d' % len(results))
+            
         self.saveStory(url, title, content, results[0])
             
 
 def main():
     configurationLocation = os.path.dirname(__file__)
     configPath = os.path.join(configurationLocation, CONFIGURATION_FILENAME)
-    scraper = WTTWScraper(configPath)
+    scraper = ChicagoJournalScraper(configPath)
     scraper.run() 
 
 if __name__ == '__main__':
