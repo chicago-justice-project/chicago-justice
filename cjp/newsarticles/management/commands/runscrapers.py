@@ -51,11 +51,6 @@ class Command(BaseCommand):
                 self.stdout.write("ERROR: Reason %s" % e)
 
         # remove original HTML for articles older than two weeks
-        #
-        # 5/13/2012 Reed's patch
-        # keeps Django from loading all records into memory.
-        # Using an iterator now
-        #
         now = datetime.now()
         keepdate = now - timedelta(days=14)
         old_articles = Article.objects.filter(created__lte=keepdate).exclude(orig_html='').iterator()
