@@ -23,6 +23,17 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/home/media/media.lawrence.com/static/"
+STATIC_ROOT = '/usr/share/nginx/chicagojustice'
+
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+# TODO: fix nginx config to serve out of separate static dir
+STATIC_URL = '/'
+
 DATABASES = {
     'default': {
         #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -34,9 +45,3 @@ DATABASES = {
         'PORT': '',
     }
 }
-
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/usr/share/nginx/chicagojustice'

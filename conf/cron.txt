@@ -1,16 +1,12 @@
-# Setup the web-server user's cron to collect the news articles.
-# The user from the buildout config is: www-data
-# Run the newspaper scrapers every 6 hours
-
+# collect news articles every 6 hours
 48 0-23/6 * * *   /home/cjp/env/chicagojustice/bin/python /home/cjp/sites/chicago-justice/cjp/manage.py runscrapers > /home/cjp/log/runScrapers.log
 
+# Once a day, dump PG table to files in an SFTP-accessible directory
+0 2 * * * /home/cjp/sites/chicago-justice/cjp/scripts/dumpArticleTables.sh
 
-# Run CPD scraper at 2 AM
-# On the 1st and 15th of the month, rebuild as far back 
-# as possible to retrieve any old updated information
-
+# Run CPD scraper at 2 AM on the 1st and 15th of the month (Currently unused)
 0 2 2-14,16-31 * * /home/cjp/env/chicagojustice/bin/python /home/cjp/sites/chicago-justice/cjp/manage.py runCpdScraper > /home/cjp/log/cpdScraper.log
-
 0 2 1,15 * *  /home/cjp/env/chicagojustice/bin/python /home/cjp/sites/chicago-justice/cjp/manage.py runCpdScraper --rebuild > /home/cjp/log/cpdScraper_rebuild.log
+
 ~
 ~

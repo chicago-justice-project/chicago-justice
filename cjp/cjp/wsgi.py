@@ -7,6 +7,6 @@ from django.core.wsgi import get_wsgi_application
 #sys.path.append('/home/cjp/sites/chicago-justice/cjp')
 sys.stdout = sys.stderr
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cjp.settings.local")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cjp.settings.production")
 
 application = get_wsgi_application()
