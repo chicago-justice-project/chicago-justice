@@ -1,2 +1,2 @@
-export CJP_DJANGO_DEVELOPMENT=TestConfig_1
+export DJANGO_SETTINGS_MODULE=cjp.settings.local
 ./manage.py runserver

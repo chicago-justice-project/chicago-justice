@@ -1,5 +1,7 @@
 {% extends "common/base.html" %}
 
+{% load static from staticfiles %}
+
 {% block title %}
     Articles
 {% endblock %}
@@ -78,10 +80,10 @@
                         <td class="listTableDataCell">{{ article.get_feedname_display }}</td>
                         <td class="listTableDataCell" style="text-align:center;">
                             {% if article.relevant %}
-                                <img src="{{ STATIC_URL }}good_checkmark.png" alt="crime related" />
-                            {% else %} 
-                                <img src="{{ STATIC_URL }}bad_x.png" alt="not crime related" />
-                            {% endif %} 
+                                <img src="{% static "good_checkmark.png" %}" alt="crime related" />
+                            {% else %}
+                                <img src="{% static "bad_x.png" %}" alt="not crime related" />
+                            {% endif %}
                         </td>
                         <td class="listTableDataCell">
                             {% for category in article.categories.all %}

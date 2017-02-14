@@ -1,3 +1,4 @@
+import datetime
 from crimedata.models import CrimeReport
 from newsarticles.models import Article, FEED_NAMES, Category
 from django.db import connection
@@ -58,6 +59,10 @@ def monthlyCounts(request):
                           context_instance=RequestContext(request))
     
 def dailyCounts(request):
+    end_date = datetime.datetime.now()
+    start_date = end_date - datetime.timedelta(days=60)
+    date_range = (start_date, end_date)
+
     data = {}
     
     data['dayCrimeReport'] = CrimeReport.objects.extra(
@@ -66,7 +71,7 @@ def dailyCounts(request):
             
             
     data['dayFeeds'] = [
-            (fullname, Article.objects.filter(feedname=feedId, relevant=True).extra(
+            (fullname, Article.objects.filter(feedname=feedId, relevant=True, created__range=date_range).extra(
                                            select={'the_year' :  'EXTRACT(year FROM created)',
                                                     'the_month': 'EXTRACT(month FROM created)',
                                                     'the_day' :  'EXTRACT(day FROM created)',
@@ -76,7 +81,7 @@ def dailyCounts(request):
         ]
             
     data['days'] = [
-            (fullname, Article.objects.filter(feedname=feedId, relevant=True).extra(
+            (fullname, Article.objects.filter(feedname=feedId, relevant=True, created__range=date_range).extra(
                                             select={'the_year' : 'EXTRACT(year FROM created)',
                                                     'the_month': 'EXTRACT(month FROM created)',
                                                     'the_date' : 'EXTRACT(day FROM created)'}

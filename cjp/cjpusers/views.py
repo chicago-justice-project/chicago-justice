@@ -1,4 +1,4 @@
-from settings import CJP_ROOT
+from cjp.settings.base import CJP_ROOT      # TODO: don't rely on this
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth.models import User

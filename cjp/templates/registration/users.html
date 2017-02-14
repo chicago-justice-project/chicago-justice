@@ -1,5 +1,7 @@
 {% extends "common/base.html" %}
 
+{% load static from staticfiles %}
+
 {% block title %}
     Admin: Manage Users
 {% endblock %}
@@ -58,17 +60,17 @@
                         <td class="listTableDataCell">{{ user.email }}</td>
                         <td class="listTableDataCell" style="text-align:center;">
                             {% if user.is_superuser %}
-                                <img src="{{ STATIC_URL }}good_checkmark.png" alt="superuser" />
-                            {% else %} 
-                                <img src="{{ STATIC_URL }}bad_x.png" alt="regular user" />
-                            {% endif %} 
+                                <img src="{% static "good_checkmark.png" %}" alt="superuser" />
+                            {% else %}
+                                <img src="{% static "bad_x.png" %}" alt="regular user" />
+                            {% endif %}
                         </td>
                         <td class="listTableDataCell" style="text-align:center;">
                             {% if user.is_active %}
-                                <img src="{{ STATIC_URL }}good_checkmark.png" alt="superuser" />
-                            {% else %} 
-                                <img src="{{ STATIC_URL }}bad_x.png" alt="regular user" />
-                            {% endif %} 
+                                <img src="{% static "good_checkmark.png" %}" alt="superuser" />
+                            {% else %}
+                                <img src="{% static "bad_x.png" %}" alt="regular user" />
+                            {% endif %}
                         </td>
                         <td class="listTableDataCell">
                             <a href="{% url 'userUpdate' user.id %}">update</a>
