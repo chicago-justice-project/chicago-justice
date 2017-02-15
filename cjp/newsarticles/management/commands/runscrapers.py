@@ -9,6 +9,7 @@ from newsarticles.scrapers import (
     chicagoReaderScraper,
     chicagoReporterScraper,
     crainsScraper,
+    dailyHeraldScraper,
     defenderScraper,
     dnaInfoScraper,
     foxchicagoScraper,
@@ -28,7 +29,8 @@ scrapers = (chicagoReporterScraper,
             chicagoMagazineScraper, defenderScraper, chicagoNowScraper,
             wttwScraper, cbslocalScraper, wbezScraper, nbclocalScraper,
             abclocalScraper, wgntvScraper, beachwoodScraper,
-            tribuneScraper, suntimesScraper, foxchicagoScraper
+            tribuneScraper, suntimesScraper, foxchicagoScraper,
+            dailyHeraldScraper,
             )
 
 from newsarticles.models import Article
