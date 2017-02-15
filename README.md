@@ -88,6 +88,9 @@ In some cases (ie. model changes) a schema migration is required. Migrate via
 migrations. See the Django docs for details on schema migrations:
 <https://docs.djangoproject.com/en/1.10/topics/migrations/>
 
+To copy static files into place for production, you must run
+`python manage.py collectstatic`.
+
 ## Accessing the data via SFTP
 
 The script `dumpArticleTables.sh` currently runs every 24 hours. This script exports the article and category tables in CSV format, then packs them into a tar archive in `/home/sftp_users/files`.
