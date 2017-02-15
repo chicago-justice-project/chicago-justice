@@ -6,7 +6,6 @@ from newsarticles.scrapers import (
     cbslocalScraper,
     chicagoMagazineScraper,
     chicagoNowScraper,
-    chicagoJournalScraper,
     chicagoReaderScraper,
     chicagoReporterScraper,
     crainsScraper,
@@ -25,7 +24,7 @@ from newsarticles.scrapers import (
 
 scrapers = (chicagoReporterScraper,
             windyCityTimesScraper, wlsScraper, dnaInfoScraper,
-            chicagoReaderScraper, crainsScraper, chicagoJournalScraper,
+            chicagoReaderScraper, crainsScraper,
             chicagoMagazineScraper, defenderScraper, chicagoNowScraper,
             wttwScraper, cbslocalScraper, wbezScraper, nbclocalScraper,
             abclocalScraper, wgntvScraper, beachwoodScraper,

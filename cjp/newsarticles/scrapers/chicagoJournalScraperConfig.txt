@@ -1,4 +1,0 @@
-[config]
-feed_url = http://www.chicagojournal.com/News/Crime/RSS
-seconds_between_queries = 1
-printLog = 1
