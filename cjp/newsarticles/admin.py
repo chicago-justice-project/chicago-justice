@@ -6,5 +6,10 @@ class ArticleAdmin(admin.ModelAdmin):
 
 admin.site.register(Article, ArticleAdmin)
 
+class NewsSourceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'short_name',)
+
+admin.site.register(NewsSource, NewsSourceAdmin)
+
 admin.site.register(Category)
 
