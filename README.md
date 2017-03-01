@@ -50,6 +50,12 @@ export DJANGO_SETTINGS_MODULE=cjp.settings.local    # Change config from product
 ./manage.py runscrapers
 ```
 
+To run a single scraper, enter the scraper name as an argument, e.g.:
+
+```
+./manage.py runscrapers crainsScraper
+```
+
 For local operation, you must specify local config via `DJANGO_SETTINGS_MODULE` env var, e.g.
 
 ```
@@ -87,6 +93,9 @@ In some cases (ie. model changes) a schema migration is required. Migrate via
 `./manage.py migrate`. Be sure to source the virtual environment before running
 migrations. See the Django docs for details on schema migrations:
 <https://docs.djangoproject.com/en/1.10/topics/migrations/>
+
+To copy static files into place for production, you must run
+`python manage.py collectstatic`.
 
 ## Accessing the data via SFTP
 

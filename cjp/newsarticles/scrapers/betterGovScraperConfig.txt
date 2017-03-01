@@ -1,0 +1,4 @@
+[config]
+feed_url = http://www.bettergov.org/criminal-justice
+seconds_between_queries = 1
+printLog = 1

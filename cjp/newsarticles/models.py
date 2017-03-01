@@ -21,6 +21,8 @@ FEED_WINDYCITYTIMES   = 'V'
 FEED_WTTW             = 'W'
 FEED_CHICAGOREPORTER  = 'X'
 FEED_WBEZ             = 'Z'
+FEED_DAILYHERALD      = 'a'     # TODO: change feed ID to more than one char
+FEED_BETTERGOV        = 'b'
 FEED_NAMES = (
     (FEED_ABCLOCAL       , 'ABC Local'),
     (FEED_BEACHWOOD      , 'Beachwood Reporter'),
@@ -43,6 +45,8 @@ FEED_NAMES = (
     (FEED_WINDYCITYTIMES , 'Windy City Times'),
     (FEED_WLSAM          , 'WLS AM'),
     (FEED_WTTW           , 'WTTW'),
+    (FEED_DAILYHERALD    , 'Daily Herald'),
+    (FEED_BETTERGOV      , 'Better Government Association'),
 )
 
 class Category(models.Model):
