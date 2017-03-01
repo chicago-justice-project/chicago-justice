@@ -3,7 +3,7 @@
 import abc
 import ConfigParser
 import exceptions
-import html2text
+import newsarticles.utils.html2text as html2text
 import httplib
 import os
 import re
