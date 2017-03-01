@@ -1,4 +1,7 @@
-from django.contrib.gis.db import models
+from django.contrib.gis.db import models as gismodels
+from django.db import models
+
+from newsarticles.basescraper import BaseScraper
 
 FEED_ABCLOCAL         = 'A'
 FEED_NBCLOCAL         = 'B'
@@ -49,6 +52,28 @@ FEED_NAMES = (
     (FEED_BETTERGOV      , 'Better Government Association'),
 )
 
+class NewsSource(models.Model):
+    name = models.CharField(max_length=256)
+    short_name = models.CharField(max_length=256)
+    legacy_feed_id = models.CharField(max_length=8, blank=True, db_index=True)
+
+# dict of int->scraper class
+SCRAPER_TYPES = {
+    0: BaseScraper,
+}
+
+SCRAPER_TYPE_CHOICES = [(k, v.__name__) for k, v in SCRAPER_TYPES.iteritems()]
+
+class NewsScraper(models.Model):
+    short_name = models.CharField(max_length=256)
+    news_source = models.ForeignKey(NewsSource)
+    enabled = models.BooleanField(default=True)
+    scraper_type = models.PositiveSmallIntegerField(choices=SCRAPER_TYPE_CHOICES)
+
+    # JSON serialized config for scraper
+    config = models.TextField()
+
+
 class Category(models.Model):
     category_name = models.CharField(max_length=256)
     abbreviation = models.CharField(max_length=5)
@@ -61,7 +86,9 @@ class Category(models.Model):
         ordering = ['abbreviation']
 
 class Article(models.Model):
+    # TODO: remove feedname and migrate to news_source
     feedname = models.CharField(max_length=1, choices=FEED_NAMES, db_index=True)
+    news_source = models.ForeignKey(NewsSource, null=True)
     url = models.CharField(max_length=1024, unique=True, db_index=True)
     orig_html = models.TextField()
     title = models.TextField()
@@ -70,6 +97,6 @@ class Article(models.Model):
     categories = models.ManyToManyField(Category)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     last_modified = models.DateTimeField(auto_now=True)
-    objects = models.GeoManager()
+    objects = gismodels.GeoManager()
 
 
