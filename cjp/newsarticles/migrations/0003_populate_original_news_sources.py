@@ -57,6 +57,9 @@ FEED_NAMES = (
 def populate_news_sources(apps, schema_editor):
     NewsSource = apps.get_model('newsarticles', 'NewsSource')
 
+    unknown_source = NewsSource(name='Unknown', short_name='unknown')
+    unknown_source.save()
+
     for (char_id, name) in FEED_NAMES:
         short_name = name.lower().replace(' ', '-')
         ns = NewsSource(name=name, short_name=short_name, legacy_feed_id=char_id)
@@ -68,11 +71,15 @@ def populate_articles(apps, schema_editor):
 
     # Cache sources
     sources = {}
+    unknown_source = None
     for ns in NewsSource.objects.all():
-        sources[ns.legacy_feed_id] = ns
+        if ns.legacy_feed_id:
+            sources[ns.legacy_feed_id] = ns
+        else:
+            unknown_source = ns
 
     for article in Article.objects.all():
-        article.news_source = sources[article.feedname]
+        article.news_source = sources.get(article.feedname, unknown_source)
         article.save(update_fields=['news_source'])
 
 

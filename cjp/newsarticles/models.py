@@ -86,8 +86,6 @@ class Category(models.Model):
         ordering = ['abbreviation']
 
 class Article(models.Model):
-    # TODO: remove feedname and migrate to news_source
-    feedname = models.CharField(max_length=1, choices=FEED_NAMES, db_index=True)
     news_source = models.ForeignKey(NewsSource, null=True)
     url = models.CharField(max_length=1024, unique=True, db_index=True)
     orig_html = models.TextField()
@@ -99,4 +97,6 @@ class Article(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     objects = gismodels.GeoManager()
 
+    # Deprecated, use news_source instead.
+    feedname = models.CharField(max_length=1, choices=FEED_NAMES, db_index=True)
 
