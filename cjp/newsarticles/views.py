@@ -1,4 +1,4 @@
-from newsarticles.models import Article, Category, FEED_NAMES
+from newsarticles.models import Article, Category, NewsSource
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import HttpResponse
 from django.db.models import Q, Max, Min
@@ -11,29 +11,36 @@ from datetime import datetime
 class ArticleForm(forms.Form):
     showAll = forms.BooleanField(label='Show Non-Crime',
                                  initial=False, required=False)
-    feedname = forms.ChoiceField(label='Source',
-                                 choices=((('ALL', 'All Feeds'),) + FEED_NAMES),
-                                 initial='ALL', required=False)
+
+    news_source = forms.ModelChoiceField(label='Source',
+                                         required=False,
+                                         empty_label='All Sources',
+                                         queryset=NewsSource.objects.all())
+
     startDate = forms.DateField(label='Start Date',
                                 widget=forms.DateInput(format="%m/%d/%Y"),
                                 required=False)
+
     endDate = forms.DateField(label='End Date',
-                                widget=forms.DateInput(format="%m/%d/%Y"),
-                                required=False)
+                              widget=forms.DateInput(format="%m/%d/%Y"),
+                              required=False)
+
     searchTerms = forms.CharField(label='Search Terms', required=False,
                                   max_length=1024)
-    category = forms.ModelMultipleChoiceField(label='Category',
-                                              required=False, queryset=Category.objects.all())
 
+    category = forms.ModelMultipleChoiceField(label='Category',
+                                              required=False, 
+                                              queryset=Category.objects.all())
 
 def articleList(request):
     form = ArticleForm(request.POST)
+    # TODO: put these into the form itself
     clearSearch = request.POST.get('clearSearch', "False") == "False"
     newSearch = request.POST.get('newSearch', "False") == "True"
 
     if clearSearch and newSearch and form.is_valid():
         showAll = form.cleaned_data['showAll']
-        feedname = form.cleaned_data['feedname']
+        news_source = form.cleaned_data['news_source']
         startDate = form.cleaned_data['startDate']
         endDate = form.cleaned_data['endDate']
         searchTerms = form.cleaned_data['searchTerms']
@@ -46,19 +53,19 @@ def articleList(request):
         request.session['article_hasSearch'] = True
 
         showAll = request.session['article_showAll']
-        feedname = request.session['article_feedname']
+        news_source = request.session['article_news_source']
         startDate = request.session['article_startDate']
         endDate = request.session['article_endDate']
         searchTerms = request.session['article_searchTerms']
         categories = request.session['article_category']
 
         form = ArticleForm({
-            'showAll' : showAll,
-            'feedname' : feedname,
-            'startDate' : startDate,
-            'endDate' : endDate,
-            'searchTerms' : searchTerms,
-            'categories' : categories
+            'showAll': showAll,
+            'news_source': news_source,
+            'startDate': startDate,
+            'endDate': endDate,
+            'searchTerms': searchTerms,
+            'categories': categories
         })
 
         try:
@@ -70,13 +77,12 @@ def articleList(request):
         form = ArticleForm()
 
         showAll = False
-        feedname = 'ALL'
+        news_source = None
         startDate = None
         endDate = None
         searchTerms = ''
         categories = []
 
-        # 3/2/2012 John Nicholson
         # added so paging works even when there is no search
         try:
             page = int(request.POST.get('page', 'invalid'))
@@ -86,7 +92,7 @@ def articleList(request):
         request.session['article_hasSearch'] = False
 
     request.session['article_showAll'] = showAll
-    request.session['article_feedname'] = feedname
+    request.session['article_news_source'] = news_source
     request.session['article_startDate'] = startDate
     request.session['article_endDate'] = endDate
     request.session['article_searchTerms'] = searchTerms
@@ -96,8 +102,8 @@ def articleList(request):
     article_list = Article.objects.all().distinct().order_by('-created')
     if not showAll:
         article_list = article_list.filter(relevant=True)
-    if feedname != '' and feedname != 'ALL':
-        article_list = article_list.filter(feedname=feedname)
+    if news_source:
+        article_list = article_list.filter(news_source=news_source)
     if startDate != None:
         startDate = datetime.strptime("%s 00:00:00" % startDate, "%Y-%m-%d %H:%M:%S")
         article_list = article_list.filter(created__gte=startDate)
@@ -109,22 +115,26 @@ def articleList(request):
     if categories:
         article_list = article_list.filter(categories__in = categories)
 
-    paginator = Paginator(article_list, 20) # Show 20 articles per page
-
-    try:
-        articles = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        articles = paginator.page(paginator.num_pages)
-
     dateRange = Article.objects.all().aggregate(minDate = Min('created'),
                                                 maxDate = Max('created'))
 
-    data = {'articles' : articles,
-            'form' : form,
-            'dateRange' : dateRange,
-           }
+    data = {
+        'articles': _paginate(article_list, 20, page),
+        'form': form,
+        'dateRange': dateRange,
+    }
+
     return render_to_response('newsarticles/articleList.html', data,
                               context_instance=RequestContext(request))
+
+def _paginate(iter, count, pagenum):
+    paginator = Paginator(iter, count)
+    try:
+        out = paginator.page(pagenum)
+    except (EmptyPage, InvalidPage):
+        out = paginator.page(paginator.num_pages)
+
+    return out
 
 
 def articleView(request, articleId, action=None):
@@ -233,9 +243,10 @@ def manageCategoryView(request, category_id=None):
                               context_instance=RequestContext(request))
 
 class ArticleListBuilderForm(forms.Form):
-    feedname = forms.ChoiceField(label='Source',
-                                 choices=((('ALL', 'All Feeds'),) + FEED_NAMES),
-                                 initial='ALL', required=False)
+    news_source = forms.ModelChoiceField(label='Source',
+                                         required=False,
+                                         empty_label='All Sources',
+                                         queryset=NewsSource.objects.all())
     startDate = forms.DateField(label='Start Date',
                                 widget=forms.DateInput(format="%m/%d/%Y"),
                                 required=False)
@@ -252,13 +263,13 @@ def emailArticleListBuilder(request):
     articles = []
     if request.POST and articleListBuilderForm.is_valid():
         didSearch = True
-        feedname = articleListBuilderForm.cleaned_data['feedname']
+        news_source = articleListBuilderForm.cleaned_data['news_source']
         startDate = articleListBuilderForm.cleaned_data['startDate']
         endDate = articleListBuilderForm.cleaned_data['endDate']
 
         articles = Article.objects.filter(relevant=True).distinct().order_by('-created')
-        if feedname != '' and feedname != 'ALL':
-            articles = articles.filter(feedname=feedname)
+        if news_source:
+            articles = articles.filter(news_source=news_source)
         if startDate != None:
             startDate = datetime.strptime("%s 00:00:00" % startDate, "%Y-%m-%d %H:%M:%S")
             articles = articles.filter(created__gte=startDate)
@@ -296,16 +307,15 @@ def emailArticleList(request):
     if not (request.user.is_authenticated() and request.user.is_superuser):
         return redirect('/')
 
-
-
     if request.POST:
         articleIds = request.POST.getlist('articleId')
         articles = Article.objects.filter(pk__in=articleIds).order_by('-created')
     else:
         articles = []
 
-    data = {'articles' : articles,
-            }
+    data = {
+        'articles' : articles,
+    }
 
     return render_to_response('newsarticles/emailArticleList.html', data,
                               context_instance=RequestContext(request))

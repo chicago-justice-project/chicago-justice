@@ -38,6 +38,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='article',
             name='news_source',
-            field=models.ForeignKey(to='newsarticles.NewsSource', null=True),
+            field=models.ForeignKey(to='newsarticles.NewsSource', null=True, db_index=True),
+        ),
+        migrations.AlterField(
+            model_name='article',
+            name='feedname',
+            field=models.CharField(max_length=1, editable=False, db_index=True),
         ),
     ]

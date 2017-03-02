@@ -4,6 +4,7 @@ import abc
 import ConfigParser
 import exceptions
 import newsarticles.utils.html2text as html2text
+from newsarticles.models import NewsSource
 import httplib
 import os
 import re
@@ -56,7 +57,7 @@ class FeedScraper(BasicScraper):
 
     def __init__(self, feedName, configFile, djangoModel):
         super(FeedScraper, self).__init__(configFile, djangoModel)
-        self.__feedName = feedName
+        self._news_source = NewsSource.objects.get(legacy_feed_id=feedName)
 
     @abc.abstractmethod
     def run(self):
@@ -144,13 +145,13 @@ class FeedScraper(BasicScraper):
         storyText = "\n".join(modifiedLines)
         try:
             article = self.model.Article.objects.get(url=url,
-                                                     feedname=self.__feedName)
+                                                     news_source=self._news_source)
             article.orig_html = orig_html
             article.title = title
             article.bodytext = storyText
             #print "update"
         except self.model.Article.DoesNotExist, e:
-            article = self.model.Article(feedname=self.__feedName,
+            article = self.model.Article(news_source=self._news_source,
                                          url=url,
                                          orig_html=orig_html,
                                          title=title,

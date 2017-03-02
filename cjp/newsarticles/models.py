@@ -57,6 +57,9 @@ class NewsSource(models.Model):
     short_name = models.CharField(max_length=256)
     legacy_feed_id = models.CharField(max_length=8, blank=True, db_index=True)
 
+    def __unicode__(self):
+        return self.name
+
 # dict of int->scraper class
 SCRAPER_TYPES = {
     0: BaseScraper,
@@ -86,7 +89,7 @@ class Category(models.Model):
         ordering = ['abbreviation']
 
 class Article(models.Model):
-    news_source = models.ForeignKey(NewsSource, null=True)
+    news_source = models.ForeignKey(NewsSource, null=True, db_index=True)
     url = models.CharField(max_length=1024, unique=True, db_index=True)
     orig_html = models.TextField()
     title = models.TextField()
@@ -98,5 +101,5 @@ class Article(models.Model):
     objects = gismodels.GeoManager()
 
     # Deprecated, use news_source instead.
-    feedname = models.CharField(max_length=1, choices=FEED_NAMES, db_index=True)
+    feedname = models.CharField(max_length=1, editable=False, db_index=True)
 
