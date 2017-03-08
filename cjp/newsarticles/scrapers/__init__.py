@@ -88,18 +88,3 @@ def run_scraper_module(scraper_module):
         print("ERROR: Reason %s" % e)
 
 
-foo = 'ha'
-
-#import pkgutil
-#import inspect
-#
-#for loader, name, is_pkg in pkgutil.walk_packages(__path__):
-#    module = loader.find_module(name).load_module(name)
-#
-#    for name, value in inspect.getmembers(module):
-#        if name.startswith('__'):
-#            continue
-#        print(name)
-#
-#        globals()[name] = value
-#        __all__.append(name)

@@ -4,6 +4,7 @@ from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 from settings.base import CJP_ROOT
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib import admin
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -19,7 +20,7 @@ urlpatterns = [
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
 
     # user login and admin
     url(r'^user/login/$', 'django.contrib.auth.views.login', name='loginView'),

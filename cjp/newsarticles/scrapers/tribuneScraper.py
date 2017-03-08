@@ -5,7 +5,6 @@ CONFIGURATION_FILENAME = "tribuneScraperConfig.txt"
 from bs4 import BeautifulSoup, Comment
 import feedparser
 import httplib
-import html2text
 import scraper
 import sys
 import os

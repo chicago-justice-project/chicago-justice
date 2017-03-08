@@ -1,0 +1,3 @@
+
+class BaseScraper(object):
+    pass
