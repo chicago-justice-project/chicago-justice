@@ -65,23 +65,6 @@ def populate_news_sources(apps, schema_editor):
         ns = NewsSource(name=name, short_name=short_name, legacy_feed_id=char_id)
         ns.save()
 
-def populate_articles(apps, schema_editor):
-    Article = apps.get_model('newsarticles', 'Article')
-    NewsSource = apps.get_model('newsarticles', 'NewsSource')
-
-    # Cache sources
-    sources = {}
-    unknown_source = None
-    for ns in NewsSource.objects.all():
-        if ns.legacy_feed_id:
-            sources[ns.legacy_feed_id] = ns
-        else:
-            unknown_source = ns
-
-    for article in Article.objects.all():
-        article.news_source = sources.get(article.feedname, unknown_source)
-        article.save(update_fields=['news_source'])
-
 
 class Migration(migrations.Migration):
 
@@ -91,5 +74,4 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(populate_news_sources),
-        migrations.RunPython(populate_articles),
     ]

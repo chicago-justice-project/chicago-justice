@@ -1,2 +1,3 @@
 *.pyc
 runScrapers.log
+.vscode
