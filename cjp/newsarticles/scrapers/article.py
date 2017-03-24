@@ -1,10 +1,11 @@
+from __future__ import unicode_literals
 import logging
 import time
 import html2text
 
 from django.core.exceptions import ObjectDoesNotExist
 from newsarticles.models import Article, NewsSource, ScraperResult
-from .util import get_rss_links, get_html_links, load_html
+from .util import get_rss_links, get_html_links, load_html, get_rss_articles
 
 FAKE_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'
 
@@ -53,6 +54,9 @@ class ArticleScraper(object):
         self.enabled = config.get('enabled', True)
         self.rss_index = config.get('rss_index', False)
         self.rss_articles = config.get('rss_articles', False)
+
+        self.html2text = html2text.HTML2Text()
+        self.html2text.body_width = 80
 
         news_source_name = config['news_source']
         try:
@@ -115,11 +119,30 @@ class ArticleScraper(object):
         return self.read_html_articles(urls, skip_existing)
 
     def read_rss_articles(self, skip_existing):
-        pass
+        for rss_article in get_rss_articles(self.index_url):
+            yield self.process_rss_article(rss_article)
 
     def read_html_articles(self, urls, skip_existing):
         for url in urls:
             yield self.process_link(url, skip_existing)
+
+    def process_rss_article(self, rss_article):
+        url = rss_article.link
+        try:
+            existing_article = Article.objects.get(url=url)
+        except ObjectDoesNotExist:
+            existing_article = None
+
+        if existing_article:
+            return ArticleResult(url, status=ArticleResult.SKIPPED)
+
+        article = Article(url=url, news_source=self.news_source, relevant=True)
+        article.title = rss_article.title
+        article.author = rss_article.author
+        article.orig_html = rss_article.content[0]['value']
+        article.bodytext = self.html2text.handle(article.orig_html)
+
+        return ArticleResult(url=url, status=ArticleResult.CREATED, article=article)
 
     def process_link(self, url, skip_existing):
         '''Attempts to load a URL and extract a news story'''
@@ -155,9 +178,7 @@ class ArticleScraper(object):
             LOG.debug('Error parsing URL [%s]', url, exc_info=True)
             return ArticleResult(url, status=ArticleResult.ERROR, error=e)
 
-        converter = html2text.HTML2Text()
-        converter.body_width = 80
-        body_text = converter.handle(body_html)
+        body_text = self.html2text.handle(body_html)
 
         if existing_article:
             article = existing_article

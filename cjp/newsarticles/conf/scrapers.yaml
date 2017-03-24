@@ -1,16 +1,16 @@
 # Supported fields:
 # news_source: must match short_name of news_source Django model.
 #              If no match, a news source will be created.
-# index_url:
-# rss_index:
-# rss_articles:
-# fake_user_agent:
-# use_cookies:
-# title_selector:
-# body_selector:
-# body_exclude_selector:
-# body_combine_all: bool
-# author_selector:
+# index_url: URL of RSS feed or HTML index page
+# rss_index:  set to True if index_url refers to an RSS feed
+# rss_articles: set to True if index_url is an RSS feed with the complete
+#               article contents. Links won't be followed
+# fake_user_agent: if true, sets a browser-like user agent
+# use_cookies: if true, uses cookies with requests
+# title_selector: CSS selector for the title of the article. Default is the <title> tag
+# author_selector: CSS selector for the article author. Optional
+# body_selector: CSS selector for the article text
+# body_exclude_selector: CSS selector for elements to remove from the body.
 
 - news_source: abc-local
   index_url: http://abc7chicago.com/feed/
@@ -19,6 +19,10 @@
   author_selector: '[rel="author"]'
   body_selector: .body-text
 
+- news_source: beachwood-reporter
+  index_url: http://www.beachwoodreporter.com/atom.xml
+  rss_articles: True
+
 - news_source: better-government-association
   index_url: http://www.bettergov.org/criminal-justice
   rss_index: False
@@ -26,6 +30,14 @@
   title_selector: '.node-article h1'
   author_selector: '.field-name-field-article-author .name'
   body_selector: '.field-name-body'
+
+- news_source: cbs-local
+  index_url: http://chicago.cbslocal.com/feed/
+  rss_articles: True
+
+- news_source: chicago-defender
+  index_url: http://chicagodefender.com/feed/
+  rss_articles: True
 
 - news_source: chicago-magazine
   index_url: http://www.chicagomag.com/rss/

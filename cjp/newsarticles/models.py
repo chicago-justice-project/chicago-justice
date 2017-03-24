@@ -10,7 +10,7 @@ class NewsSource(models.Model):
     legacy_feed_id = models.CharField(max_length=8, blank=True, db_index=True)
 
     def __unicode__(self):
-        return "{} ({})".format(self.name, self.short_name)
+        return self.name
 
     class Meta:
         ordering = ['name']

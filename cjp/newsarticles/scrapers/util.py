@@ -4,6 +4,10 @@ from cookielib import CookieJar
 import feedparser
 from bs4 import BeautifulSoup
 
+def get_rss_articles(url):
+    feed = feedparser.parse(url)
+    return feed.entries
+
 def get_rss_links(url):
     feed = feedparser.parse(url)
     links = []
@@ -41,7 +45,8 @@ def load_html(url, with_cookies=False, headers=None):
     if headers:
         opener.addheaders = headers
 
-    response = opener.open(url)
+    urlstr = url.encode('utf-8')
+    response = opener.open(urlstr)
     html = response.read().decode('utf-8', errors='replace')
 
     soup = BeautifulSoup(html, 'html.parser')
