@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import gc
 
 def queryset_iterator(queryset, chunksize=1000):
-    '''''
+    """
     Iterate over a Django Queryset ordered by the primary key
 
     This method loads a maximum of chunksize (default: 1000) rows in it's
@@ -13,11 +14,15 @@ def queryset_iterator(queryset, chunksize=1000):
     classes.
 
     Note that the implementation of the iterator does not support ordered query sets.
-    '''
-    pk = 0
-    last_pk = queryset.order_by('-pk')[0].pk
+    """
     queryset = queryset.order_by('pk')
-    while pk < last_pk:
+    last_item = queryset.last()
+
+    if not last_item:
+        return
+
+    pk = 0
+    while pk < last_item.pk:
         for row in queryset.filter(pk__gt=pk)[:chunksize]:
             pk = row.pk
             yield row

@@ -1,0 +1,145 @@
+# Supported fields:
+# news_source: must match short_name of news_source Django model.
+#              If no match, a news source will be created.
+# index_url:
+# rss_index:
+# rss_articles:
+# fake_user_agent:
+# use_cookies:
+# title_selector:
+# body_selector:
+# body_exclude_selector:
+# body_combine_all: bool
+# author_selector:
+
+- news_source: abc-local
+  index_url: http://abc7chicago.com/feed/
+  rss_index: True
+  title_selector: .headline
+  author_selector: '[rel="author"]'
+  body_selector: .body-text
+
+- news_source: better-government-association
+  index_url: http://www.bettergov.org/criminal-justice
+  rss_index: False
+  index_url_selector: '.node-article a'
+  title_selector: '.node-article h1'
+  author_selector: '.field-name-field-article-author .name'
+  body_selector: '.field-name-body'
+
+- news_source: chicago-magazine
+  index_url: http://www.chicagomag.com/rss/
+  rss_index: True
+  title_selector: h1.headline
+  author_selector: .byline
+  body_selector: '.content.post'
+  exclude_selector: '#share-mini, #share, #related-articles, .comments-block, #footer-newsletter-subscribe'
+
+- news_source: chicago-now
+  index_url: http://www.chicagonow.com/rss/global
+  rss_index: True
+  title_selector: h2.post-title
+  author_selector: .author-name
+  body_selector: '.post-content'
+
+- news_source: chicago-reader
+  index_url: http://www.chicagoreader.com/chicago/Rss.xml?section=846996
+  rss_index: True
+  title_selector: h1.headline
+  author_selector: '[rel="author"]'
+  body_selector: '#storyBody'
+
+- news_source: chicago-reporter
+  index_url: http://chicagoreporter.com/feed/
+  rss_index: True
+  fake_user_agent: True
+  title_selector: .entry-title
+  author_selector: '[rel="author"]'
+  body_selector: '[itemprop="articleBody"]'
+
+- news_source: chicago-sun-times
+  index_url: http://chicago.suntimes.com/section/crime/feed/
+  rss_index: True
+  title_selector:
+  author_selector: .post-meta-author
+  body_selector: .post-content
+
+- news_source: chicago-tribune
+  index_url: http://www.chicagotribune.com/rss2.0.xml
+  rss_index: True
+  title_selector: '[itemprop="headline"]'
+  author_selector: '[itemprop="author"]'
+  body_selector: '[itemprop="articleBody"]'
+
+- news_source: crains
+  index_url: http://www.chicagobusiness.com/section/news-all&template=rss&mime=xml
+  rss_index: True
+  use_cookies: True
+  title_selector: '#seo-headline-dest'
+  author_selector: '[rel="author"]'
+  body_selector: '#left-container'
+
+- news_source: daily-herald
+  index_url: http://www.dailyherald.com/rss/feed/?feed=news_chicago
+  rss_index: True
+  title_selector: '#head'
+  author_selector: .plainByline
+  body_selector: '[itemprop="articleBody"]'
+
+- news_source: dnainfo-chicago
+  index_url: https://www.dnainfo.com/chicago/topics/crime-mayhem.rss
+  rss_index: True
+  title_selector: .story-headline
+  author_selector: .reporter-display .name
+  body_selector: .story .entry
+
+- news_source: fox-chicago
+  index_url: http://www.fox32chicago.com/news/local/crime
+  rss_index: False
+  index_url_selector: a.story-link
+  title_selector: .story-header h1
+  body_selector: .story-content
+
+- news_source: nbc-local
+  index_url: http://www.nbcchicago.com/news/local/?rss=y
+  rss_index: True
+  title_selector: h1.headline
+  author_selector: article .byline
+  body_selector: '[itemprop="articleBody"]'
+
+- news_source: wbez
+  index_url: http://feeds.feedburner.com/wbez
+  rss_index: True
+  title_selector: article h1
+  author_selector: article .byline
+  body_selector: article .article_copy
+  exclude_selector: '#inpage_ad_unit, .inpage_newsletter_signup'
+
+- news_source: wgn-tv
+  index_url: http://wgntv.com/category/news/feed/
+  rss_index: True
+  title_selector: h1.entry-title
+  author_selector: '[rel="author"]'
+  body_selector: .entry-content
+  exclude_selector: .related-module
+
+- news_source: windy-city-times
+  index_url: http://www.windycitymediagroup.com/gaynewsarticles.php
+  rss_index: False
+  index_url_selector: a.page-c-head
+  title_selector: .fp-newshead
+  body_selector: '[colspan="2"] .article-body'
+
+- news_source: wls-am
+  index_url: http://www.wlsam.com/feed/
+  rss_index: True
+  title_selector: .Clean-Single article .entry-title
+  body_selector: .entry-content
+
+- news_source: wttw
+  index_url: https://feeds.feedburner.com/ChicagoTonight
+  rss_index: True
+  rss_content: False
+  title_selector: .article-title
+  author_selector: .node-article .submitted a
+  body_selector: .main-container .node-article .content

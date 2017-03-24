@@ -1,7 +1,15 @@
-from django.core.management.base import BaseCommand, CommandError
+import os.path as path
+import logging
+import yaml
+from django.core.management.base import BaseCommand
 
-from newsarticles.scrapers import run_scraper, run_all
-from newsarticles.models import Article
+from newsarticles.scrapers import scrape_articles
+
+LOG = logging.getLogger(__name__)
+
+SCRAPER_CONFIG = '../../conf/scrapers.yaml'
+CONFIG_PATH = path.abspath(path.join(path.dirname(__file__), SCRAPER_CONFIG))
+
 
 class Command(BaseCommand):
     help = "Run the news article scrapers, writing to the database"
@@ -10,9 +18,21 @@ class Command(BaseCommand):
         parser.add_argument('scraper', nargs='?')
 
     def handle(self, *args, **options):
-        if (options['scraper']):
-            print('Running scraper %s' % options['scraper'])
-            run_scraper(options['scraper'])
+        cfg_file = file(CONFIG_PATH, 'r')
+        all_scrapers = yaml.load(cfg_file)
+
+        if options['scraper']:
+            scraper_name = options['scraper']
+            LOG.info('Running scrapers for news source %s', scraper_name)
+
+            matched_scrapers = [scraper for scraper in all_scrapers
+                                if scraper.get('news_source') == scraper_name]
         else:
-            print('Running all scrapers')
-            run_all()
+            matched_scrapers = all_scrapers
+            LOG.info('Running all scrapers')
+
+        if not len(matched_scrapers):
+            LOG.critical('No matching scrapers found')
+            return
+
+        scrape_articles(matched_scrapers)

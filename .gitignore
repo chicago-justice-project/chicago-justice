@@ -1,3 +1,5 @@
 *.pyc
-runScrapers.log
+*.log
 .vscode
+.env
+
