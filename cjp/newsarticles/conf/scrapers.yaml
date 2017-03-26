@@ -60,6 +60,7 @@
   title_selector: h1.headline
   author_selector: '[rel="author"]'
   body_selector: '#storyBody'
+  exclude_selsctor: .teads-inread
 
 - news_source: chicago-reporter
   index_url: http://chicagoreporter.com/feed/
@@ -82,6 +83,7 @@
   title_selector: '[itemprop="headline"]'
   author_selector: '[itemprop="author"]'
   body_selector: '[itemprop="articleBody"]'
+  exclude_selector: .trb_embed
 
 - news_source: crains
   index_url: http://www.chicagobusiness.com/section/news-all&template=rss&mime=xml
@@ -111,6 +113,7 @@
   index_url_selector: a.story-link
   title_selector: .story-header h1
   body_selector: .story-content
+  exclude_selector: '#relatedStoriesDiv'
 
 - news_source: nbc-local
   index_url: http://www.nbcchicago.com/news/local/?rss=y
@@ -118,6 +121,7 @@
   title_selector: h1.headline
   author_selector: article .byline
   body_selector: '[itemprop="articleBody"]'
+  exclude_selector: '.articleAutoFooter'
 
 - news_source: wbez
   index_url: http://feeds.feedburner.com/wbez
@@ -125,7 +129,7 @@
   title_selector: article h1
   author_selector: article .byline
   body_selector: article .article_copy
-  exclude_selector: '#inpage_ad_unit, .inpage_newsletter_signup'
+  exclude_selector: '#inpage_ad_unit, .inpage_newsletter_signup, .share_bar'
 
 - news_source: wgn-tv
   index_url: http://wgntv.com/category/news/feed/
@@ -133,7 +137,7 @@
   title_selector: h1.entry-title
   author_selector: '[rel="author"]'
   body_selector: .entry-content
-  exclude_selector: .related-module
+  exclude_selector: .related-module, .ooyala-container
 
 - news_source: windy-city-times
   index_url: http://www.windycitymediagroup.com/gaynewsarticles.php
@@ -146,12 +150,12 @@
   index_url: http://www.wlsam.com/feed/
   rss_index: True
   title_selector: .Clean-Single article .entry-title
-  body_selector: .entry-content
+  body_selector: '[itemprop="text"]'
 
 - news_source: wttw
   index_url: https://feeds.feedburner.com/ChicagoTonight
   rss_index: True
-  rss_content: False
+  index_url_selector: 'feedburner_origlink'
   title_selector: .article-title
   author_selector: .node-article .submitted a
   body_selector: .main-container .node-article .content

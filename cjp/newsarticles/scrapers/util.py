@@ -8,11 +8,13 @@ def get_rss_articles(url):
     feed = feedparser.parse(url)
     return feed.entries
 
-def get_rss_links(url):
+def get_rss_links(url, link_selector):
     feed = feedparser.parse(url)
     links = []
     for item in feed.entries:
-        links.append(item.link)
+        link = item.get(link_selector)
+        if link:
+            links.append(link)
     return links
 
 def get_html_links(url, link_selector):

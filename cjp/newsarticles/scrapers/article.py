@@ -41,7 +41,12 @@ def scrape_articles(scrapers):
     for cfg in scrapers:
         LOG.info('Running scraper %s', cfg)
         scraper = ArticleScraper(config=cfg)
-        scraper.run()
+        result = scraper.run()
+        if result.success:
+            LOG.info('%s - successful added=%i error=%i',
+                     result.news_source, result.added_count, result.error_count)
+        else:
+            LOG.warn('%s - failed: %s', result.news_source, result.output)
 
 
 class ArticleScraper(object):
@@ -49,14 +54,22 @@ class ArticleScraper(object):
     index page, article title, and article text. Also supports RSS indexes.'''
     def __init__(self, config=None):
         config = config or dict()
-        self.config = config
         self.index_url = config['index_url']
         self.enabled = config.get('enabled', True)
         self.rss_index = config.get('rss_index', False)
         self.rss_articles = config.get('rss_articles', False)
+        self.index_url_selector = config.get('index_url_selector', 'link')
+        self.fake_user_agent = config.get('fake_user_agent', False)
+        self.use_cookies = config.get('use_cookies', False)
+
+        self.title_selector = config.get('title_selector', None)
+        self.body_selector = config.get('body_selector', None)
+        self.author_selector = config.get('author_selector', None)
+        self.exclude_selector = config.get('exclude_selector', None)
 
         self.html2text = html2text.HTML2Text()
         self.html2text.body_width = 80
+        self.html2text.inline_links = False
 
         news_source_name = config['news_source']
         try:
@@ -89,7 +102,15 @@ class ArticleScraper(object):
 
     def run(self, delay_sec=1, save=True, skip_existing=True):
         results = []
-        for result in self.read_articles(skip_existing):
+        try:
+            articles = self.read_articles(skip_existing)
+        except Exception, e:
+            result = ScraperResult(news_source=self.news_source, success=False)
+            result.output = 'Error getting article listing: {}'.format(e)
+            result.save()
+            return result
+
+        for result in articles:
             LOG.debug('result: %s', result)
 
             if save and result.article and result.success:
@@ -112,9 +133,9 @@ class ArticleScraper(object):
             return self.read_rss_articles(skip_existing)
 
         if self.rss_index:
-            urls = get_rss_links(self.index_url)
+            urls = get_rss_links(self.index_url, self.index_url_selector)
         else:
-            urls = get_html_links(self.index_url, self.config['index_url_selector'])
+            urls = get_html_links(self.index_url, self.index_url_selector)
 
         return self.read_html_articles(urls, skip_existing)
 
@@ -156,13 +177,11 @@ class ArticleScraper(object):
             return ArticleResult(url, status=ArticleResult.SKIPPED)
 
         headers = []
-        if self.config.get('fake_user_agent', False):
+        if self.fake_user_agent:
             headers.append(('User-agent', FAKE_USER_AGENT))
 
-        use_cookies = self.config.get('use_cookies', False)
-
         try:
-            soup = load_html(url, headers=headers, with_cookies=use_cookies)
+            soup = load_html(url, headers=headers, with_cookies=self.use_cookies)
         except Exception, e:
             LOG.debug('Error loading url [%s]', url, exc_info=True)
             return ArticleResult(url=url, status=ArticleResult.ERROR, error=e)
@@ -178,7 +197,7 @@ class ArticleScraper(object):
             LOG.debug('Error parsing URL [%s]', url, exc_info=True)
             return ArticleResult(url, status=ArticleResult.ERROR, error=e)
 
-        body_text = self.html2text.handle(body_html)
+        body_text = self.html2text.handle(body_html).strip()
 
         if existing_article:
             article = existing_article
@@ -195,11 +214,10 @@ class ArticleScraper(object):
         return ArticleResult(url=url, status=status, article=article)
 
     def extract_title(self, soup):
-        selector = self.config.get('title_selector', None)
         title = ''
 
-        if selector:
-            title_tags = soup.select(selector)
+        if self.title_selector:
+            title_tags = soup.select(self.title_selector)
             if title_tags and len(title_tags) > 0:
                 title = title_tags[0].get_text(strip=True)
         if not title:
@@ -207,32 +225,27 @@ class ArticleScraper(object):
         return title
 
     def extract_body(self, soup):
-        selector = self.config['body_selector']
-        if not selector:
+        if not self.body_selector:
             raise ScraperException('No body selector!')
 
-        exclude_selector = self.config.get('article_exclude_selector', None)
-
-        results = soup.select(selector)
+        results = soup.select(self.body_selector)
         if len(results) < 1:
-            raise ScraperException("Can't find article body '{}'".format(selector))
+            raise ScraperException("Can't find article body '{}'".format(self.body_selector))
         elif len(results) > 1:
             LOG.debug('Multiple article bodies (%d) found for selector: %s. Taking first.',
-                      len(results), selector)
+                      len(results), self.body_selector)
 
         body_html = results[0]
-        if exclude_selector:
-            remove_elements = body_html.select(exclude_selector)
+        if self.exclude_selector:
+            remove_elements = body_html.select(self.exclude_selector)
             for element in remove_elements:
                 element.extract()
 
         return body_html.prettify()
 
     def extract_author(self, soup):
-        selector = self.config.get('author_selector', None)
-
-        if selector:
-            results = soup.select(selector)
+        if self.author_selector:
+            results = soup.select(self.author_selector)
             if results and len(results) > 0:
                 return results[0].get_text(strip=True)
         return ''
