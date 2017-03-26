@@ -31,6 +31,12 @@
   author_selector: '.field-name-field-article-author .name'
   body_selector: '.field-name-body'
 
+- news_source: capitol-fax
+  index_url: https://capitolfax.com/feed/
+  rss_index: True
+  title_selector: .post .titleLink
+  body_selector: .storycontent
+
 - news_source: cbs-local
   index_url: http://chicago.cbslocal.com/feed/
   rss_articles: True
@@ -85,6 +91,13 @@
   body_selector: '[itemprop="articleBody"]'
   exclude_selector: .trb_embed
 
+- news_source: columbia-chronicle
+  index_url: http://www.columbiachronicle.com/search/?f=rss&t=article
+  rss_index: True
+  title_selector: '[itemprop="headline"]'
+  author_selector: '[itemprop="author"]'
+  body_selector: '[itemprop="articleBody"]'
+
 - news_source: crains
   index_url: http://www.chicagobusiness.com/section/news-all&template=rss&mime=xml
   rss_index: True
@@ -99,6 +112,14 @@
   title_selector: '#head'
   author_selector: .plainByline
   body_selector: '[itemprop="articleBody"]'
+
+- news_source: daily-line
+  index_url: http://thedailyline.net/feed/
+  rss_index: True
+  title_selector: article .post-title
+  author_selector: 'article [rel="author"]'
+  body_selector: article .post-entry
+  exclude_selector: .sharedaddy, .powerpress_links
 
 - news_source: dnainfo-chicago
   index_url: https://www.dnainfo.com/chicago/topics/crime-mayhem.rss
@@ -115,6 +136,13 @@
   body_selector: .story-content
   exclude_selector: '#relatedStoriesDiv'
 
+- news_source: medill
+  index_url: http://news.medill.northwestern.edu/chicago/feed/
+  rss_index: True
+  title_selector: article .entry-title
+  body_selector: article .entry-content
+  exclude_selector: .sharedaddy
+
 - news_source: nbc-local
   index_url: http://www.nbcchicago.com/news/local/?rss=y
   rss_index: True
@@ -122,6 +150,25 @@
   author_selector: article .byline
   body_selector: '[itemprop="articleBody"]'
   exclude_selector: '.articleAutoFooter'
+
+- news_source: politico
+  index_url: http://www.politico.com/rss/illinois-playbook.xml
+  rss_index: True
+  title_selector: article h1
+  body_selector: article .story-text
+  exclude_selector: .story-continued, .story-interrupt, .story-intro
+
+- news_source: south-side-weekly
+  index_url: http://southsideweekly.com/feed/
+  rss_articles: True
+
+- news_source: state-journal-register
+  index_url: http://www.sj-r.com/news?template=rss&mime=xml
+  rss_index: True
+  index_url_selector: id
+  title_selector: 'article .headline'
+  author_selector: 'article .byline-item'
+  body_selector: 'article .article-body'
 
 - news_source: wbez
   index_url: http://feeds.feedburner.com/wbez

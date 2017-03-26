@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 import logging
 import time
 import html2text
+import django.db
 
 from django.core.exceptions import ObjectDoesNotExist
 from newsarticles.models import Article, NewsSource, ScraperResult
@@ -110,14 +111,21 @@ class ArticleScraper(object):
             result.save()
             return result
 
-        for result in articles:
-            LOG.debug('result: %s', result)
+        for scrape_result in articles:
 
-            if save and result.article and result.success:
-                result.article.save()
-            results.append(result)
+            final_result = scrape_result
 
-            if result.status != ArticleResult.SKIPPED:
+            if save and scrape_result.article and scrape_result.success:
+                try:
+                    scrape_result.article.save()
+                except django.db.Error, e:
+                    final_result = ArticleResult(url=scrape_result.url, status=ArticleResult.ERROR,
+                                                 error=e)
+
+            LOG.debug('result: %s', final_result)
+            results.append(final_result)
+
+            if final_result.status != ArticleResult.SKIPPED:
                 time.sleep(delay_sec)
 
         scraper_result = self.make_scraper_result(results)
