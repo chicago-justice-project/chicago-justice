@@ -1,4 +1,0 @@
-[config]
-feed_url = http://www.dnainfo.com/chicago/topics/crime-mayhem.rss
-seconds_between_queries = 1
-printLog = 1

@@ -1,4 +1,0 @@
-[config]
-feed_url = http://www.chicagobusiness.com/section/news&template=rss
-seconds_between_queries = 1
-printLog = 1

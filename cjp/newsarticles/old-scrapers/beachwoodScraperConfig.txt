@@ -1,4 +1,0 @@
-[config]
-feed_url = http://www.beachwoodreporter.com/atom.xml
-seconds_between_queries = 1
-printLog = 1
