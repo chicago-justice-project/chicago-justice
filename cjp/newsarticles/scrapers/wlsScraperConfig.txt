@@ -1,4 +1,0 @@
-[config]
-feed_url = http://www.wlsam.com/feed/
-seconds_between_queries = 1
-printLog = 1

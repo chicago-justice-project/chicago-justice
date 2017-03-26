@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import Article, Category, NewsSource
+from .models import Article, Category, NewsSource, ScraperResult
 
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('news_source', 'created', 'title',)
@@ -11,5 +11,9 @@ class NewsSourceAdmin(admin.ModelAdmin):
 
 admin.site.register(NewsSource, NewsSourceAdmin)
 
-admin.site.register(Category)
+class ScraperResultAdmin(admin.ModelAdmin):
+    list_display = ('news_source', 'completed_time', 'success',
+                    'added_count', 'error_count', 'total_count')
 
+admin.site.register(ScraperResult, ScraperResultAdmin)
+admin.site.register(Category)

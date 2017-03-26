@@ -1,4 +1,0 @@
-[config]
-feed_url = http://abclocal.go.com/wls/xml?id=7098705
-seconds_between_queries = 1
-printLog = 1

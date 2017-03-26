@@ -1,4 +1,0 @@
-[config]
-feed_url = http://www.fox32chicago.com/news/local/crime
-seconds_between_queries = 1
-printLog = 1

@@ -1,4 +1,0 @@
-[config]
-feed_url = http://www.dailyherald.com/rss/feed/?feed=news_chicago
-seconds_between_queries = 1
-printLog = 1

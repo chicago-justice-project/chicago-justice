@@ -130,11 +130,33 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
+    'root': {
+        'handlers': ['console', 'logfile']
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'logfile': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': environ.get('LOGFILE', os.path.join(BASE_DIR, 'django.log')),
+            'maxBytes': 100000,
+            'backupCount': 5,
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s|%(asctime)s|%(module)s|%(process)d|%(message)s',
+            'datefmt' : "%Y-%m-%dT%H:%M:%S"
         }
     },
     'loggers': {
@@ -143,6 +165,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'newsarticles': {
+            'level': 'DEBUG',
+            'propagate': True,
+        }
     }
 }
 

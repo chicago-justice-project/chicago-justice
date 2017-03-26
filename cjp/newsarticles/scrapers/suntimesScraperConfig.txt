@@ -1,4 +1,0 @@
-[config]
-feed_url = http://chicago.suntimes.com/section/crime/feed/
-seconds_between_queries = 1
-printLog = 1
