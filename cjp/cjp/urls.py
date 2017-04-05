@@ -1,16 +1,9 @@
-#from django.conf.urls.defaults import patterns, include, url
 from django.conf.urls import patterns, include, url
-#from django.views.generic.simple import direct_to_template
 from django.views.generic import TemplateView
 from settings.base import CJP_ROOT
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-
-#urlpatterns = patterns('',
 urlpatterns = [
     # Examples:
     # url(r'^$', 'cjp.views.home', name='home'),
@@ -19,7 +12,6 @@ urlpatterns = [
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
     # user login and admin
@@ -39,14 +31,6 @@ urlpatterns = [
     url(r'^articles/(\d+)/relevant/$', 'newsarticles.views.articleView', kwargs={'action': 'relevant'}, name='updateArticleRelevant'),
     url(r'^articles/(\d+)/updateCategories/$', 'newsarticles.views.articleView', kwargs={'action': 'updateCategories'}, name='updateArticleCategories'),
 
-    # article category management
-    url(r'^articles/category/$', 'newsarticles.views.manageCategoryView', name='manageCategoryView'),
-    url(r'^articles/category/(\d+)/$', 'newsarticles.views.manageCategoryView', name='editCategoryView'),
-
-    # article list builder
-    url(r'^emailarticlelistbuilder/$', 'newsarticles.views.emailArticleListBuilder', name='emailArticleListBuilder'),
-    url(r'^emailarticlelistbuilder/list$', 'newsarticles.views.emailArticleList', name='emailArticleList'),
-
     # crime reports
     url(r'^crimereports/$', 'crimedata.views.crimeReportList', name='mainCrimeReportView'),
     url(r'^crimereports/export/$', 'crimedata.views.crimeReportExport', name='exportCrimeReport'),
@@ -56,13 +40,6 @@ urlpatterns = [
 
     # stats
     url(r'^stats/totalCounts$', 'stats.views.totalCounts', name='statsTotalCounts'),
-    url(r'^stats/yearlyCounts$', 'stats.views.yearlyCounts', name='statsYearlyCounts'),
-    url(r'^stats/monthlyCounts$', 'stats.views.monthlyCounts', name='statsMonthlyCounts'),
-    url(r'^stats/dailyCounts$', 'stats.views.dailyCounts', name='statsDailyCounts'),
-
-    # release notes
-    #url(r'^releaseNotes/$', direct_to_template, { 'template': 'static/releaseNotes.html' }, name='releaseNotes'),
-    url(r'^releaseNotes/$', TemplateView.as_view(template_name='static/releaseNotes.html'), name='releaseNotes'),
 
 ]
 

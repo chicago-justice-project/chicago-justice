@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.gis.db import models as gismodels
+from django.contrib.auth.models import User
 
 
 class NewsSource(models.Model):
@@ -29,6 +29,9 @@ class Category(models.Model):
 
 
 class ScraperResult(models.Model):
+    """
+    A single run of a scraper.
+    """
     news_source = models.ForeignKey(NewsSource, db_index=True)
 
     completed_time = models.DateTimeField(auto_now_add=True)
@@ -43,6 +46,9 @@ class ScraperResult(models.Model):
         return '{} - {}'.format(self.news_source.name, self.completed_time)
 
 class Article(models.Model):
+    """
+    Base article contents. Should never change after initial scraping
+    """
     news_source = models.ForeignKey(NewsSource, null=True, db_index=True)
     url = models.CharField(max_length=1024, unique=True, db_index=True)
     title = models.TextField()
@@ -52,11 +58,33 @@ class Article(models.Model):
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-    # Fields from classification/coding
+    # Fields from classification/coding- move to UserCoding
     relevant = models.BooleanField(db_index=True)
     categories = models.ManyToManyField(Category)
-    objects = gismodels.GeoManager()
 
-    # Deprecated, use news_source instead.
-    feedname = models.CharField(max_length=1, editable=False, db_index=True)
+    def is_coded(self):
+        return UserCoding.objects.filter(article=self).count() > 0
 
+
+class UserCoding(models.Model):
+    article = models.ForeignKey(Article, db_index=True)
+    date = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, db_index=True)
+
+    # Fields from classification/coding
+    relevant = models.BooleanField()
+    categories = models.ManyToManyField(Category)
+
+#class LearnedCoding(models.Model):
+#    article = models.ForeignKey(Article, unique=True)
+#    date = models.DateTimeField(auto_now=True)
+#    model_info = models.TextField()
+#
+#    categories = models.ManyToManyField(Category, through='LearnedCategoryRelevance')
+#    relevance = models.FloatField()
+#
+#class LearnedCategoryRelevance(models.Model):
+#    coding = models.ForeignKey(LearnedCoding)
+#    category = models.ForeignKey(Category)
+#    relevance = models.FloatField()
+#
