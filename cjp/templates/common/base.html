@@ -4,20 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-        <title>Data</title>
+        <title>Chicago Justice Project - Data portal</title>
         <link href="{% static "site.css" %}" rel="stylesheet" type="text/css" />
         <link type="text/css" href="{% static "css/custom-theme/jquery-ui-1.8.15.custom.css" %}" rel="Stylesheet" />
         <script type="text/javascript" src="{% static "js/jquery-1.6.2.min.js" %}"></script>
         <script type="text/javascript" src="{% static "js/jquery-ui-1.8.15.custom.min.js" %}"></script>
 
-        <script type="text/javascript">
-        /* <![CDATA[ */
-            function markArticleRelevant(articleId, relevant, pageNum) {
-                window.location = "?page=" + pageNum + "&articleId=" + articleId +
-                                  "&relevant=" + relevant + "&action=markRelevant";
-            }
-        /* ]]> */
-        </script>
         {% block esrimap %}{% endblock %}
     </head>
     <body>

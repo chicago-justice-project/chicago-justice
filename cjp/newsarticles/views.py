@@ -1,14 +1,15 @@
-from newsarticles.models import Article, Category, NewsSource
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.http import HttpResponse
-from django.db.models import Q, Max, Min
-from django.shortcuts import render_to_response, redirect
-from django import forms
-from django.template import RequestContext
 from datetime import datetime
+from django.contrib.auth.decorators import permission_required
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.db.models import Q, Max, Min
+from django.shortcuts import render, get_object_or_404
+from django import forms
+from newsarticles.models import Article, Category, NewsSource, UserCoding
 
 
-class ArticleForm(forms.Form):
+class ArticleSearchForm(forms.Form):
     showAll = forms.BooleanField(label='Show Non-Crime',
                                  initial=False, required=False)
 
@@ -33,7 +34,7 @@ class ArticleForm(forms.Form):
                                               queryset=Category.objects.all())
 
 def articleList(request):
-    form = ArticleForm(request.POST)
+    form = ArticleSearchForm(request.POST)
     # TODO: put these into the form itself
     clearSearch = request.POST.get('clearSearch', "False") == "False"
     newSearch = request.POST.get('newSearch', "False") == "True"
@@ -59,7 +60,7 @@ def articleList(request):
         searchTerms = request.session['article_searchTerms']
         categories = request.session['article_category']
 
-        form = ArticleForm({
+        form = ArticleSearchForm({
             'showAll': showAll,
             'news_source': news_source,
             'startDate': startDate,
@@ -74,7 +75,7 @@ def articleList(request):
             page = request.session.get('article_page', 1)
 
     else:
-        form = ArticleForm()
+        form = ArticleSearchForm()
 
         showAll = False
         news_source = None
@@ -124,8 +125,7 @@ def articleList(request):
         'dateRange': dateRange,
     }
 
-    return render_to_response('newsarticles/articleList.html', data,
-                              context_instance=RequestContext(request))
+    return render(request, 'newsarticles/articleList.html', data)
 
 def _paginate(iter, count, pagenum):
     paginator = Paginator(iter, count)
@@ -137,48 +137,59 @@ def _paginate(iter, count, pagenum):
     return out
 
 
-def articleView(request, articleId, action=None):
-    try:
-        article = Article.objects.get(id = articleId)
-    except:
-        article = None
+PREVIEW_LENGTH = 300
 
-    categories = Category.objects.all().order_by('category_name')
+def view_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
 
-    if action == 'print':
-        actionMessage = None
-        template = 'newsarticles/printArticle.html'
+    display_text = article.bodytext
 
-    elif action == 'relevant' and article and request.user.is_authenticated():
-        try:
-            article.relevant = not (request.POST['relevant'] == 'True')
-            article.save()
-        except:
-            pass
-        actionMessage = "Crime Related has been updated"
-        template = 'newsarticles/article.html'
+    is_preview = not request.user.is_authenticated()
+    if is_preview:
+        display_text = display_text[:PREVIEW_LENGTH] + '...'
 
-    elif action == 'updateCategories' and article and request.user.is_authenticated():
-        article.categories.clear()
-        for key, val in request.POST.iteritems():
-            if key.startswith('category_'):
-                try:
-                    category = Category.objects.get(pk=val)
-                    article.categories.add(category)
-                except:
-                    pass
-        article.save()
-        actionMessage = "Categories have been updated"
-        template = 'newsarticles/article.html'
+    data = {'article': article,
+            'is_preview': is_preview,
+            'display_text': display_text}
 
+    return render(request, 'newsarticles/article.html', data)
+
+
+class UserCodingSubmitForm(forms.Form):
+    relevant = forms.BooleanField(initial=True,
+                                  required=False,
+                                  label='Relevant')
+
+    categories = forms.ModelMultipleChoiceField(label='Categories',
+                                                required=False,
+                                                widget=forms.CheckboxSelectMultiple(),
+                                                queryset=Category.objects.all())
+
+@permission_required('newsarticles.can_code_article')
+def code_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+
+    if request.method == 'POST':
+        form = UserCodingSubmitForm(request.POST)
+        if form.is_valid():
+            user_coding, created = UserCoding.objects.update_or_create(
+                article=article,
+                user=request.user,
+                defaults={'relevant': form.cleaned_data['relevant']})
+
+            # ManyToMany relationships need to be added after the record is created
+            user_coding.categories = form.cleaned_data['categories']
+
+            return HttpResponseRedirect(reverse('mainArticleView'))
     else:
-        actionMessage = None
-        template = 'newsarticles/article.html'
+        try:
+            user_coding = UserCoding.objects.get(article=article, user=request.user)
+            initial_data = {'categories': user_coding.categories.all(),
+                            'relevant': user_coding.relevant}
+        except UserCoding.DoesNotExist:
+            initial_data = None
 
-    data = {'article' : article,
-            'categories' : categories,
-            'actionMessage' : actionMessage,
-           }
-    return render_to_response(template, data,
-                              context_instance=RequestContext(request))
+        form = UserCodingSubmitForm(initial=initial_data)
 
+    return render(request, 'newsarticles/code_article.html',
+                  {'form': form, 'article': article})

@@ -45,6 +45,14 @@ class ScraperResult(models.Model):
     def __unicode__(self):
         return '{} - {}'.format(self.news_source.name, self.completed_time)
 
+class ArticleManager(models.Manager):
+    def relevant(self):
+        return self.filter(usercoding__relevant=True).distinct()
+
+    def coded(self):
+        return self.filter(usercoding__isnull=False).distinct()
+
+
 class Article(models.Model):
     """
     Base article contents. Should never change after initial scraping
@@ -58,12 +66,17 @@ class Article(models.Model):
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     last_modified = models.DateTimeField(auto_now=True)
 
+    objects = ArticleManager()
+
     # Fields from classification/coding- move to UserCoding
-    relevant = models.BooleanField(db_index=True)
+    relevant = models.NullBooleanField(db_index=True)
     categories = models.ManyToManyField(Category)
 
+    def __unicode__(self):
+        return self.url[:60]
+
     def is_coded(self):
-        return UserCoding.objects.filter(article=self).count() > 0
+        return self.usercoding_set.count() > 0
 
 
 class UserCoding(models.Model):
@@ -74,6 +87,10 @@ class UserCoding(models.Model):
     # Fields from classification/coding
     relevant = models.BooleanField()
     categories = models.ManyToManyField(Category)
+
+    class Meta:
+        unique_together = (("article", "user"),)
+        permissions = (('can_code_article', 'Can code news articles'),)
 
 #class LearnedCoding(models.Model):
 #    article = models.ForeignKey(Article, unique=True)

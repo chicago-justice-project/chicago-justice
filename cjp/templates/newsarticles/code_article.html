@@ -1,7 +1,7 @@
 {% extends "common/base.html" %}
 
 {% block title %}
-{{ article.title }}
+Coding article: {{ article.title }}
 {% endblock %}
 
 {% block content %}
@@ -13,6 +13,16 @@
     <tr>
         <th class="crimeReportHead leftHead">Source</th>
         <td class="crimeReportContent">{{ article.news_source }}</td>
+    </tr>
+    <tr>
+        <th class="crimeReportHead leftHead">Coding</th>
+        <td class="crimeReportContent">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_ul }}
+                <input type="submit" value="Submit" />
+            </form>
+        </td>
     </tr>
     <tr>
         <th class="crimeReportHead leftHead">Original Load Date</th>
@@ -27,18 +37,13 @@
         <td class="crimeReportContent"><a href="{{ article.url }}">{{ article.url }}</a></td>
     </tr>
     </tr>
-        <th class="crimeReportHead leftHead">
-            {% if is_preview %}
-            Article Preview
-            {% else %}
-            Article Text
-            {% endif %}
-        </th>
+        <th class="crimeReportHead leftHead">Article Text</th>
         <td class="crimeReportContent">
             <div class="articleBody">
-                {{ display_text }}
+                {{article.bodytext }}
             </div>
         </td>
     </tr>
 </table>
+
 {% endblock %}

@@ -11,7 +11,7 @@
     $(document).ready(function() {
         var minDate = new Date({{ dateRange.minDate.year }}, {{ dateRange.minDate.month }} - 1, {{ dateRange.minDate.day }});
         var maxDate = new Date({{ dateRange.maxDate.year }}, {{ dateRange.maxDate.month }} - 1, {{ dateRange.maxDate.day }});
-                
+
 		$( "#id_startDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
         $( "#id_endDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
     });
@@ -57,7 +57,7 @@
         </table>
     </form>
 </div>
-        
+
 {% if articles %}
     <div style="width:95%">
         <div style="width:100%">
@@ -71,8 +71,8 @@
                 <th class="listTableHeadCell">Categories</th>
                 <th class="listTableHeadCell">Load Date</th>
                 <th class="listTableHeadCell">Last Updated</th>
+                <th class="listTableHeadCell"></th>
                 <th class="listTableHeadCell" style="width:25%">Original URL</th>
-                <th class="listTableHeadCell">&nbsp;</th>
             </tr>
             {% for article in articles.object_list %}
                 <tr>
@@ -92,13 +92,13 @@
                     </td>
                     <td class="listTableDataCell">{{ article.created }}</td>
                     <td class="listTableDataCell">{{ article.last_modified }}</td>
-                    <td class="listTableDataCell"><a href="{{ article.url }}">{{ article.url }}</a></td>
                     <td class="listTableDataCell">
-                        <form id="form_{{article.id}}" action="{% url 'viewSingleArticle' article.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="searchButton">view</button>
-                        </form>
-                    </td>
+                        {% if perms.newsarticles.can_code_article %}
+                        <a href="{% url 'code-article' article.id %}">Code Article</a></td>
+                        {% else %}
+                        <a href="{% url 'view-article' article.id %}">View Article</a></td>
+                        {% endif %}
+                    <td class="listTableDataCell"><a href="{{ article.url }}">{{ article.url }}</a></td>
                 </tr>
             {% endfor %}
         </table>

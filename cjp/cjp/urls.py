@@ -1,6 +1,4 @@
-from django.conf.urls import patterns, include, url
-from django.views.generic import TemplateView
-from settings.base import CJP_ROOT
+from django.conf.urls import include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 
@@ -16,7 +14,7 @@ urlpatterns = [
 
     # user login and admin
     url(r'^user/login/$', 'django.contrib.auth.views.login', name='loginView'),
-    url(r'^user/logout/$', 'django.contrib.auth.views.logout', kwargs={'next_page': CJP_ROOT}, name='logoutView'),
+    url(r'^user/logout/$', 'django.contrib.auth.views.logout', kwargs={'next_page': 'mainArticleView'}, name='logoutView'),
     url(r'^user/manage/$', 'cjpusers.views.manage', name='userManageView'),
     url(r'^user/manage/adduser/$', 'cjpusers.views.manage', kwargs={'action': 'addUser'}, name='userManageAddUserView'),
     url(r'^user/manage/update/(\d+)/$', 'cjpusers.views.userUpdate', name='userUpdate'),
@@ -26,10 +24,8 @@ urlpatterns = [
     url(r'^articles/$', 'newsarticles.views.articleList', name='mainArticleView'),
 
     #individual article
-    url(r'^articles/(\d+)/$', 'newsarticles.views.articleView', name='viewSingleArticle'),
-    url(r'^articles/(\d+)/print/$', 'newsarticles.views.articleView', kwargs={'action': 'print'}, name='printSingleArticle'),
-    url(r'^articles/(\d+)/relevant/$', 'newsarticles.views.articleView', kwargs={'action': 'relevant'}, name='updateArticleRelevant'),
-    url(r'^articles/(\d+)/updateCategories/$', 'newsarticles.views.articleView', kwargs={'action': 'updateCategories'}, name='updateArticleCategories'),
+    url(r'^articles/(\d+)/$', 'newsarticles.views.view_article', name='view-article'),
+    url(r'^articles/(\d+)/updatecoding/$', 'newsarticles.views.code_article', name='code-article'),
 
     # crime reports
     url(r'^crimereports/$', 'crimedata.views.crimeReportList', name='mainCrimeReportView'),
