@@ -6,8 +6,9 @@ import django.db
 
 from django.core.exceptions import ObjectDoesNotExist
 from newsarticles.models import Article, NewsSource, ScraperResult
-from .util import get_rss_links, get_html_links, load_html, get_rss_articles
+from .util import get_rss_links, parse_html_links, load_html, get_rss_articles
 
+USER_AGENT = 'CJP scraper (chicagojustice.org)'
 FAKE_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'
 
 LOG = logging.getLogger(__name__)
@@ -143,7 +144,10 @@ class ArticleScraper(object):
         if self.rss_index:
             urls = get_rss_links(self.index_url, self.index_url_selector)
         else:
-            urls = get_html_links(self.index_url, self.index_url_selector)
+            soup = load_html(self.index_url,
+                             headers=self.get_headers(),
+                             with_cookies=self.use_cookies)
+            urls = parse_html_links(soup, self.index_url, self.index_url_selector)
 
         return self.read_html_articles(urls, skip_existing)
 
@@ -184,12 +188,10 @@ class ArticleScraper(object):
         if existing_article and skip_existing:
             return ArticleResult(url, status=ArticleResult.SKIPPED)
 
-        headers = []
-        if self.fake_user_agent:
-            headers.append(('User-agent', FAKE_USER_AGENT))
-
         try:
-            soup = load_html(url, headers=headers, with_cookies=self.use_cookies)
+            soup = load_html(url,
+                             headers=self.get_headers(),
+                             with_cookies=self.use_cookies)
         except Exception, e:
             LOG.debug('Error loading url [%s]', url, exc_info=True)
             return ArticleResult(url=url, status=ArticleResult.ERROR, error=e)
@@ -220,6 +222,16 @@ class ArticleScraper(object):
         article.author = author
 
         return ArticleResult(url=url, status=status, article=article)
+
+    def get_headers(self):
+        if self.fake_user_agent and isinstance(self.fake_user_agent, basestring):
+            user_agent = self.fake_user_agent
+        elif self.fake_user_agent:
+            user_agent = FAKE_USER_AGENT
+        else:
+            user_agent = USER_AGENT
+
+        return {'User-Agent': user_agent}
 
     def extract_title(self, soup):
         title = ''

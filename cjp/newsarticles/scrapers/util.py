@@ -17,8 +17,7 @@ def get_rss_links(url, link_selector):
             links.append(link)
     return links
 
-def get_html_links(url, link_selector):
-    soup = load_html(url)
+def parse_html_links(soup, url, link_selector):
     results = soup.select(link_selector)
 
     parsed_url = urlparse.urlparse(url, 'http')
@@ -35,7 +34,7 @@ def get_html_links(url, link_selector):
 
     return links
 
-def load_html(url, with_cookies=False, headers=None):
+def load_html(url, with_cookies=False, headers={}):
     """Attempts to load an HTML page, returning a BeautifulSoup instance. Raises
     any networking or parsing exceptions"""
     if with_cookies:
@@ -44,11 +43,9 @@ def load_html(url, with_cookies=False, headers=None):
     else:
         opener = urllib2.build_opener()
 
-    if headers:
-        opener.addheaders = headers
+    request = urllib2.Request(url, headers=headers)
 
-    urlstr = url.encode('utf-8')
-    response = opener.open(urlstr)
+    response = opener.open(request)
     html = response.read().decode('utf-8', errors='replace')
 
     soup = BeautifulSoup(html, 'html.parser')
