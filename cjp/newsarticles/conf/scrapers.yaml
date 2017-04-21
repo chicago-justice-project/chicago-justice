@@ -202,7 +202,6 @@
 - news_source: wttw
   index_url: https://feeds.feedburner.com/ChicagoTonight
   rss_index: True
-  index_url_selector: 'feedburner_origlink'
   title_selector: .article-title
   author_selector: .node-article .submitted a
   body_selector: .main-container .node-article .content
