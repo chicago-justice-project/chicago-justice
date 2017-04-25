@@ -78,6 +78,23 @@ class Article(models.Model):
     def is_coded(self):
         return self.usercoding_set.count() > 0
 
+    def current_coding(self):
+        return self.usercoding_set.last()
+
+    def is_relevant(self):
+        # TODO: stub
+        coding = self.current_coding()
+        return coding and coding.relevant
+
+    def get_categories(self):
+        coding = self.current_coding()
+        if coding:
+            return coding.categories.all()
+        else:
+            return []
+
+    # Deprecated, use news_source instead.
+    feedname = models.CharField(max_length=1, editable=False, null=True, db_index=True)
 
 class UserCoding(models.Model):
     article = models.ForeignKey(Article, db_index=True)
@@ -92,7 +109,7 @@ class UserCoding(models.Model):
         unique_together = (("article", "user"),)
         permissions = (('can_code_article', 'Can code news articles'),)
 
-#class LearnedCoding(models.Model):
+#class TrainedCoding(models.Model):
 #    article = models.ForeignKey(Article, unique=True)
 #    date = models.DateTimeField(auto_now=True)
 #    model_info = models.TextField()
@@ -100,7 +117,7 @@ class UserCoding(models.Model):
 #    categories = models.ManyToManyField(Category, through='LearnedCategoryRelevance')
 #    relevance = models.FloatField()
 #
-#class LearnedCategoryRelevance(models.Model):
+#class TrainedCategoryRelevance(models.Model):
 #    coding = models.ForeignKey(LearnedCoding)
 #    category = models.ForeignKey(Category)
 #    relevance = models.FloatField()

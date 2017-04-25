@@ -1,7 +1,7 @@
 from uuid import uuid4
 from django.test import TestCase
 
-from newsarticles.models import Article, UserCoding, NewsSource
+from newsarticles.models import Article, UserCoding, NewsSource, Category
 
 def make_article(save=True):
     url = 'http://example.com/{}'.format(uuid4())
@@ -11,22 +11,54 @@ def make_article(save=True):
         article.save()
     return article
 
+def make_category(save=True):
+    cat = Category(category_name="", abbreviation="")
+    if save:
+        cat.save()
+    return cat
+
 class ArticleTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.article = make_article()
+        cls.categories = [make_category(), make_category(), make_category()]
 
-    def test_uncoded(self):
+    def test_is_coded_uncoded(self):
         self.assertFalse(self.article.is_coded())
 
-    def test_coded(self):
-        UserCoding.objects.create(
-            article=self.article,
+    def test_is_coded_coded(self):
+        self.article.usercoding_set.create(
             user_id=0,
             relevant=True,
         )
 
         self.assertTrue(self.article.is_coded())
+
+    def test_relevant_uncoded(self):
+        self.assertIsNone(self.article.is_relevant())
+
+    def test_relevant_one_coding_true(self):
+        self.article.usercoding_set.create(user_id=0, relevant=True)
+        self.assertTrue(self.article.is_relevant())
+
+    def test_relevant_one_coding_false(self):
+        self.article.usercoding_set.create(user_id=0, relevant=False)
+        self.assertFalse(self.article.is_relevant())
+
+    def test_categories_uncoded(self):
+        self.assertEqual(len(self.article.get_categories()), 0)
+
+    def test_categories_coded(self):
+        expected_categories = [self.categories[0]]
+
+        coding = self.article.usercoding_set.create(user_id=0, relevant=True)
+        coding.categories = expected_categories
+        coding.save()
+
+        categories = self.article.get_categories()
+        self.assertEqual(len(categories), 1)
+        self.assertEqual(categories[0].id, expected_categories[0].id)
+
 
 class ArticleManagerTest(TestCase):
     """

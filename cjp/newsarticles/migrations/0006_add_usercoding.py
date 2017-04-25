@@ -21,10 +21,6 @@ class Migration(migrations.Migration):
                 ('relevant', models.BooleanField()),
             ],
         ),
-        migrations.RemoveField(
-            model_name='article',
-            name='feedname',
-        ),
         migrations.AddField(
             model_name='usercoding',
             name='article',
@@ -39,5 +35,18 @@ class Migration(migrations.Migration):
             model_name='usercoding',
             name='user',
             field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AlterModelOptions(
+            name='usercoding',
+            options={'permissions': (('can_code_article', 'Can code news articles'),)},
+        ),
+        migrations.AlterField(
+            model_name='article',
+            name='relevant',
+            field=models.NullBooleanField(db_index=True),
+        ),
+        migrations.AlterUniqueTogether(
+            name='usercoding',
+            unique_together=set([('article', 'user')]),
         ),
     ]
