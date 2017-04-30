@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
 
@@ -60,9 +61,9 @@ class Article(models.Model):
     news_source = models.ForeignKey(NewsSource, null=True, db_index=True)
     url = models.CharField(max_length=1024, unique=True, db_index=True)
     title = models.TextField()
-    author = models.CharField(max_length=1024, default="")
+    author = models.CharField(max_length=1024, default="", blank=True)
     bodytext = models.TextField()
-    orig_html = models.TextField()
+    orig_html = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     last_modified = models.DateTimeField(auto_now=True)
 
@@ -70,19 +71,21 @@ class Article(models.Model):
 
     # Fields from classification/coding- move to UserCoding
     relevant = models.NullBooleanField(db_index=True)
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, blank=True)
 
     def __unicode__(self):
         return self.url[:60]
 
     def is_coded(self):
-        return self.usercoding_set.count() > 0
+        return hasattr(self, 'usercoding')
 
     def current_coding(self):
-        return self.usercoding_set.last()
+        try:
+            return self.usercoding
+        except ObjectDoesNotExist:
+            return None
 
     def is_relevant(self):
-        # TODO: stub
         coding = self.current_coding()
         return coding and coding.relevant
 
@@ -97,28 +100,28 @@ class Article(models.Model):
     feedname = models.CharField(max_length=1, editable=False, null=True, db_index=True)
 
 class UserCoding(models.Model):
-    article = models.ForeignKey(Article, db_index=True)
+    article = models.OneToOneField(Article, db_index=True)
     date = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, db_index=True)
+    user = models.ForeignKey(User, db_index=True, null=True, blank=True,
+                             on_delete=models.SET_NULL)
 
     # Fields from classification/coding
     relevant = models.BooleanField()
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, blank=True)
 
     class Meta:
         unique_together = (("article", "user"),)
-        permissions = (('can_code_article', 'Can code news articles'),)
 
 #class TrainedCoding(models.Model):
-#    article = models.ForeignKey(Article, unique=True)
+#    article = models.OneToOneField(Article, db_index=True)
 #    date = models.DateTimeField(auto_now=True)
 #    model_info = models.TextField()
 #
-#    categories = models.ManyToManyField(Category, through='LearnedCategoryRelevance')
+#    categories = models.ManyToManyField(Category, through='TrainedCategoryRelevance')
 #    relevance = models.FloatField()
 #
 #class TrainedCategoryRelevance(models.Model):
-#    coding = models.ForeignKey(LearnedCoding)
+#    coding = models.ForeignKey(TrainedCoding)
 #    category = models.ForeignKey(Category)
 #    relevance = models.FloatField()
 #

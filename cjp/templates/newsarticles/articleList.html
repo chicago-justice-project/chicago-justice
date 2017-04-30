@@ -79,14 +79,14 @@
                     <td class="listTableDataCell">{{ article.title|safe }}</td>
                     <td class="listTableDataCell">{{ article.news_source }}</td>
                     <td class="listTableDataCell" style="text-align:center;">
-                        {% if article.relevant %}
+                        {% if article.is_relevant %}
                             <img src="{% static "good_checkmark.png" %}" alt="crime related" />
-                        {% else %}
+                        {% elif article.is_coded %}
                             <img src="{% static "bad_x.png" %}" alt="not crime related" />
                         {% endif %}
                     </td>
                     <td class="listTableDataCell">
-                        {% for category in article.categories.all %}
+                        {% for category in article.get_categories %}
                             {{ category.abbreviation }}<br />
                         {% endfor %}
                     </td>

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import django.db.models.deletion
 from django.conf import settings
 
 
@@ -21,29 +22,45 @@ class Migration(migrations.Migration):
                 ('relevant', models.BooleanField()),
             ],
         ),
-        migrations.AddField(
-            model_name='usercoding',
-            name='article',
-            field=models.ForeignKey(to='newsarticles.Article'),
+        migrations.AlterField(
+            model_name='article',
+            name='author',
+            field=models.CharField(default='', max_length=1024, blank=True),
         ),
-        migrations.AddField(
-            model_name='usercoding',
+        migrations.AlterField(
+            model_name='article',
             name='categories',
-            field=models.ManyToManyField(to='newsarticles.Category'),
+            field=models.ManyToManyField(to='newsarticles.Category', blank=True),
         ),
-        migrations.AddField(
-            model_name='usercoding',
-            name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+        migrations.AlterField(
+            model_name='article',
+            name='feedname',
+            field=models.CharField(max_length=1, null=True, editable=False, db_index=True),
         ),
-        migrations.AlterModelOptions(
-            name='usercoding',
-            options={'permissions': (('can_code_article', 'Can code news articles'),)},
+        migrations.AlterField(
+            model_name='article',
+            name='orig_html',
+            field=models.TextField(blank=True),
         ),
         migrations.AlterField(
             model_name='article',
             name='relevant',
             field=models.NullBooleanField(db_index=True),
+        ),
+        migrations.AddField(
+            model_name='usercoding',
+            name='article',
+            field=models.OneToOneField(to='newsarticles.Article'),
+        ),
+        migrations.AddField(
+            model_name='usercoding',
+            name='categories',
+            field=models.ManyToManyField(to='newsarticles.Category', blank=True),
+        ),
+        migrations.AddField(
+            model_name='usercoding',
+            name='user',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
         migrations.AlterUniqueTogether(
             name='usercoding',

@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -100,7 +100,7 @@ def articleList(request):
     request.session['article_category'] = categories
     request.session['article_page'] = page
 
-    article_list = Article.objects.all().distinct().order_by('-created')
+    article_list = Article.objects.order_by('-created')
     if not showAll:
         article_list = article_list.filter(relevant=True)
     if news_source:
@@ -165,7 +165,7 @@ class UserCodingSubmitForm(forms.Form):
                                                 widget=forms.CheckboxSelectMultiple(),
                                                 queryset=Category.objects.all())
 
-@permission_required('newsarticles.can_code_article')
+@login_required
 def code_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
 
@@ -174,19 +174,19 @@ def code_article(request, pk):
         if form.is_valid():
             user_coding, created = UserCoding.objects.update_or_create(
                 article=article,
-                user=request.user,
-                defaults={'relevant': form.cleaned_data['relevant']})
+                defaults={
+                    'user': request.user,
+                    'relevant': form.cleaned_data['relevant']})
 
             # ManyToMany relationships need to be added after the record is created
             user_coding.categories = form.cleaned_data['categories']
 
             return HttpResponseRedirect(reverse('mainArticleView'))
     else:
-        try:
-            user_coding = UserCoding.objects.get(article=article, user=request.user)
-            initial_data = {'categories': user_coding.categories.all(),
-                            'relevant': user_coding.relevant}
-        except UserCoding.DoesNotExist:
+        if article.is_coded():
+            initial_data = {'categories': article.usercoding.categories.all(),
+                            'relevant': article.usercoding.relevant}
+        else:
             initial_data = None
 
         form = UserCodingSubmitForm(initial=initial_data)

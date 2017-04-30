@@ -19,7 +19,7 @@ def make_category(save=True):
 
 class ArticleTest(TestCase):
     @classmethod
-    def setUpTestData(cls):
+    def setUp(cls):
         cls.article = make_article()
         cls.categories = [make_category(), make_category(), make_category()]
 
@@ -27,7 +27,8 @@ class ArticleTest(TestCase):
         self.assertFalse(self.article.is_coded())
 
     def test_is_coded_coded(self):
-        self.article.usercoding_set.create(
+        UserCoding.objects.create(
+            article=self.article,
             user_id=0,
             relevant=True,
         )
@@ -38,11 +39,19 @@ class ArticleTest(TestCase):
         self.assertIsNone(self.article.is_relevant())
 
     def test_relevant_one_coding_true(self):
-        self.article.usercoding_set.create(user_id=0, relevant=True)
+        UserCoding.objects.create(
+            article=self.article,
+            user_id=0,
+            relevant=True,
+        )
         self.assertTrue(self.article.is_relevant())
 
     def test_relevant_one_coding_false(self):
-        self.article.usercoding_set.create(user_id=0, relevant=False)
+        UserCoding.objects.create(
+            article=self.article,
+            user_id=0,
+            relevant=False,
+        )
         self.assertFalse(self.article.is_relevant())
 
     def test_categories_uncoded(self):
@@ -51,7 +60,11 @@ class ArticleTest(TestCase):
     def test_categories_coded(self):
         expected_categories = [self.categories[0]]
 
-        coding = self.article.usercoding_set.create(user_id=0, relevant=True)
+        coding = UserCoding.objects.create(
+            article=self.article,
+            user_id=0,
+            relevant=True,
+        )
         coding.categories = expected_categories
         coding.save()
 
