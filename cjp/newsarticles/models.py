@@ -80,10 +80,7 @@ class Article(models.Model):
         return hasattr(self, 'usercoding')
 
     def current_coding(self):
-        try:
-            return self.usercoding
-        except ObjectDoesNotExist:
-            return None
+        return getattr(self, 'usercoding', None)
 
     def is_relevant(self):
         coding = self.current_coding()

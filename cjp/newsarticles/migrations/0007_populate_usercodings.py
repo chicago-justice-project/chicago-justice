@@ -23,9 +23,12 @@ def create_initial_usercodings(apps, schema_editor):
     UserCoding = apps.get_model('newsarticles', 'UserCoding')
 
     large_queryset = queryset_iterator(Article.objects, chunksize=500)
+    count = 0
     for article in large_queryset:
         coding = convert_coding(article, UserCoding)
-        print('Coding for {}: {}'.format(article.url, coding))
+        count += 1
+        if count % 1000 == 0:
+            print('migrated {} articles'.format(count))
 
 def reverse_create_initial(apps, schema_editor):
     pass
