@@ -176,3 +176,4 @@ LOGGING = {
 # TODO: move to 'next' param in HTTP request
 CJP_ROOT = '/'
 LOGIN_REDIRECT_URL = CJP_ROOT
+LOGIN_URL = '/user/login/'

@@ -1,14 +1,15 @@
-from newsarticles.models import Article, Category, NewsSource
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.http import HttpResponse
-from django.db.models import Q, Max, Min
-from django.shortcuts import render_to_response, redirect
-from django import forms
-from django.template import RequestContext
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.db.models import Q, Max, Min
+from django.shortcuts import render, get_object_or_404
+from django import forms
+from newsarticles.models import Article, Category, NewsSource, UserCoding
 
 
-class ArticleForm(forms.Form):
+class ArticleSearchForm(forms.Form):
     showAll = forms.BooleanField(label='Show Non-Crime',
                                  initial=False, required=False)
 
@@ -29,11 +30,11 @@ class ArticleForm(forms.Form):
                                   max_length=1024)
 
     category = forms.ModelMultipleChoiceField(label='Category',
-                                              required=False, 
+                                              required=False,
                                               queryset=Category.objects.all())
 
 def articleList(request):
-    form = ArticleForm(request.POST)
+    form = ArticleSearchForm(request.POST)
     # TODO: put these into the form itself
     clearSearch = request.POST.get('clearSearch', "False") == "False"
     newSearch = request.POST.get('newSearch', "False") == "True"
@@ -59,7 +60,7 @@ def articleList(request):
         searchTerms = request.session['article_searchTerms']
         categories = request.session['article_category']
 
-        form = ArticleForm({
+        form = ArticleSearchForm({
             'showAll': showAll,
             'news_source': news_source,
             'startDate': startDate,
@@ -74,7 +75,7 @@ def articleList(request):
             page = request.session.get('article_page', 1)
 
     else:
-        form = ArticleForm()
+        form = ArticleSearchForm()
 
         showAll = False
         news_source = None
@@ -99,7 +100,7 @@ def articleList(request):
     request.session['article_category'] = categories
     request.session['article_page'] = page
 
-    article_list = Article.objects.all().distinct().order_by('-created')
+    article_list = Article.objects.order_by('-created')
     if not showAll:
         article_list = article_list.filter(relevant=True)
     if news_source:
@@ -124,8 +125,7 @@ def articleList(request):
         'dateRange': dateRange,
     }
 
-    return render_to_response('newsarticles/articleList.html', data,
-                              context_instance=RequestContext(request))
+    return render(request, 'newsarticles/articleList.html', data)
 
 def _paginate(iter, count, pagenum):
     paginator = Paginator(iter, count)
@@ -137,188 +137,59 @@ def _paginate(iter, count, pagenum):
     return out
 
 
-def articleView(request, articleId, action=None):
-    try:
-        article = Article.objects.get(id = articleId)
-    except:
-        article = None
+PREVIEW_LENGTH = 300
 
-    categories = Category.objects.all().order_by('category_name')
+def view_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
 
-    if action == 'print':
-        actionMessage = None
-        template = 'newsarticles/printArticle.html'
+    display_text = article.bodytext
 
-    elif action == 'relevant' and article and request.user.is_authenticated():
-        try:
-            article.relevant = not (request.POST['relevant'] == 'True')
-            article.save()
-        except:
-            pass
-        actionMessage = "Crime Related has been updated"
-        template = 'newsarticles/article.html'
+    is_preview = not request.user.is_authenticated()
+    if is_preview:
+        display_text = display_text[:PREVIEW_LENGTH] + '...'
 
-    elif action == 'updateCategories' and article and request.user.is_authenticated():
-        article.categories.clear()
-        for key, val in request.POST.iteritems():
-            if key.startswith('category_'):
-                try:
-                    category = Category.objects.get(pk=val)
-                    article.categories.add(category)
-                except:
-                    pass
-        article.save()
-        actionMessage = "Categories have been updated"
-        template = 'newsarticles/article.html'
+    data = {'article': article,
+            'is_preview': is_preview,
+            'display_text': display_text}
 
+    return render(request, 'newsarticles/article.html', data)
+
+
+class UserCodingSubmitForm(forms.Form):
+    relevant = forms.BooleanField(initial=True,
+                                  required=False,
+                                  label='Relevant')
+
+    categories = forms.ModelMultipleChoiceField(label='Categories',
+                                                required=False,
+                                                widget=forms.CheckboxSelectMultiple(),
+                                                queryset=Category.objects.all())
+
+@login_required
+def code_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+
+    if request.method == 'POST':
+        form = UserCodingSubmitForm(request.POST)
+        if form.is_valid():
+            user_coding, created = UserCoding.objects.update_or_create(
+                article=article,
+                defaults={
+                    'user': request.user,
+                    'relevant': form.cleaned_data['relevant']})
+
+            # ManyToMany relationships need to be added after the record is created
+            user_coding.categories = form.cleaned_data['categories']
+
+            return HttpResponseRedirect(reverse('mainArticleView'))
     else:
-        actionMessage = None
-        template = 'newsarticles/article.html'
-
-    data = {'article' : article,
-            'categories' : categories,
-            'actionMessage' : actionMessage,
-           }
-    return render_to_response(template, data,
-                              context_instance=RequestContext(request))
-
-
-class CategoryForm(forms.Form):
-    category_name = forms.CharField(label='Category Name', required=True, max_length=256)
-    abbreviation = forms.CharField(label='Abbreviation', required=True, max_length=5,
-                                   widget=forms.TextInput(attrs={'size':'5'}))
-
-    def clean_category_name(self):
-        data = self.cleaned_data['category_name']
-        data = data.strip()
-        if len(data) == 0:
-            raise forms.ValidationError("requires at least one character")
-        return data
-
-    def clean_abbreviation(self):
-        data = self.cleaned_data['abbreviation']
-        data = data.strip()
-        if len(data) == 0:
-            raise forms.ValidationError("requires at least one character")
-        return data
-
-
-def manageCategoryView(request, category_id=None):
-    if not (request.user.is_authenticated() and request.user.is_superuser):
-        return redirect('/')
-
-    if category_id:
-        try:
-            category = Category.objects.get(pk=category_id)
-            categoryForm = CategoryForm({'category_name' : category.category_name,
-                                         'abbreviation' : category.abbreviation})
-        except:
-            categoryForm = CategoryForm()
-            category = None
-    else:
-        categoryForm = CategoryForm()
-        category = None
-
-    if request.POST:
-        categoryForm = CategoryForm(request.POST)
-        if categoryForm.is_valid():
-            cleanData = categoryForm.cleaned_data
-            if category:
-                category.category_name = cleanData['category_name']
-                category.abbreviation = cleanData['abbreviation']
-            else:
-                category = Category(category_name=cleanData['category_name'],
-                                    abbreviation=cleanData['abbreviation'])
-            category.save()
-
-            categoryForm = CategoryForm()
-            category_id = None
-
-    categories = Category.objects.all().order_by('category_name')
-    data = {'categories': categories,
-            'categoryForm': categoryForm,
-            'category_id' : category_id,
-            }
-    return render_to_response('newsarticles/manageCategory.html', data,
-                              context_instance=RequestContext(request))
-
-class ArticleListBuilderForm(forms.Form):
-    news_source = forms.ModelChoiceField(label='Source',
-                                         required=False,
-                                         empty_label='All Sources',
-                                         queryset=NewsSource.objects.all())
-    startDate = forms.DateField(label='Start Date',
-                                widget=forms.DateInput(format="%m/%d/%Y"),
-                                required=False)
-    endDate = forms.DateField(label='End Date',
-                                widget=forms.DateInput(format="%m/%d/%Y"),
-                                required=False)
-
-def emailArticleListBuilder(request):
-    if not (request.user.is_authenticated() and request.user.is_superuser):
-        return redirect('/')
-
-    articleListBuilderForm = ArticleListBuilderForm(request.POST)
-
-    articles = []
-    if request.POST and articleListBuilderForm.is_valid():
-        didSearch = True
-        news_source = articleListBuilderForm.cleaned_data['news_source']
-        startDate = articleListBuilderForm.cleaned_data['startDate']
-        endDate = articleListBuilderForm.cleaned_data['endDate']
-
-        articles = Article.objects.filter(relevant=True).distinct().order_by('-created')
-        if news_source:
-            articles = articles.filter(news_source=news_source)
-        if startDate != None:
-            startDate = datetime.strptime("%s 00:00:00" % startDate, "%Y-%m-%d %H:%M:%S")
-            articles = articles.filter(created__gte=startDate)
-        if endDate != None:
-            endDate = datetime.strptime("%s 23:59:59" % endDate, "%Y-%m-%d %H:%M:%S")
-            articles = articles.filter(created__lte=endDate)
-
-        articleCount = articles.count()
-        if articleCount > 200:
-            tooManyArticles = True
-            didSearch = False
-            articles = []
+        if article.is_coded():
+            initial_data = {'categories': article.usercoding.categories.all(),
+                            'relevant': article.usercoding.relevant}
         else:
-            tooManyArticles = False
+            initial_data = None
 
-    else:
-        didSearch = False
-        tooManyArticles = False
+        form = UserCodingSubmitForm(initial=initial_data)
 
-
-    dateRange = Article.objects.all().aggregate(minDate = Min('created'),
-                                                maxDate = Max('created'))
-
-    data = {'articleListBuilderForm' : articleListBuilderForm,
-            'dateRange' : dateRange,
-            'articles' : articles,
-            'didSearch' : didSearch,
-            'tooManyArticles' : tooManyArticles,
-            }
-
-    return render_to_response('newsarticles/emailArticleListBuilder.html', data,
-                              context_instance=RequestContext(request))
-
-def emailArticleList(request):
-    if not (request.user.is_authenticated() and request.user.is_superuser):
-        return redirect('/')
-
-    if request.POST:
-        articleIds = request.POST.getlist('articleId')
-        articles = Article.objects.filter(pk__in=articleIds).order_by('-created')
-    else:
-        articles = []
-
-    data = {
-        'articles' : articles,
-    }
-
-    return render_to_response('newsarticles/emailArticleList.html', data,
-                              context_instance=RequestContext(request))
-
-
-
+    return render(request, 'newsarticles/code_article.html',
+                  {'form': form, 'article': article})

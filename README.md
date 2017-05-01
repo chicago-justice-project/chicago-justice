@@ -34,7 +34,7 @@ see: <http://postgis.net/docs/PostGIS_FAQ.html>
 
 in psql:
 
-`# grant all privileges on database cjpwebdb to cjpuser;`
+`# grant all on database cjpwebdb to cjpuser;`
 
 ### Initialize Django models and start server
 
