@@ -46,12 +46,18 @@ class ScraperResult(models.Model):
     def __unicode__(self):
         return '{} - {}'.format(self.news_source.name, self.completed_time)
 
-class ArticleManager(models.Manager):
+class ArticleQuerySet(models.QuerySet):
+    def exclude_irrelevant(self):
+        return self.exclude(usercoding__relevant=False).distinct()
+
     def relevant(self):
         return self.filter(usercoding__relevant=True).distinct()
 
     def coded(self):
         return self.filter(usercoding__isnull=False).distinct()
+
+    def filter_categories(self, categories):
+        return self.filter(usercoding__categories__in = categories).distinct()
 
 
 class Article(models.Model):
@@ -67,7 +73,7 @@ class Article(models.Model):
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-    objects = ArticleManager()
+    objects = ArticleQuerySet.as_manager()
 
     # Fields from classification/coding- move to UserCoding
     relevant = models.NullBooleanField(db_index=True)

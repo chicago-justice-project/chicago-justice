@@ -102,7 +102,7 @@ def articleList(request):
 
     article_list = Article.objects.order_by('-created')
     if not showAll:
-        article_list = article_list.filter(relevant=True)
+        article_list = article_list.exclude_irrelevant()
     if news_source:
         article_list = article_list.filter(news_source=news_source)
     if startDate != None:
@@ -114,7 +114,7 @@ def articleList(request):
     if searchTerms:
         article_list = article_list.filter(Q(title__icontains=searchTerms) | Q(bodytext__icontains=searchTerms))
     if categories:
-        article_list = article_list.filter(categories__in = categories)
+        article_list = article_list.filter_categories(categories)
 
     dateRange = Article.objects.all().aggregate(minDate = Min('created'),
                                                 maxDate = Max('created'))

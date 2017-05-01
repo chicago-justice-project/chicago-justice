@@ -79,21 +79,34 @@ class ArticleManagerTest(TestCase):
     """
     @classmethod
     def setUpTestData(cls):
+        cls.c1 = make_category()
+        cls.c2 = make_category()
+
         a1 = make_article()
         a2 = make_article()
         a3 = make_article()
+        a4 = make_article()
 
-        UserCoding.objects.create(article=a1, user_id=0, relevant=True)
-        UserCoding.objects.create(article=a2, user_id=0, relevant=False)
+        uc1 = UserCoding.objects.create(article=a1, user_id=0, relevant=True)
+        uc1.categories = [cls.c1]
+
+        uc2 = UserCoding.objects.create(article=a2, user_id=0, relevant=False)
+
+        uc3 = UserCoding.objects.create(article=a3, user_id=0, relevant=True)
+        uc3.categories = [cls.c1, cls.c2]
 
     def test_relevant_queryset(self):
         queryset = Article.objects.relevant()
-        self.assertEqual(queryset.count(), 1)
+        self.assertEqual(queryset.count(), 2)
 
     def test_coded_queryset(self):
         queryset = Article.objects.coded()
-        self.assertEqual(queryset.count(), 2)
+        self.assertEqual(queryset.count(), 3)
 
     def test_all_queryset(self):
         queryset = Article.objects.all()
-        self.assertEqual(queryset.count(), 3)
+        self.assertEqual(queryset.count(), 4)
+
+    def test_categories_queryset(self):
+        queryset = Article.objects.filter_categories([self.c1])
+        self.assertEqual(queryset.count(), 2)
