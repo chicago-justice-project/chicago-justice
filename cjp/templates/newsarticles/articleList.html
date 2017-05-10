@@ -93,7 +93,7 @@
                     <td class="listTableDataCell">{{ article.created }}</td>
                     <td class="listTableDataCell">{{ article.last_modified }}</td>
                     <td class="listTableDataCell">
-                        {% if perms.newsarticles.can_code_article %}
+                        {% if user.is_authenticated %}
                         <a href="{% url 'code-article' article.id %}">Code Article</a></td>
                         {% else %}
                         <a href="{% url 'view-article' article.id %}">View Article</a></td>
