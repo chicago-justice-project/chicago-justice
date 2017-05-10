@@ -64,7 +64,11 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '#&ubnzmo6$-0nk7i&hmii=e$7y-)nv+bm#&ps)6eq@!k+n-nq5'
 
+# Show the debug_toolbar to the following IPs
+INTERNAL_IPS = ['127.0.0.1']
+
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -72,10 +76,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     #'django.middleware.transaction.TransactionMiddleware',
 )
-
-ATOMIC_REQUESTS = True
-# RE: deprecation of TransactionMiddleware & introduction of ATOMIC_REQUESTS
-# see: https://docs.djangoproject.com/en/1.6/topics/db/transactions/#changes-from-django-1-5-and-earlier
 
 ROOT_URLCONF = 'cjp.urls'
 
@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.gis',
+    'debug_toolbar',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
