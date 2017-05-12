@@ -12,7 +12,7 @@ def make_article(save=True):
     return article
 
 def make_category(save=True):
-    cat = Category(category_name="", abbreviation="")
+    cat = Category(title="", abbreviation="")
     if save:
         cat.save()
     return cat

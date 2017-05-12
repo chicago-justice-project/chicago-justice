@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+from itertools import groupby
+from collections import OrderedDict
 
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
@@ -17,16 +19,34 @@ class NewsSource(models.Model):
         ordering = ['name']
 
 
+class CategoryQuerySet(models.QuerySet):
+    def active(self):
+        return self.filter(active=True)
+
+
 class Category(models.Model):
-    category_name = models.CharField(max_length=256)
+
+    KINDS = OrderedDict([
+        ('crimes', 'Crimes'),
+        ('orgs', 'Justice Agencies / Agencies'),
+        ('policing', 'Policing'),
+        ('other', 'Misc.'),
+    ])
+    DEFAULT_KIND = 'other'
+
+    title = models.CharField(max_length=256)
     abbreviation = models.CharField(max_length=5)
+    active = models.BooleanField(default=True)
+    kind = models.CharField(max_length=50, choices=KINDS.items(), default=DEFAULT_KIND)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
 
+    objects = CategoryQuerySet.as_manager()
+
     def __unicode__(self):
-        return '{} ({})'.format(self.category_name, self.abbreviation)
+        return '{} ({})'.format(self.title, self.abbreviation)
 
     class Meta:
-        ordering = ['abbreviation']
+        ordering = ['kind', 'abbreviation']
 
 
 class ScraperResult(models.Model):

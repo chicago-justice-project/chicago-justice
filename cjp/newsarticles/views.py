@@ -7,6 +7,7 @@ from django.db.models import Q, Max, Min
 from django.shortcuts import render, get_object_or_404
 from django import forms
 from newsarticles.models import Article, Category, NewsSource, UserCoding
+from newsarticles.forms import GroupedMultModelChoiceField
 
 
 class ArticleSearchForm(forms.Form):
@@ -29,9 +30,11 @@ class ArticleSearchForm(forms.Form):
     searchTerms = forms.CharField(label='Search Terms', required=False,
                                   max_length=1024)
 
-    category = forms.ModelMultipleChoiceField(label='Category',
-                                              required=False,
-                                              queryset=Category.objects.all())
+    category = GroupedMultModelChoiceField(label='Categories',
+                                           required=False,
+                                           queryset=Category.objects.active(),
+                                           group_by_field='kind',
+                                           group_label=Category.KINDS.get)
 
 def articleList(request):
     form = ArticleSearchForm(request.POST)
@@ -160,10 +163,12 @@ class UserCodingSubmitForm(forms.Form):
                                   required=False,
                                   label='Relevant')
 
-    categories = forms.ModelMultipleChoiceField(label='Categories',
-                                                required=False,
-                                                widget=forms.CheckboxSelectMultiple(),
-                                                queryset=Category.objects.all())
+    categories = GroupedMultModelChoiceField(label='Categories',
+                                             required=False,
+                                             queryset=Category.objects.active(),
+                                             widget=forms.CheckboxSelectMultiple(),
+                                             group_by_field='kind',
+                                             group_label=Category.KINDS.get)
 
 @login_required
 def code_article(request, pk):
