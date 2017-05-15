@@ -68,16 +68,16 @@ class ScraperResult(models.Model):
 
 class ArticleQuerySet(models.QuerySet):
     def exclude_irrelevant(self):
-        return self.exclude(usercoding__relevant=False).distinct()
+        return self.exclude(usercoding__relevant=False)
 
     def relevant(self):
-        return self.filter(usercoding__relevant=True).distinct()
+        return self.filter(usercoding__relevant=True)
 
     def coded(self):
-        return self.filter(usercoding__isnull=False).distinct()
+        return self.filter(usercoding__isnull=False)
 
     def filter_categories(self, categories):
-        return self.filter(usercoding__categories__in = categories).distinct()
+        return self.filter(usercoding__categories__in=categories)
 
 
 class Article(models.Model):
