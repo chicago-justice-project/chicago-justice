@@ -1,7 +1,6 @@
 from .base import *
 
 print("---Running Local Config---")
-CJP_ADMIN_USER = get_env_variable('CJP_ADMIN_USER')
 
 DEBUG = True
 
