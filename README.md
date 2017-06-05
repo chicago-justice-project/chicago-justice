@@ -1,65 +1,180 @@
 # Chicago Justice Project backend app
 
-## Installation instructions
+## Local installation instructions
 
-Recommended: Create a python virtualenv
+### Postgres installation
 
-`pip install -r requirements.txt`
+Postgres' PostGIS extensions are required.
 
-You must have GEOS and its python bindings installed. See:
-<https://docs.djangoproject.com/en/1.8/ref/contrib/gis/install/geolibs/>
+#### macOS
+
+The easiest way to install PostgreSQL and the PostGIS extensions for Mac is
+with a prebuilt Postgres installation, like
+[Postgres.app](http://postgresapp.com/).
+
+Alternatively, you may use [Homebrew](https://brew.sh/):
+
+```bash
+brew install postgres postgis
+brew services start postgresql
+```
+
+If you later get an error when trying to sync the database about the `libgdal`
+and `libspatialite` libraries, you may need to reinstall `libspatial` and
+`proj` from source and then reinstall `gdal` per [Issue
+#5161](https://github.com/Homebrew/homebrew-core/issues/5161) in Homebrew:
+
+```bash
+brew reinstall --build-from-source libspatialite proj
+brew reinstall gdal
+```
+
+#### GNU/Linux
+
+The versions of PostgreSQL and PostGIS provided in most distros' repositories
+should be adequate and can be installed through your distro's package manager.
+
+Ubuntu 16.04:
+
+```bash
+sudo apt-get update
+sudo apt-get install postgresql postgis
+```
+
+Arch Linux:
+
+```bash
+sudo pacman -S postgresql postgis
+sudo -u postgres initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
+sudo systemctl start postgresql.service
+```
 
 ### Postgres setup
 
-Postgres' PostGIS extensions are required. The easiest way to install the
-extension is with a prebuilt postgress installation, like Postgres.app for Mac.
+Once PostgreSQL is installed and running, you can create the PostGIS template
+database and the database you'll use locally for this app.
 
 Assuming user has db privileges:
 
-`sh create_template_postgis­1.4.sh`
+```bash
+sh scripts/createTemplatePostgis.sh
+```
 
-Or, if e.g. postgres user has db privileges:
+Or, if the user `postgres` has db privileges:
 
-`sudo ­u postgres sh create_template_postgis­1.4.sh`
+```bash
+sudo -u postgres scripts/createTemplatePostgis.sh
+```
 
-Then create Postgres user and data:
+This script will create a PostgreSQL template database called
+`template_postgis` that you'll use to create a local database for the app.
 
+Again, as a user with db privileges:
 
-`createdb -T template_postgis cjpwebdb`
-`createuser -P cjpuser`
+```bash
+createdb -T template_postgis cjpdb
+```
 
-Password: cjppassword
+The name of the database (e.g., `cjpdb`) may be anything you choose, but
+keep track of what you name it along with the user and password we're about to
+create. You'll need these for setting up your virtual environment.
 
-see: <http://postgis.net/docs/PostGIS_FAQ.html>
+Create the Postgres user and give it a password:
 
-in psql:
+```bash
+createuser --interactive --pwprompt
+```
 
-`# grant all on database cjpwebdb to cjpuser;`
+Finally, grant privileges on the database you just created to the user you just
+created. For instance, if we created database `cjpdb` and the user `cjpuser`:
+
+```bash
+psql -d postgres -c "GRANT ALL ON DATABASE cjpdb TO cjpuser;"
+```
+
+### Create a python virtual environment
+
+Next we're going to create a virtual environment to house the environment
+variables and the app's dependencies.
+
+If not already installed, install python's `virtualenv` and
+`virtualenvwrapper` (as we use python 2, we want to make sure we install the
+python 2 versions of all packages):
+
+```bash
+pip2 install virtualenv virtualenvwrapper
+mkdir ~/.virtualenvs
+```
+
+Add the following to your `.bashrc` file:
+
+```bash
+export WORKON_HOME=~/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
+```
+
+Find out the path to your python installation:
+
+```bash
+which python2
+```
+
+Create your working environment, naming it whatever you'd like (e.g.,
+`cjp_dev`), where `usr/local/bin/python2` is whatever path the previous command
+returned:
+
+```bash
+mkvirtualenv --python=/usr/local/bin/python2 cjp_dev
+```
+
+You may now use `workon cjp_dev` and `deactivate` to activate and deactivate
+the virtual environment. Setup hooks so that when the virtual environment is
+activated, the proper environment variables will be set. Be sure to substitute
+`cjp_dev`, `cjpdb`, `cjpuser`, and `cjppassword` with your setup.
+
+Add the following to `~/.virtualenvs/cjp_dev/bin/postactivate`:
+
+```bash
+export DJANGO_SETTINGS_MODULE="cjp.settings.local"
+export DATABASE_NAME="cjpdb"
+export DATABASE_USER="cjpuser"
+export DATABASE_PASSWORD="cjppassword"
+```
+
+To make sure these variables are unset upon deactivating the virtual
+environment, add the following to `~/.virtualenvs/cjp_dev/bin/predeactivate`:
+
+```bash
+unset DJANGO_SETTINGS_MODULE
+unset DATABASE_NAME
+unset DATABASE_USER
+unset DATABASE_PASSWORD
+```
+
+With your virtual environment activated, we're now ready to install the
+necessary dependencies:
+
+```bash
+pip2 install -r requirements.txt
+```
 
 ### Initialize Django models and start server
 
 ```bash
-export DJANGO_SETTINGS_MODULE=cjp.settings.local    # Change config from production (default) to local
 ./manage.py syncdb
 ./manage.py runserver
 ```
 
 ## Running news scrapers
 
-```
+```bash
 ./manage.py runscrapers
 ```
 
 To run a single scraper, enter the scraper name as an argument, e.g.:
 
-```
-./manage.py runscrapers crainsScraper
-```
-
-For local operation, you must specify local config via `DJANGO_SETTINGS_MODULE` env var, e.g.
-
-```
-DJANGO_SETTINGS_MODULE=cjp.settings.local ./manage.py runscrapers
+```bash
+./manage.py runscrapers crains
 ```
 
 ----
