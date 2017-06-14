@@ -18,8 +18,7 @@ STATIC_ROOT = '/tmp/cjpstatic'
 
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'cjpwebdb',                      # Or path to database file if using sqlite3.
         'USER': 'cjpuser',                      # Not used with sqlite3.
         'PASSWORD': 'cjppasswd',                  # Not used with sqlite3.

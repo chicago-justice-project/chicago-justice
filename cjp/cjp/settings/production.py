@@ -8,7 +8,6 @@ ALLOWED_HOSTS = [
     'ec2-54-88-218-235.compute-1.amazonaws.com',
     'data.chicagojustice.org',
 ]
-POSTGIS_VERSION = (2, 1, 8)
 
 CJP_ROOT = "/"
 CJP_ADMIN_USER = "cjpadmin"
@@ -36,8 +35,7 @@ STATIC_URL = '/'
 
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'cjpweb_prd',
         'USER': 'cjpuser',
         'PASSWORD': 'cjpuser',

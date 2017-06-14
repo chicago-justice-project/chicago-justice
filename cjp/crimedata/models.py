@@ -1,9 +1,8 @@
-from django.contrib.gis.db import models
+from django.db import models
 from django.db import connection
 import datetime
 
 class CrimeReport(models.Model):
-    #cpd_crime_id bigserial NOT NULL,
     orig_ward = models.CharField(max_length=5, db_index=True) # character varying(5) NOT NULL,
     orig_rd   = models.CharField(max_length=20, db_index=True) #  character varying(20) NOT NULL,
     orig_beat_num = models.CharField(max_length=8, db_index=True) #  character varying(8),
@@ -18,7 +17,7 @@ class CrimeReport(models.Model):
     orig_description = models.CharField(max_length=150, db_index=True) #  character varying(150) NOT NULL,
     orig_stdir = models.CharField(max_length=10, db_index=True) #  character varying(10) NOT NULL,
     orig_curr_iucr = models.CharField(max_length=20, db_index=True) #  character varying(20) NOT NULL,
-    
+
     web_case_num = models.CharField(max_length=20, db_index=True) #   character varying(20) NOT NULL,
     web_date = models.DateTimeField(db_index=True)                # timestamp without time zone NOT NULL,
     web_block = models.CharField(max_length=200, db_index=True) #   character varying(200) NOT NULL,
@@ -31,21 +30,19 @@ class CrimeReport(models.Model):
     web_beat = models.CharField(max_length=8, db_index=True) #   character varying(8) NOT NULL,
     web_ward = models.CharField(max_length=5, db_index=True) #   character varying(5) NOT NULL,
     web_nibrs = models.CharField(max_length=11, db_index=True) #   character varying(11) NOT NULL,
-    
+
     crime_date = models.DateField(db_index=True) # date NOT NULL,
     crime_time = models.TimeField(db_index=True)
-    
+
     geocode_latitude = models.FloatField(db_index=True) #  double precision NOT NULL,
     geocode_longitude = models.FloatField(db_index=True) #  double precision NOT NULL
-    geocode_point = models.PointField(srid=4326, spatial_index=True)
-    
-    objects = models.GeoManager()
-    
+
+
 class LookupCRCrimeDateMonth(models.Model):
     year = models.SmallIntegerField(db_index=True)
     month = models.SmallIntegerField(db_index=True)
     the_date = models.DateField()
-    
+
     @staticmethod
     def createLookup():
         LookupCRCrimeDateMonth.objects.all().delete()
@@ -59,79 +56,79 @@ class LookupCRCrimeDateMonth(models.Model):
                                            month=int(m['the_month']),
                                            the_date=datetime.date(int(m['the_year']), int(m['the_month']), 1))
             lcrm.save()
-            
+
 class LookupCRCode(models.Model):
     web_code = models.CharField(max_length=20, db_index=True)
-    
+
     @staticmethod
     def createLookup():
         LookupCRCode.objects.all().delete()
         codes = CrimeReport.objects.all().values('web_code').order_by('web_code').distinct()
-        
+
         for code in codes:
             lcr = LookupCRCode(web_code=code['web_code'])
             lcr.save()
-            
+
 class LookupCRCrimeType(models.Model):
     web_crime_type = models.CharField(max_length=100, db_index=True)
-    
+
     @staticmethod
     def createLookup():
         LookupCRCrimeType.objects.all().delete()
         crimeTypes = CrimeReport.objects.all().values('web_crime_type').order_by('web_crime_type').distinct()
-        
+
         for crimeType in crimeTypes:
             if len(crimeType['web_crime_type']) > 0:
                 lcrt = LookupCRCrimeType(web_crime_type=crimeType['web_crime_type'])
                 lcrt.save()
-                
+
 class LookupCRSecondary(models.Model):
     web_secondary = models.CharField(max_length=150, db_index=True)
-    
+
     @staticmethod
     def createLookup():
         LookupCRSecondary.objects.all().delete()
         secondaries = CrimeReport.objects.all().values('web_secondary').order_by('web_secondary').distinct()
-        
+
         for secondary in secondaries:
             if len(secondary['web_secondary']) > 0:
                 lcrs = LookupCRSecondary(web_secondary=secondary['web_secondary'])
                 lcrs.save()
-                
+
 class LookupCRBeat(models.Model):
     web_beat = models.CharField(max_length=8, db_index=True)
-    
+
     @staticmethod
     def createLookup():
         LookupCRBeat.objects.all().delete()
         beats = CrimeReport.objects.all().values('web_beat').order_by('web_beat').distinct()
-        
+
         for beat in beats:
             if len(beat['web_beat']) > 0:
                 lcrb = LookupCRBeat(web_beat=beat['web_beat'])
                 lcrb.save()
-                
+
 class LookupCRWard(models.Model):
     web_ward = models.CharField(max_length=5, db_index=True)
-    
+
     @staticmethod
     def createLookup():
         LookupCRWard.objects.all().delete()
         wards = CrimeReport.objects.all().values('web_ward').order_by('web_ward').distinct()
-        
+
         for ward in wards:
             if len(ward['web_ward']) > 0:
                 lcrw = LookupCRWard(web_ward=ward['web_ward'])
                 lcrw.save()
-                
+
 class LookupCRNibrs(models.Model):
     web_nibrs = models.CharField(max_length=11, db_index=True)
-    
+
     @staticmethod
     def createLookup():
         LookupCRNibrs.objects.all().delete()
         nibrss = CrimeReport.objects.all().values('web_nibrs').order_by('web_nibrs').distinct()
-        
+
         for nibrs in nibrss:
             if len(nibrs['web_nibrs']) > 0:
                 lcrn = LookupCRNibrs(web_nibrs=nibrs['web_nibrs'])

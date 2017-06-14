@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import django.contrib.gis.db.models.fields
 
 
 class Migration(migrations.Migration):
@@ -45,7 +44,6 @@ class Migration(migrations.Migration):
                 ('crime_time', models.TimeField(db_index=True)),
                 ('geocode_latitude', models.FloatField(db_index=True)),
                 ('geocode_longitude', models.FloatField(db_index=True)),
-                ('geocode_point', django.contrib.gis.db.models.fields.PointField(srid=4326)),
             ],
         ),
         migrations.CreateModel(
