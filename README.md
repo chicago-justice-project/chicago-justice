@@ -102,7 +102,9 @@ mkvirtualenv --python=/usr/local/bin/python2 cjp_dev
 You may now use `workon cjp_dev` and `deactivate` to activate and deactivate
 the virtual environment. Setup hooks so that when the virtual environment is
 activated, the proper environment variables will be set. Be sure to substitute
-`cjp_dev`, `cjpdb`, `cjpuser`, and `cjppassword` with your setup.
+`cjp_dev`, `cjpdb`, `cjpuser`, and `cjppassword` with your setup. You can also
+generate a unique secret key with something like this [Django Secret Key
+Generator](http://www.miniwebtool.com/django-secret-key-generator/)
 
 Add the following to `~/.virtualenvs/cjp_dev/bin/postactivate`:
 
@@ -111,6 +113,7 @@ export DJANGO_SETTINGS_MODULE="cjp.settings.local"
 export DATABASE_NAME="cjpdb"
 export DATABASE_USER="cjpuser"
 export DATABASE_PASSWORD="cjppassword"
+export SECRET_KEY='#&ubnzmo6$-0nk7i&hmii=e$7y-)nv+bm#&ps)6eq@!k+n-nq5'
 ```
 
 To make sure these variables are unset upon deactivating the virtual
@@ -121,6 +124,7 @@ unset DJANGO_SETTINGS_MODULE
 unset DATABASE_NAME
 unset DATABASE_USER
 unset DATABASE_PASSWORD
+unset SECRET_KEY
 ```
 
 With your virtual environment activated, we're now ready to install the
