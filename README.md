@@ -4,75 +4,47 @@
 
 ### Postgres installation
 
-Postgres' PostGIS extensions are required.
-
 #### macOS
 
-The easiest way to install PostgreSQL and the PostGIS extensions for Mac is
-with a prebuilt Postgres installation, like
-[Postgres.app](http://postgresapp.com/).
+The easiest way to install PostgreSQL for Mac is with a prebuilt Postgres
+installation, like [Postgres.app](http://postgresapp.com/).
 
 Alternatively, you may use [Homebrew](https://brew.sh/):
 
 ```bash
-brew install postgres postgis
+brew install postgres
 brew services start postgresql
-```
-
-If you later get an error when trying to sync the database about the `libgdal`
-and `libspatialite` libraries, you may need to reinstall `libspatial` and
-`proj` from source and then reinstall `gdal` per [Issue
-#5161](https://github.com/Homebrew/homebrew-core/issues/5161) in Homebrew:
-
-```bash
-brew reinstall --build-from-source libspatialite proj
-brew reinstall gdal
 ```
 
 #### GNU/Linux
 
-The versions of PostgreSQL and PostGIS provided in most distros' repositories
-should be adequate and can be installed through your distro's package manager.
+The version of PostgreSQL provided in most distros' repositories should be
+adequate and can be installed through your distro's package manager.
 
 Ubuntu 16.04:
 
 ```bash
 sudo apt-get update
-sudo apt-get install postgresql postgis
+sudo apt-get install postgresql
 ```
 
 Arch Linux:
 
 ```bash
-sudo pacman -S postgresql postgis
+sudo pacman -S postgresql
 sudo -u postgres initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
 sudo systemctl start postgresql.service
 ```
 
 ### Postgres setup
 
-Once PostgreSQL is installed and running, you can create the PostGIS template
-database and the database you'll use locally for this app.
+Once PostgreSQL is installed and running, you can create the database you'll
+use locally for this app.
 
-Assuming user has db privileges:
-
-```bash
-sh scripts/createTemplatePostgis.sh
-```
-
-Or, if the user `postgres` has db privileges:
+As a user with Postgres database privileges:
 
 ```bash
-sudo -u postgres scripts/createTemplatePostgis.sh
-```
-
-This script will create a PostgreSQL template database called
-`template_postgis` that you'll use to create a local database for the app.
-
-Again, as a user with db privileges:
-
-```bash
-createdb -T template_postgis cjpdb
+createdb cjpdb
 ```
 
 The name of the database (e.g., `cjpdb`) may be anything you choose, but
