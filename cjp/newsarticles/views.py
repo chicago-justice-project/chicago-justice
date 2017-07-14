@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -170,6 +171,19 @@ class UserCodingSubmitForm(forms.Form):
                                              group_by_field='kind',
                                              group_label=Category.KINDS.get)
 
+    location_data = forms.CharField(initial="[]",
+                                    required=False,
+                                    widget=forms.HiddenInput(attrs={'id': 'locsHiddenInput'}))
+
+    """ Validates location_data as JSON, but doesn't check the structure at all """
+    def clean_location_data(self):
+        jdata = self.cleaned_data['location_data'] or '[]'
+        try:
+            json_data = json.loads(jdata)
+        except ValueError:
+            raise forms.ValidationError('Invalid JSON in location_data', code='jsonerror')
+        return jdata
+
 @login_required
 def code_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
@@ -181,7 +195,8 @@ def code_article(request, pk):
                 article=article,
                 defaults={
                     'user': request.user,
-                    'relevant': form.cleaned_data['relevant']})
+                    'relevant': form.cleaned_data['relevant'],
+                    'locations': form.cleaned_data['location_data']})
 
             # ManyToMany relationships need to be added after the record is created
             user_coding.categories = form.cleaned_data['categories']
@@ -190,7 +205,8 @@ def code_article(request, pk):
     else:
         if article.is_coded():
             initial_data = {'categories': article.usercoding.categories.all(),
-                            'relevant': article.usercoding.relevant}
+                            'relevant': article.usercoding.relevant,
+                            'location_data': article.usercoding.locations}
         else:
             initial_data = None
 
