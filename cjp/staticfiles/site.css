@@ -1,6 +1,6 @@
 #sidebar {
     float: left;
-    width: 160px; 
+    width: 160px;
     background: #DFDFDF;
     padding: 20px;
     font-size: .8em;
@@ -35,9 +35,7 @@ div.articleHeaderContent {
     position: relative;
     display:inline;
 }
-div.articleTitle {
-    
-}
+
 div.articleFeed {
     display:inline;
     margin-right: 10px;
@@ -55,9 +53,28 @@ div.articleRelevant {
     margin-right: 10px;
 }
 div.articleBody {
+    line-height: 2em;
     white-space: pre;
-    font-family: monospace;
 }
+
+.articleBody::-moz-selection {
+    background: #FC0;
+}
+
+.articleBody::selection {
+    background: #FC0;
+}
+
+mark {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background-color: #FC0;
+}
+
+mark:hover {
+    cursor: pointer;
+}
+
 div.articleFunction {
     display:inline;
 }
@@ -143,7 +160,7 @@ th.listTableHeadCell {
 
 td.listTableDataCell {
     font-size: .8em;
-    border: 1px solid black;   
+    border: 1px solid black;
 }
 
 th.leftHead {
@@ -169,7 +186,7 @@ th.crimeReportHead {
 
 td.crimeReportContent {
     font-size: .8em;
-    border: 1px solid black;   
+    border: 1px solid black;
 }
 
 button.listTableAction {
