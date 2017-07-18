@@ -12,6 +12,13 @@
 # body_selector: CSS selector for the article text
 # body_exclude_selector: CSS selector for elements to remove from the body.
 
+- news_source: fop-news
+  index_url: https://fop7blog.org/news?format=RSS
+  rss_index: True
+  title_selector: .title
+  body_selector: .body
+  author_selector: .author
+
 - news_source: fop-blog
   index_url: https://thebluevoicechoice.blogspot.com/feeds/posts/default
   rss_index: True
