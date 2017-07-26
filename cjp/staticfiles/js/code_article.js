@@ -5,6 +5,12 @@ function updateForm() {
     var locsJSON = JSON.stringify(Locs);
     $(locationsSelector).attr("value", locsJSON);
 }
+function isIE() {
+  var ua = window.navigator.userAgent;
+  var msie = ua.indexOf("MSIE ");
+  var trident = ua.indexOf("Trident/");
+  return (msie != -1) || (trident != -1);
+}
 // Adapted from: https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
 function getSelectionWithin(element) {
   var start = 0; // Start point of selection with relation to `element`
@@ -48,12 +54,21 @@ function getSelectionWithin(element) {
           }
         }
       }
-      preCaretRange.selectNodeContents(element);
-      var elementContents = preCaretRange.cloneContents();
-      preCaretRange.setEnd(range.startContainer, range.startOffset);
-      start = preCaretRange.toString().length;
-      preCaretRange.setEnd(range.endContainer, range.endOffset);
-      end = preCaretRange.toString().length;
+      if (isIE()) {
+          preCaretRange.selectNodeContents(element);
+          var elementContents = preCaretRange.cloneContents();
+          preCaretRange.setEnd(range.startContainer, range.startOffset);
+          start = preCaretRange.toString().replace(/\n+/g, " ").replace(/\r+/g, "").length;
+          preCaretRange.setEnd(range.endContainer, range.endOffset);
+          end = preCaretRange.toString().replace(/\n+/g, " ").replace(/\r+/g, "").length;
+      } else {
+          preCaretRange.selectNodeContents(element);
+          var elementContents = preCaretRange.cloneContents();
+          preCaretRange.setEnd(range.startContainer, range.startOffset);
+          start = preCaretRange.toString().length;
+          preCaretRange.setEnd(range.endContainer, range.endOffset);
+          end = preCaretRange.toString().length;
+      }
       if (end - start !== 0) {
         collapsed = false;
       }
