@@ -131,6 +131,7 @@ class UserCoding(models.Model):
     # Fields from classification/coding
     relevant = models.BooleanField()
     categories = models.ManyToManyField(Category, blank=True)
+    locations = models.TextField(default='[]', blank=True)
 
     class Meta:
         unique_together = (("article", "user"),)

@@ -2,7 +2,7 @@
 
 {% load static from staticfiles %}
 
-{% block esrimap %}
+{% block head %}
     {% include "common/map_inc.html" %}
 {% endblock %}
 
@@ -70,7 +70,7 @@
                     <tr>
                         <th class="crimeReportHead leftHead">orig_domestic_i</th>
                         <td class="crimeReportContent">{{ crimeReport.orig_domestic_i }}</td>
-                    </tr>            
+                    </tr>
                     <tr>
                         <th class="crimeReportHead leftHead">orig_ward</th>
                         <td class="crimeReportContent">{{ crimeReport.orig_ward }}</td>
@@ -147,7 +147,7 @@
             </table>
         </div>
         <div id="mapDiv" style="margin-left:370px; width: 400px; height:400px; border:1px solid #000;"></div>
-        
+
         <script type="text/javascript">
         /* <![CDATA[ */
             dojo.require("esri.map");
@@ -157,25 +157,25 @@
                 var basemapURL= "http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"
                 var basemap = new esri.layers.ArcGISTiledMapServiceLayer(basemapURL);
                 map.addLayer(basemap);
-                
-                
+
+
                 var point = new esri.geometry.Point({{ crimeReport.geocode_longitude }},
                                                     {{ crimeReport.geocode_latitude }},
                                                     new esri.SpatialReference({ wkid: 4326 }));
                 var mapPoint = esri.geometry.geographicToWebMercator(point);
-                
+
                 var factor = 500;
                 var extent = new esri.geometry.Extent(
                                     mapPoint.x - factor, mapPoint.y - factor,
                                     mapPoint.x + factor, mapPoint.y + factor,
                                     mapPoint.spatialReference);
                 map.setExtent(extent, true);
-                    
+
                 dojo.connect(map, 'onLoad', function() {
                     var shadow = new esri.symbol.PictureMarkerSymbol('{% static "msmarker.shadow.png" %}', 59, 32);
                     shadow.setOffset(16, 15);
                     map.graphics.add(new esri.Graphic(mapPoint, shadow));
-                    
+
                     var marker = new esri.symbol.PictureMarkerSymbol('{% static "red-pushpin.png" %}', 32, 32);
                     marker.setOffset(6, 15);
                     map.graphics.add(new esri.Graphic(mapPoint, marker));
