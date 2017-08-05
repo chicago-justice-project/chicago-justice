@@ -202,7 +202,7 @@ def code_article(request, pk):
             # ManyToMany relationships need to be added after the record is created
             user_coding.categories = form.cleaned_data['categories']
 
-            return HttpResponseRedirect(reverse('mainArticleView'))
+            return HttpResponseRedirect(reverse('random-article'))
     else:
         if article.is_coded():
             initial_data = {'categories': article.usercoding.categories.all(),
