@@ -19,6 +19,9 @@
             <p><b>Articles</b></p>
             <ul>
                 <li><a href="{% url 'mainArticleView' %}">Articles</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'random-article' %}">Code Random Article</a></li>
+                {% endif %}
             </ul>
 
             <p><b>Crime Reports</b></p>

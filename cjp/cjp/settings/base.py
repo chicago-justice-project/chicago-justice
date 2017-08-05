@@ -175,5 +175,5 @@ LOGGING = {
 # Default redirect path after login/logout
 # TODO: move to 'next' param in HTTP request
 CJP_ROOT = '/'
-LOGIN_REDIRECT_URL = CJP_ROOT
+LOGIN_REDIRECT_URL = '/articles/coderandom/'
 LOGIN_URL = '/user/login/'
