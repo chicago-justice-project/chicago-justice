@@ -59,55 +59,48 @@
 </div>
 
 {% if articles %}
-    <div style="width:95%">
-        <div style="width:100%">
-            {% include "common/pagination_inc.html" with objectList=articles showExtra=1 objectLabel="Article(s)" %}
-        </div>
-        <table class="listTable" style="width:100%">
+      {% include "common/pagination_inc.html" with objectList=articles showExtra=1 objectLabel="Article(s)" %}
+      <div id="articleTable" class="container-fluid">
+        <table class="table table-bordered">
             <tr>
-                <th class="listTableHeadCell" style="width:25%">Title</th>
-                <th class="listTableHeadCell">Source</th>
-                <th class="listTableHeadCell">Crime Related</th>
-                <th class="listTableHeadCell">Categories</th>
-                <th class="listTableHeadCell">Load Date</th>
-                <th class="listTableHeadCell">Last Updated</th>
-                <th class="listTableHeadCell"></th>
-                <th class="listTableHeadCell" style="width:25%">Original URL</th>
+                <th>Title</th>
+                <th>Source</th>
+                <th>Categories</th>
+                <th>Load Date</th>
+                <th>Last Updated</th>
+                <th></th>
+                <th>Original URL</th>
             </tr>
             {% for article in articles.object_list %}
+              {% if article.is_relevant %}
+                <tr class="success">
+              {% elif article.is_coded %}
+                <tr class="danger">
+              {% else %}
                 <tr>
-                    <td class="listTableDataCell">{{ article.title|safe }}</td>
-                    <td class="listTableDataCell">{{ article.news_source }}</td>
-                    <td class="listTableDataCell" style="text-align:center;">
-                        {% if article.is_relevant %}
-                            <img src="{% static "good_checkmark.png" %}" alt="crime related" />
-                        {% elif article.is_coded %}
-                            <img src="{% static "bad_x.png" %}" alt="not crime related" />
-                        {% endif %}
-                    </td>
-                    <td class="listTableDataCell">
-                        {% for category in article.get_categories %}
-                            {{ category.abbreviation }}<br />
-                        {% endfor %}
-                    </td>
-                    <td class="listTableDataCell">{{ article.created }}</td>
-                    <td class="listTableDataCell">{{ article.last_modified }}</td>
-                    <td class="listTableDataCell">
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'code-article' article.id %}">Code Article</a></td>
-                        {% else %}
-                        <a href="{% url 'view-article' article.id %}">View Article</a></td>
-                        {% endif %}
-                    <td class="listTableDataCell"><a href="{{ article.url }}">{{ article.url }}</a></td>
+              {% endif %}
+                  <td>{{ article.title|safe }}</td>
+                  <td>{{ article.news_source }}</td>
+                  <td>
+                    {% for category in article.get_categories %}
+                      {{ category.abbreviation }}<br />
+                    {% endfor %}
+                  </td>
+                  <td>{{ article.created }}</td>
+                  <td>{{ article.last_modified }}</td>
+                  <td>
+                   {% if user.is_authenticated %}
+                   <a href="{% url 'code-article' article.id %}">Code Article</a></td>
+                   {% else %}
+                   <a href="{% url 'view-article' article.id %}">View Article</a></td>
+                   {% endif %}
+                  <td><a href="{{ article.url }}">{{ article.url }}</a></td>
                 </tr>
             {% endfor %}
         </table>
-        <div style="width:100%">
-            {% include "common/pagination_inc.html" with objectList=articles objectLabel="Article(s)" %}
-        </div>
-    </div>
+      </div>
 {% else %}
-    <p>No articles are available.</p>
+    <div class="alert alert-danger" role="alert">No articles are available.</div>
 {% endif %}
 
 {% endblock %}

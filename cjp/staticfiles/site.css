@@ -38,11 +38,19 @@ nav.coding-form ul li label {
   font-weight: normal;
 }
 
+input#pageNumberInput.form-control {
+  width: 50px;
+}
+
 div.article {
     margin-top: 2em;
     margin-bottom: 2em;
     border: 1px solid black;
     font-size: .8em;
+}
+
+div#articleTable {
+  margin-top: 1em;
 }
 div.articleHeader {
     background-color: #ccccff;
