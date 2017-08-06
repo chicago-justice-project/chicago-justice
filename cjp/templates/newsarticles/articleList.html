@@ -17,45 +17,53 @@
     });
 </script>
 
-<div class="search">
-    <form action="{% url 'mainArticleView' %}" method="post">
-        <table>
-            <tr>
-                <td colspan="4">{{ form.non_field_errors }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.showAll.label }}{{ form.showAll.errors }}</td>
-                <td>{{ form.showAll }}</td>
-                <td>{{ form.news_source.label }}{{ form.news_source.errors }}</td>
-                <td>{{ form.news_source }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.startDate.label }}{{ form.startDate.errors }}</td>
-                <td>{{ form.startDate }}</td>
-                <td rowspan="3">{{ form.category.label }}{{ form.category.errors }}</td>
-                <td rowspan="3">{{ form.category }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.endDate.label }}{{ form.endDate.errors }}</td>
-                <td>{{ form.endDate }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.searchTerms.label }}{{ form.searchTerms.errors }}</td>
-                <td>{{ form.searchTerms }}</td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align:center;">
-                    {% csrf_token %}
-                    <input type="hidden" name="newSearch" value="True" />
-                    <input type="hidden" name="clearSearch" value="False" />
-                    <button class="searchButton">Search</button>
-                    <button class="searchButton" onclick="this.form.reset(); return false;">Reset</button>
-                    <button class="searchButton"
-                            onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
-                </td>
-            </tr>
-        </table>
+<div class="container-fluid">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Search Articles</h3>
+    </div>
+    <div class="panel-body">
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+      {% elif form.showAll.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.showAll.errors }}</div>
+      {% elif form.news_source.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.news_source.errors }}</div>
+      {% elif form.startDate.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.startDate.errors }}</div>
+      {% elif form.endDate.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.endDate.errors }}</div>
+      {% elif form.searchTerms.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.searchTerms.errors }}</div>
+      {% endif %}
+      <form class="form-horizontal" action="{% url 'mainArticleView' %}" method="post">
+      {% csrf_token %}
+        <div class="form-inline text-center">
+            <label for="showAll">{{ form.showAll.label }}</label>
+            {{ form.showAll }}
+            <label for="news_source">{{ form.news_source.label }}</label>
+            {{ form.news_source }}
+            <label for="searchTerms">{{ form.searchTerms.label }}</label>
+            {{ form.searchTerms }}
+        </div>
+        <div class="form-inline text-center">
+          <label for="category">{{ form.category.label }}</label>
+          {{ form.category }}
+          <label for="startDate">{{ form.startDate.label }}</label>
+          {{ form.startDate }}
+          <label for="endDate">{{ form.endDate.label }}</label>
+          {{ form.endDate }}
+        </div>
+        <div class="form-inline text-center">
+          <input type="hidden" name="newSearch" value="True" />
+          <input type="hidden" name="clearSearch" value="False" />
+          <button class="btn btn-default">Search</button>
+          <button class="btn btn-default" onclick="this.form.reset(); return false;">Reset</button>
+          <button class="btn btn-default" onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
+        </div>
     </form>
+  </div>
+  </div>
 </div>
 
 {% if articles %}
