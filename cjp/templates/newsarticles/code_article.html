@@ -9,49 +9,50 @@
 {% endblock %}
 
 {% block title %}
-Coding article: {{ article.title }}
+Coding Article: <small>{{ article.title }}</small>
 {% endblock %}
 
 {% block content %}
-<table class="crimeReportTable">
+<div class="container">
+  <div class="col-md-3" role="complementary">
+    <div class="coding-form affix panel panel-default">
+      <form action="" method="post">
+      {% csrf_token %}
+      <div class="panel-body">
+      <input class="btn btn-default" type="submit" value="Submit" />
+      {{ form.as_ul }}
+      </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-9" role="main">
+    <table class="table table-bordered">
     <tr>
-        <th class="crimeReportHead leftHead">Title</th>
-        <td class="crimeReportContent">{{ article.title }}</td>
+        <th class="crimeReportHead">Source</th>
+        <td>{{ article.news_source }}</td>
     </tr>
     <tr>
-        <th class="crimeReportHead leftHead">Source</th>
-        <td class="crimeReportContent">{{ article.news_source }}</td>
+        <th class="crimeReportHead">Original Load Date</th>
+        <td>{{ article.created }}</td>
     </tr>
     <tr>
-        <th class="crimeReportHead leftHead">Coding</th>
-        <td class="crimeReportContent">
-            <form action="" method="post">
-                {% csrf_token %}
-                {{ form.as_ul }}
-                <input type="submit" value="Submit" />
-            </form>
-        </td>
+        <th class="crimeReportHead">Last Updated</th>
+        <td>{{ article.last_modified }}</td>
     </tr>
     <tr>
-        <th class="crimeReportHead leftHead">Original Load Date</th>
-        <td class="crimeReportContent">{{ article.created }}</td>
+        <th class="crimeReportHead">Original URL</th>
+        <td><a href="{{ article.url }}">{{ article.url }}</a></td>
     </tr>
-    </tr>
-        <th class="crimeReportHead leftHead">Last Updated</th>
-        <td class="crimeReportContent">{{ article.last_modified }}</td>
-    </tr>
-    </tr>
-        <th class="crimeReportHead leftHead">Original URL</th>
-        <td class="crimeReportContent"><a href="{{ article.url }}">{{ article.url }}</a></td>
-    </tr>
-    </tr>
-        <th class="crimeReportHead leftHead">Article Text</th>
-        <td class="crimeReportContent">
-            <div class="articleBody">
-                {{article.bodytext }}
-            </div>
-        </td>
-    </tr>
-</table>
+    </table>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3>Article Text</h3>
+      </div>
+      <div class="articleBody panel-body">
+        {{article.bodytext }}
+      </div> <!-- /.panel-body-->
+    </div> <!-- /.panel-->
+  </div><!-- /.col-md-9-->
+</div><!-- /.container-->
 
 {% endblock %}

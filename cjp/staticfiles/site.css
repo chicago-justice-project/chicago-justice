@@ -1,18 +1,33 @@
-#sidebar {
-    float: left;
-    width: 160px;
-    background: #DFDFDF;
-    padding: 20px;
-    font-size: .8em;
-    border: 1px solid black;
-}
-
 #content {
-    margin-left: 220px;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 .sidebarSubmenu {
     padding-left: 30px;
+}
+
+div.coding-form {
+  width: 275px;
+}
+
+div.coding-form ul, li {
+  list-style: none;
+}
+
+div.coding-form ul {
+  padding-left: 2px;
+  margin-left: 2px;
+  font-weight: bold;
+}
+
+div.coding-form li {
+  padding-left: 3px;
+  margin-left: 3px;
+}
+
+div.coding-form label {
+  font-weight: normal;
 }
 
 div.article {
@@ -163,11 +178,6 @@ td.listTableDataCell {
     border: 1px solid black;
 }
 
-th.leftHead {
-    text-align: left;
-    vertical-align: top;
-}
-
 .message {
     text-align: center;
     font-size: .8em;
@@ -179,14 +189,7 @@ table.crimeReportTable {
 }
 
 th.crimeReportHead {
-    font-size: .8em;
-    border: 1px solid black;
-    background-color: #ccccff;
-}
-
-td.crimeReportContent {
-    font-size: .8em;
-    border: 1px solid black;
+    background-color: #D9EDF7;
 }
 
 button.listTableAction {
