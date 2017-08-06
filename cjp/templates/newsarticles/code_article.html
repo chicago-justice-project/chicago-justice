@@ -14,16 +14,15 @@ Coding Article: <small>{{ article.title }}</small>
 
 {% block content %}
 <div class="container">
+  <div class="row">
   <div class="col-md-3" role="complementary">
-    <div class="coding-form affix panel panel-default">
-      <form action="" method="post">
+    <form action="" method="post">
       {% csrf_token %}
-      <div class="panel-body">
-      <input class="btn btn-default" type="submit" value="Submit" />
-      {{ form.as_ul }}
-      </div>
-      </form>
-    </div>
+      <nav data-spy="affix" class="coding-form">
+        <input class="code-submit-btn btn btn-primary btn-lg btn-block" type="submit" value="Submit Coding" />
+        {{ form.as_ul }}
+      </nav>
+    </form>
   </div>
   <div class="col-md-9" role="main">
     <table class="table table-bordered">
@@ -44,7 +43,7 @@ Coding Article: <small>{{ article.title }}</small>
         <td><a href="{{ article.url }}">{{ article.url }}</a></td>
     </tr>
     </table>
-    <div class="panel panel-primary">
+    <div class="panel panel-info">
       <div class="panel-heading">
         <h3>Article Text</h3>
       </div>
@@ -53,6 +52,7 @@ Coding Article: <small>{{ article.title }}</small>
       </div> <!-- /.panel-body-->
     </div> <!-- /.panel-->
   </div><!-- /.col-md-9-->
+</div><!-- /.row -->
 </div><!-- /.container-->
 
 {% endblock %}
