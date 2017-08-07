@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block title %}
-Coding Article: <small>{{ article.title }}</small>
+{{ article.title }}<small>(Coding Article)</small>
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@ Coding Article: <small>{{ article.title }}</small>
   <div class="col-md-3" role="complementary">
     <form action="" method="post">
       {% csrf_token %}
-      <nav data-spy="affix" class="coding-form">
+      <nav id="codingSidebar" class="coding-form affix">
         <input class="code-submit-btn btn btn-primary btn-lg btn-block" type="submit" value="Submit Coding" />
         {{ form.as_ul }}
       </nav>
@@ -45,7 +45,7 @@ Coding Article: <small>{{ article.title }}</small>
     </table>
     <div class="panel panel-info">
       <div class="panel-heading">
-        <h3>Article Text</h3>
+        <h3>Article Text <small>(Select text below to mark as location data)</small></h3>
       </div>
       <div class="articleBody panel-body">
         {{article.bodytext }}

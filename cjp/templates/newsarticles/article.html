@@ -5,40 +5,42 @@
 {% endblock %}
 
 {% block content %}
-<table class="crimeReportTable">
+<div class="container">
+  <div class="row">
+  <div class="col-md-12" role="main">
+    <table class="table table-bordered">
     <tr>
-        <th class="crimeReportHead leftHead">Title</th>
-        <td class="crimeReportContent">{{ article.title }}</td>
+        <th class="crimeReportHead">Source</th>
+        <td>{{ article.news_source }}</td>
     </tr>
     <tr>
-        <th class="crimeReportHead leftHead">Source</th>
-        <td class="crimeReportContent">{{ article.news_source }}</td>
+        <th class="crimeReportHead">Original Load Date</th>
+        <td>{{ article.created }}</td>
     </tr>
     <tr>
-        <th class="crimeReportHead leftHead">Original Load Date</th>
-        <td class="crimeReportContent">{{ article.created }}</td>
+        <th class="crimeReportHead">Last Updated</th>
+        <td>{{ article.last_modified }}</td>
     </tr>
+    <tr>
+        <th class="crimeReportHead">Original URL</th>
+        <td><a href="{{ article.url }}">{{ article.url }}</a></td>
     </tr>
-        <th class="crimeReportHead leftHead">Last Updated</th>
-        <td class="crimeReportContent">{{ article.last_modified }}</td>
-    </tr>
-    </tr>
-        <th class="crimeReportHead leftHead">Original URL</th>
-        <td class="crimeReportContent"><a href="{{ article.url }}">{{ article.url }}</a></td>
-    </tr>
-    </tr>
-        <th class="crimeReportHead leftHead">
+    </table>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3>
             {% if is_preview %}
             Article Preview
             {% else %}
             Article Text
             {% endif %}
-        </th>
-        <td class="crimeReportContent">
-            <div class="articleBody">
-                {{ display_text }}
-            </div>
-        </td>
-    </tr>
-</table>
+        </h3>
+      </div>
+      <div class="articleBody panel-body">
+        {{ display_text }}
+      </div> <!-- /.panel-body-->
+    </div> <!-- /.panel-->
+  </div><!-- /.col-md-12-->
+  </div><!-- /.row -->
+</div><!-- /.container-->
 {% endblock %}

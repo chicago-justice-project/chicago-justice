@@ -7,6 +7,12 @@
     padding-left: 30px;
 }
 
+@media (max-width: 992px) {
+    nav#codingSidebar.affix {
+        position: static;
+    }
+}
+
 nav.coding-form {
   margin-top: 1em;
   width: 275px;
