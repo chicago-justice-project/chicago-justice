@@ -5,7 +5,7 @@ from os.path import dirname
 from os import environ
 from django.core.exceptions import ImproperlyConfigured
 
-# Function to get environment variables
+# Function to get environment variables from os environment
 def get_env_variable(var_name):
     try:
         return os.environ[var_name]
