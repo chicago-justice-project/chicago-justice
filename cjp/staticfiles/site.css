@@ -187,6 +187,15 @@ div.login, .loginButton {
     font-size: .8em;
 }
 
+label.required:after {
+  content: "*";
+  color: red;
+}
+
+.red {
+  color: red;
+}
+
 table.listTable {
     border-collapse:collapse;
 }

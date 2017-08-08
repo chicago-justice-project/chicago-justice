@@ -25,15 +25,20 @@
     <div class="panel-body">
       {% if form.non_field_errors %}
       <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
-      {% elif form.showAll.errors %}
+      {% endif %}
+      {% if form.showAll.errors %}
       <div class="alert alert-danger" role="alert">{{ form.showAll.errors }}</div>
-      {% elif form.news_source.errors %}
+      {% endif %}
+      {% if form.news_source.errors %}
       <div class="alert alert-danger" role="alert">{{ form.news_source.errors }}</div>
-      {% elif form.startDate.errors %}
+      {% endif %}
+      {% if form.startDate.errors %}
       <div class="alert alert-danger" role="alert">{{ form.startDate.errors }}</div>
-      {% elif form.endDate.errors %}
+      {% endif %}
+      {% if form.endDate.errors %}
       <div class="alert alert-danger" role="alert">{{ form.endDate.errors }}</div>
-      {% elif form.searchTerms.errors %}
+      {% endif %}
+      {% if form.searchTerms.errors %}
       <div class="alert alert-danger" role="alert">{{ form.searchTerms.errors }}</div>
       {% endif %}
       <form class="form-horizontal" action="{% url 'mainArticleView' %}" method="post">
