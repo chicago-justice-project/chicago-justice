@@ -5,44 +5,42 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Scraper Counts</h3>
-        </div>
-        <div class="panel-body">
-          <table class="table table-bordered">
-            {% for total in totals %}
-            <tr>
-              <th>{{ total.0 }}</th>
-              <td>{{ total.1 }}</td>
-            </tr>
-            {% endfor %}
-          </table>
-        </div>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Scraper Counts</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordered">
+          {% for total in totals %}
+          <tr>
+            <th>{{ total.0 }}</th>
+            <td>{{ total.1 }}</td>
+          </tr>
+          {% endfor %}
+        </table>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Article Counts</h3>
-        </div>
-        <div class="panel-body">
-          <table class="table table-bordered">
-            <tr>
-              <th>Non-relevant Article Count</th>
-              <td>{{ articleNonRelevantCount }}</td>
-            </tr>
-            <tr>
-              <th>Categorized Articles</th>
-              <td>{{ categorizedArticleCount }}</td>
-            </tr>
-          </table>
-        </div>
+</div>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Article Counts</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordered">
+          <tr>
+            <th>Non-relevant Article Count</th>
+            <td>{{ articleNonRelevantCount }}</td>
+          </tr>
+          <tr>
+            <th>Categorized Articles</th>
+            <td>{{ categorizedArticleCount }}</td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>

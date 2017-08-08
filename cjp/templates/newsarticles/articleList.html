@@ -17,105 +17,103 @@
     });
 </script>
 
-<div class="container-fluid">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Search Articles</h3>
-    </div>
-    <div class="panel-body">
-      {% if form.non_field_errors %}
-      <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
-      {% endif %}
-      {% if form.showAll.errors %}
-      <div class="alert alert-danger" role="alert">{{ form.showAll.errors }}</div>
-      {% endif %}
-      {% if form.news_source.errors %}
-      <div class="alert alert-danger" role="alert">{{ form.news_source.errors }}</div>
-      {% endif %}
-      {% if form.startDate.errors %}
-      <div class="alert alert-danger" role="alert">{{ form.startDate.errors }}</div>
-      {% endif %}
-      {% if form.endDate.errors %}
-      <div class="alert alert-danger" role="alert">{{ form.endDate.errors }}</div>
-      {% endif %}
-      {% if form.searchTerms.errors %}
-      <div class="alert alert-danger" role="alert">{{ form.searchTerms.errors }}</div>
-      {% endif %}
-      <form class="form-horizontal" action="{% url 'mainArticleView' %}" method="post">
-      {% csrf_token %}
-        <div class="form-inline text-center">
-            <label for="showAll">{{ form.showAll.label }}</label>
-            {{ form.showAll }}
-            <label for="news_source">{{ form.news_source.label }}</label>
-            {{ form.news_source }}
-            <label for="searchTerms">{{ form.searchTerms.label }}</label>
-            {{ form.searchTerms }}
-        </div>
-        <div class="form-inline text-center">
-          <label for="category">{{ form.category.label }}</label>
-          {{ form.category }}
-          <label for="startDate">{{ form.startDate.label }}</label>
-          {{ form.startDate }}
-          <label for="endDate">{{ form.endDate.label }}</label>
-          {{ form.endDate }}
-        </div>
-        <div class="form-inline text-center">
-          <input type="hidden" name="newSearch" value="True" />
-          <input type="hidden" name="clearSearch" value="False" />
-          <button class="btn btn-default">Search</button>
-          <button class="btn btn-default" onclick="this.form.reset(); return false;">Reset</button>
-          <button class="btn btn-default" onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
-        </div>
-    </form>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Search Articles</h3>
   </div>
+  <div class="panel-body">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% if form.showAll.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.showAll.errors }}</div>
+    {% endif %}
+    {% if form.news_source.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.news_source.errors }}</div>
+    {% endif %}
+    {% if form.startDate.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.startDate.errors }}</div>
+    {% endif %}
+    {% if form.endDate.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.endDate.errors }}</div>
+    {% endif %}
+    {% if form.searchTerms.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.searchTerms.errors }}</div>
+    {% endif %}
+    <form class="form-horizontal" action="{% url 'mainArticleView' %}" method="post">
+    {% csrf_token %}
+      <div class="form-inline text-center">
+          <label for="showAll">{{ form.showAll.label }}</label>
+          {{ form.showAll }}
+          <label for="news_source">{{ form.news_source.label }}</label>
+          {{ form.news_source }}
+          <label for="searchTerms">{{ form.searchTerms.label }}</label>
+          {{ form.searchTerms }}
+      </div>
+      <div class="form-inline text-center">
+        <label for="category">{{ form.category.label }}</label>
+        {{ form.category }}
+        <label for="startDate">{{ form.startDate.label }}</label>
+        {{ form.startDate }}
+        <label for="endDate">{{ form.endDate.label }}</label>
+        {{ form.endDate }}
+      </div>
+      <div class="form-inline text-center">
+        <input type="hidden" name="newSearch" value="True" />
+        <input type="hidden" name="clearSearch" value="False" />
+        <button class="btn btn-default">Search</button>
+        <button class="btn btn-default" onclick="this.form.reset(); return false;">Reset</button>
+        <button class="btn btn-default" onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
+      </div>
+    </form>
   </div>
 </div>
 
 {% if articles %}
-      {% include "common/pagination_inc.html" with objectList=articles showExtra=1 objectLabel="Article(s)" %}
-      <div id="articleTable" class="container-fluid">
-        <table class="table table-bordered">
-            <tr>
-                <th>Title</th>
-                <th>Source</th>
-                <th>Crime Related</th>
-                <th>Categories</th>
-                <th>Load Date</th>
-                <th>Last Updated</th>
-                <th></th>
-                <th>Original URL</th>
-            </tr>
-             {% for article in articles.object_list %}
-                <tr>
-                  <td>{{ article.title|safe }}</td>
-                  <td>{{ article.news_source }}</td>
-                  <td class="text-center">
-                    {% if article.is_relevant %}
-                    <img src="{% static "good_checkmark.png" %}" alt="crime related" />
-                    {% elif article.is_coded %}
-                    <img src="{% static "bad_x.png" %}" alt="not crime related" />
-                    {% endif %}
-                  </td>
-                  <td>
-                    {% for category in article.get_categories %}
-                      {{ category.abbreviation }}<br />
-                    {% endfor %}
-                  </td>
-                  <td>{{ article.created }}</td>
-                  <td>{{ article.last_modified }}</td>
-                  <td>
-                   {% if user.is_authenticated %}
-                   <a href="{% url 'code-article' article.id %}">Code Article</a></td>
-                   {% else %}
-                   <a href="{% url 'view-article' article.id %}">View Article</a></td>
-                   {% endif %}
-                  <td><a href="{{ article.url }}">{{ article.url }}</a></td>
-                </tr>
-            {% endfor %}
-        </table>
-      </div>
+  {% include "common/pagination_inc.html" with objectList=articles showExtra=1 objectLabel="Article(s)" %}
+  <table id="articleTable" class="table table-bordered">
+   <tr>
+    <th>Title</th>
+    <th>Source</th>
+    <th>Crime Related</th>
+    <th>Categories</th>
+    <th>Load Date</th>
+    <th>Last Updated</th>
+    <th></th>
+    <th>Original URL</th>
+   </tr>
+   {% for article in articles.object_list %}
+     <tr>
+       <td>{{ article.title|safe }}</td>
+       <td>{{ article.news_source }}</td>
+       <td class="text-center">
+         {% if article.is_relevant %}
+         <img src="{% static "good_checkmark.png" %}" alt="crime related" />
+         {% elif article.is_coded %}
+         <img src="{% static "bad_x.png" %}" alt="not crime related" />
+         {% endif %}
+       </td>
+       <td>
+         {% for category in article.get_categories %}
+           {{ category.abbreviation }}<br />
+         {% endfor %}
+       </td>
+       <td>{{ article.created }}</td>
+       <td>{{ article.last_modified }}</td>
+       <td>
+         {% if user.is_authenticated %}
+         <a href="{% url 'code-article' article.id %}">Code Article</a>
+       </td>
+         {% else %}
+         <a href="{% url 'view-article' article.id %}">View Article</a>
+       </td>
+         {% endif %}
+       <td><a href="{{ article.url }}">{{ article.url }}</a></td>
+     </tr>
+   {% endfor %}
+  </table>
 {% else %}
-    <div class="alert alert-danger" role="alert">No articles are available.</div>
+  <div class="alert alert-danger" role="alert">No articles are available.</div>
 {% endif %}
 
 {% endblock %}

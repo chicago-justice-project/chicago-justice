@@ -1,33 +1,31 @@
-<div id="paginationContainer" class="container-fluid">
-  <div class="row">
-    {% if showExtra %}
-    <div class="col-md-6 text-left">
-      {{ objectList.paginator.count }} {{ objectLabel }}
-    </div>
-    {% endif %}
-    <div class="col-md-6 text-right">
-      <div class="form-inline">
-      {% if objectList.has_previous %}
-        <form class="form-group form-group-sm" action="" method="post">
-        {% csrf_token %}
-          <input name="page" value="{{ objectList.previous_page_number }}" type="hidden" />
-          <button type="submit" class="btn btn-default btn-xs" aria-label="Previous"><span class="glyphicon glyphicon-menu-left"></span></button>
-        </form>
-      {% endif %}
+<div class="row">
+  {% if showExtra %}
+  <div class="col-md-6 text-left">
+    {{ objectList.paginator.count }} {{ objectLabel }}
+  </div>
+  {% endif %}
+  <div class="col-md-6 text-right">
+    <div class="form-inline">
+    {% if objectList.has_previous %}
       <form class="form-group form-group-sm" action="" method="post">
-        {% csrf_token %}
-        <label for="page">Page</label>
-        <input type="text" class="form-control" id="pageNumberInput" name="page" value="{{ objectList.number }}" onchange="this.form.submit()" />
-        <label for="page">of {{ objectList.paginator.num_pages }}</label>
+      {% csrf_token %}
+        <input name="page" value="{{ objectList.previous_page_number }}" type="hidden" />
+        <button type="submit" class="btn btn-default btn-xs" aria-label="Previous"><span class="glyphicon glyphicon-menu-left"></span></button>
       </form>
-      {% if objectList.has_next %}
-        <form class="form-group form-group-sm" action="" method="post">
-        {% csrf_token %}
-          <input name="page" value="{{ objectList.next_page_number }}" type="hidden" />
-          <button type="submit" class="btn btn-default btn-xs" aria-label="Next"><span class="glyphicon glyphicon-menu-right"></span></button>
-        </form>
-      {% endif %}
-      </div>
+    {% endif %}
+    <form class="form-group form-group-sm" action="" method="post">
+      {% csrf_token %}
+      <label for="page">Page</label>
+      <input type="text" class="form-control" id="pageNumberInput" name="page" value="{{ objectList.number }}" onchange="this.form.submit()" />
+      <label for="page">of {{ objectList.paginator.num_pages }}</label>
+    </form>
+    {% if objectList.has_next %}
+      <form class="form-group form-group-sm" action="" method="post">
+      {% csrf_token %}
+        <input name="page" value="{{ objectList.next_page_number }}" type="hidden" />
+        <button type="submit" class="btn btn-default btn-xs" aria-label="Next"><span class="glyphicon glyphicon-menu-right"></span></button>
+      </form>
+    {% endif %}
     </div>
   </div>
 </div>
