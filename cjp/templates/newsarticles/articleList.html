@@ -73,22 +73,24 @@
             <tr>
                 <th>Title</th>
                 <th>Source</th>
+                <th>Crime Related</th>
                 <th>Categories</th>
                 <th>Load Date</th>
                 <th>Last Updated</th>
                 <th></th>
                 <th>Original URL</th>
             </tr>
-            {% for article in articles.object_list %}
-              {% if article.is_relevant %}
-                <tr class="success">
-              {% elif article.is_coded %}
-                <tr class="danger">
-              {% else %}
+             {% for article in articles.object_list %}
                 <tr>
-              {% endif %}
                   <td>{{ article.title|safe }}</td>
                   <td>{{ article.news_source }}</td>
+                  <td class="text-center">
+                    {% if article.is_relevant %}
+                    <img src="{% static "good_checkmark.png" %}" alt="crime related" />
+                    {% elif article.is_coded %}
+                    <img src="{% static "bad_x.png" %}" alt="not crime related" />
+                    {% endif %}
+                  </td>
                   <td>
                     {% for category in article.get_categories %}
                       {{ category.abbreviation }}<br />
