@@ -1,30 +1,50 @@
 {% extends "common/base.html" %}
 
 {% block title %}
-    Scraper Stats
+    Stats
 {% endblock %}
 
 {% block content %}
-    
-    <div class="statTableTitle">Total Counts</div>
-    <table class="statTable">
-        {% for total in totals %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Scraper Counts</h3>
+        </div>
+        <div class="panel-body">
+          <table class="table table-bordered">
+            {% for total in totals %}
             <tr>
-                <th class="statTable">{{ total.0 }}</th>
-                <td class="statTable">{{ total.1 }}</td>
+              <th>{{ total.0 }}</th>
+              <td>{{ total.1 }}</td>
             </tr>
-        {% endfor %}
-        <tr>
-            <td colspan="2">&nbsp;</td>
-        </tr>
-        <tr>
-            <th class="statTable">Non-relevant Article Count</th>
-            <td class="statTable">{{ articleNonRelevantCount }}</td>
-        </tr>
-        <tr>
-            <th class="statTable">Categorized Articles</th>
-            <td class="statTable">{{ categorizedArticleCount }}</td>
-        </tr>
-    </table>
-    
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Article Counts</h3>
+        </div>
+        <div class="panel-body">
+          <table class="table table-bordered">
+            <tr>
+              <th>Non-relevant Article Count</th>
+              <td>{{ articleNonRelevantCount }}</td>
+            </tr>
+            <tr>
+              <th>Categorized Articles</th>
+              <td>{{ categorizedArticleCount }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
