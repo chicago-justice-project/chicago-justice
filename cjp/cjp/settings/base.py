@@ -3,6 +3,15 @@
 import os.path
 from os.path import dirname
 from os import environ
+from django.core.exceptions import ImproperlyConfigured
+
+# Function to get environment variables from os environment
+def get_env_variable(var_name):
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the %s environment variable" % var_name
+        raise ImproperlyConfigured(error_msg)
 
 # Root project dir (the one containing manage.py)
 BASE_DIR = dirname(dirname(dirname(os.path.abspath(__file__))))
@@ -62,7 +71,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '#&ubnzmo6$-0nk7i&hmii=e$7y-)nv+bm#&ps)6eq@!k+n-nq5'
+SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # Show the debug_toolbar to the following IPs
 INTERNAL_IPS = ['127.0.0.1']

@@ -1,65 +1,175 @@
 # Chicago Justice Project backend app
 
-## Installation instructions
+## Local installation instructions
 
-Recommended: Create a python virtualenv
+### Postgres installation
 
-`pip install -r requirements.txt`
+#### macOS
 
-You must have GEOS and its python bindings installed. See:
-<https://docs.djangoproject.com/en/1.8/ref/contrib/gis/install/geolibs/>
+The easiest way to install PostgreSQL for Mac is with a prebuilt Postgres
+installation, like [Postgres.app](http://postgresapp.com/).
+
+Alternatively, you may use [Homebrew](https://brew.sh/):
+
+```shell
+brew install postgres
+brew services start postgresql
+```
+
+#### GNU/Linux
+
+The version of PostgreSQL provided in most distros' repositories should be
+adequate and can be installed through your distro's package manager.
+
+Ubuntu 16.04:
+
+```shell
+sudo apt-get update
+sudo apt-get install postgresql
+```
+
+Arch Linux:
+
+```shell
+sudo pacman -S postgresql
+sudo -u postgres initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
+sudo systemctl start postgresql.service
+```
 
 ### Postgres setup
 
-Postgres' PostGIS extensions are required. The easiest way to install the
-extension is with a prebuilt postgress installation, like Postgres.app for Mac.
+Once PostgreSQL is installed and running, you can create the database you'll
+use locally for this app.
 
-Assuming user has db privileges:
+As a user with Postgres database privileges:
 
-`sh create_template_postgis­1.4.sh`
+```shell
+createdb cjpdb
+```
 
-Or, if e.g. postgres user has db privileges:
+The name of the database (e.g., `cjpdb`) may be anything you choose, but
+keep track of what you name it along with the user and password we're about to
+create. You'll need these for setting up your virtual environment.
 
-`sudo ­u postgres sh create_template_postgis­1.4.sh`
+Create the Postgres user and give it a password:
 
-Then create Postgres user and data:
+```shell
+createuser --interactive --pwprompt
+```
 
+Finally, grant privileges on the database you just created to the user you just
+created. For instance, if we created database `cjpdb` and the user `cjpuser`:
 
-`createdb -T template_postgis cjpwebdb`
-`createuser -P cjpuser`
+```shell
+psql -d postgres -c "GRANT ALL ON DATABASE cjpdb TO cjpuser;"
+```
 
-Password: cjppassword
+### Setup Environment Variables
 
-see: <http://postgis.net/docs/PostGIS_FAQ.html>
+Certain settings are read from environment variables. There are two ways you
+can set variables: 1) Use a `.env` file in the root directory; 2) setup a
+python virtual environment and use `virtualenv`'s `postactivate` and
+`predeactivate` hooks. Both methods are detailed below.
 
-in psql:
+#### Create a `.env` environment variable file
 
-`# grant all on database cjpwebdb to cjpuser;`
+An example `.env` file is provided. You should copy it:
+
+```shell
+cp .env-example .env
+```
+
+Then, you can edit the file in your preferred editor.
+
+#### Create a python virtual environment
+
+Alternatively, you can create a virtual environment to house the environment
+variables and the app's dependencies.
+
+If not already installed, install python's `virtualenv` and
+`virtualenvwrapper` (as we use python 2, we want to make sure we install the
+python 2 versions of all packages):
+
+```shell
+pip2 install virtualenv virtualenvwrapper
+mkdir ~/.virtualenvs
+```
+
+Add the following to your `.bashrc` file:
+
+```shell
+export WORKON_HOME=~/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
+```
+
+Find out the path to your python installation:
+
+```shell
+which python2
+```
+
+Create your working environment, naming it whatever you'd like (e.g.,
+`cjp_dev`), where `usr/local/bin/python2` is whatever path the previous command
+returned:
+
+```shell
+mkvirtualenv --python=/usr/local/bin/python2 cjp_dev
+```
+
+You may now use `workon cjp_dev` and `deactivate` to activate and deactivate
+the virtual environment. Setup hooks so that when the virtual environment is
+activated, the proper environment variables will be set. Be sure to substitute
+`cjp_dev`, `cjpdb`, `cjpuser`, and `cjppassword` with your setup. You can also
+generate a unique secret key with something like this [Django Secret Key
+Generator](http://www.miniwebtool.com/django-secret-key-generator/)
+
+Add the following to `~/.virtualenvs/cjp_dev/bin/postactivate`:
+
+```bash
+export DJANGO_SETTINGS_MODULE="cjp.settings.local"
+export DATABASE_NAME="cjpdb"
+export DATABASE_USER="cjpuser"
+export DATABASE_PASSWORD="cjppassword"
+export SECRET_KEY='#&ubnzmo6$-0nk7i&hmii=e$7y-)nv+bm#&ps)6eq@!k+n-nq5'
+```
+
+To make sure these variables are unset upon deactivating the virtual
+environment, add the following to `~/.virtualenvs/cjp_dev/bin/predeactivate`:
+
+```bash
+unset DJANGO_SETTINGS_MODULE
+unset DATABASE_NAME
+unset DATABASE_USER
+unset DATABASE_PASSWORD
+unset SECRET_KEY
+```
+
+### Install Dependencies
+
+With the environment variables set, we're now ready to install the necessary
+dependencies:
+
+```shell
+pip2 install -r requirements.txt
+```
 
 ### Initialize Django models and start server
 
-```bash
-export DJANGO_SETTINGS_MODULE=cjp.settings.local    # Change config from production (default) to local
+```shell
 ./manage.py syncdb
 ./manage.py runserver
 ```
 
 ## Running news scrapers
 
-```
+```shell
 ./manage.py runscrapers
 ```
 
 To run a single scraper, enter the scraper name as an argument, e.g.:
 
-```
-./manage.py runscrapers crainsScraper
-```
-
-For local operation, you must specify local config via `DJANGO_SETTINGS_MODULE` env var, e.g.
-
-```
-DJANGO_SETTINGS_MODULE=cjp.settings.local ./manage.py runscrapers
+```shell
+./manage.py runscrapers crains
 ```
 
 ----
