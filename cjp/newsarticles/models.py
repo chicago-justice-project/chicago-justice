@@ -76,6 +76,9 @@ class ArticleQuerySet(models.QuerySet):
     def coded(self):
         return self.filter(usercoding__isnull=False)
 
+    def uncoded(self):
+        return self.filter(usercoding__isnull=True)
+
     def filter_categories(self, categories):
         return self.filter(usercoding__categories__in=categories)
 
