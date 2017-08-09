@@ -27,6 +27,7 @@ urlpatterns = [
     #individual article
     url(r'^articles/(\d+)/$', 'newsarticles.views.view_article', name='view-article'),
     url(r'^articles/(\d+)/updatecoding/$', 'newsarticles.views.code_article', name='code-article'),
+    url(r'^articles/coderandom/$', 'newsarticles.views.random_article', name='random-article'),
 
     # crime reports
     url(r'^crimereports/$', 'crimedata.views.crimeReportList', name='mainCrimeReportView'),

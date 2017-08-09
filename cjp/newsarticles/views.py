@@ -1,4 +1,5 @@
 import json
+import random
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -201,7 +202,7 @@ def code_article(request, pk):
             # ManyToMany relationships need to be added after the record is created
             user_coding.categories = form.cleaned_data['categories']
 
-            return HttpResponseRedirect(reverse('mainArticleView'))
+            return HttpResponseRedirect(reverse('random-article'))
     else:
         if article.is_coded():
             initial_data = {'categories': article.usercoding.categories.all(),
@@ -214,3 +215,10 @@ def code_article(request, pk):
 
     return render(request, 'newsarticles/code_article.html',
                   {'form': form, 'article': article})
+
+@login_required
+def random_article(request):
+    uncoded_article_pks = Article.objects.uncoded().values_list('pk', flat=True)
+    selected_pk = random.sample(uncoded_article_pks, 1)[0]
+    
+    return HttpResponseRedirect(reverse('code-article', args=(selected_pk,)))
