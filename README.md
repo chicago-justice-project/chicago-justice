@@ -11,7 +11,7 @@ installation, like [Postgres.app](http://postgresapp.com/).
 
 Alternatively, you may use [Homebrew](https://brew.sh/):
 
-```bash
+```shell
 brew install postgres
 brew services start postgresql
 ```
@@ -23,14 +23,14 @@ adequate and can be installed through your distro's package manager.
 
 Ubuntu 16.04:
 
-```bash
+```shell
 sudo apt-get update
 sudo apt-get install postgresql
 ```
 
 Arch Linux:
 
-```bash
+```shell
 sudo pacman -S postgresql
 sudo -u postgres initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
 sudo systemctl start postgresql.service
@@ -43,7 +43,7 @@ use locally for this app.
 
 As a user with Postgres database privileges:
 
-```bash
+```shell
 createdb cjpdb
 ```
 
@@ -53,41 +53,58 @@ create. You'll need these for setting up your virtual environment.
 
 Create the Postgres user and give it a password:
 
-```bash
+```shell
 createuser --interactive --pwprompt
 ```
 
 Finally, grant privileges on the database you just created to the user you just
 created. For instance, if we created database `cjpdb` and the user `cjpuser`:
 
-```bash
+```shell
 psql -d postgres -c "GRANT ALL ON DATABASE cjpdb TO cjpuser;"
 ```
 
-### Create a python virtual environment
+### Setup Environment Variables
 
-Next we're going to create a virtual environment to house the environment
+Certain settings are read from environment variables. There are two ways you
+can set variables: 1) Use a `.env` file in the root directory; 2) setup a
+python virtual environment and use `virtualenv`'s `postactivate` and
+`predeactivate` hooks. Both methods are detailed below.
+
+#### Create a `.env` environment variable file
+
+An example `.env` file is provided. You should copy it:
+
+```shell
+cp .env-example .env
+```
+
+Then, you can edit the file in your preferred editor.
+
+#### Create a python virtual environment
+
+Alternatively, you can create a virtual environment to house the environment
 variables and the app's dependencies.
 
 If not already installed, install python's `virtualenv` and
 `virtualenvwrapper` (as we use python 2, we want to make sure we install the
 python 2 versions of all packages):
 
-```bash
+```shell
 pip2 install virtualenv virtualenvwrapper
 mkdir ~/.virtualenvs
 ```
 
 Add the following to your `.bashrc` file:
 
-```bash
+```shell
 export WORKON_HOME=~/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 ```
 
 Find out the path to your python installation:
 
-```bash
+```shell
 which python2
 ```
 
@@ -95,7 +112,7 @@ Create your working environment, naming it whatever you'd like (e.g.,
 `cjp_dev`), where `usr/local/bin/python2` is whatever path the previous command
 returned:
 
-```bash
+```shell
 mkvirtualenv --python=/usr/local/bin/python2 cjp_dev
 ```
 
@@ -127,29 +144,31 @@ unset DATABASE_PASSWORD
 unset SECRET_KEY
 ```
 
-With your virtual environment activated, we're now ready to install the
-necessary dependencies:
+### Install Dependencies
 
-```bash
+With the environment variables set, we're now ready to install the necessary
+dependencies:
+
+```shell
 pip2 install -r requirements.txt
 ```
 
 ### Initialize Django models and start server
 
-```bash
+```shell
 ./manage.py syncdb
 ./manage.py runserver
 ```
 
 ## Running news scrapers
 
-```bash
+```shell
 ./manage.py runscrapers
 ```
 
 To run a single scraper, enter the scraper name as an argument, e.g.:
 
-```bash
+```shell
 ./manage.py runscrapers crains
 ```
 
