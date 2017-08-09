@@ -28,7 +28,7 @@ def read_env():
 
 if __name__ == "__main__":
     read_env()
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cjp.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cjp.settings.production")
 
     from django.core.management import execute_from_command_line
 
