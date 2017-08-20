@@ -3,13 +3,15 @@ import os
 import sys
 import re
 
+ENV_FILE = os.path.join(os.path.dirname(__file__), '.env')
+
 def read_env():
     """Pulled from Honcho code with minor updates, reads local default
     environment variables from a .env file located in the project root
     directory.
     """
     try:
-        with open('.env') as f:
+        with open(ENV_FILE) as f:
             content = f.read()
     except IOError:
         content = ''
