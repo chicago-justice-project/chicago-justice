@@ -140,7 +140,7 @@ $(document).ready(function(){
   $(articleBodySelector).on("click", "mark", function(){
     // When highlighted location is clicked create then show popover confirming
     // removal of location
-    $(this).webuiPopover({trigger: 'manual', closeable: true, content: '<input id="btnRemove" type="Submit" value="Remove"/>'});
+    $(this).webuiPopover({trigger: 'manual', closeable: true, content: '<input class="btn btn-default" id="btnRemove" type="Submit" value="Remove"/>'});
     $(this).webuiPopover('show');
   });
 

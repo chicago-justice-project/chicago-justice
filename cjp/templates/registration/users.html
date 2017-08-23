@@ -3,81 +3,98 @@
 {% load static from staticfiles %}
 
 {% block title %}
-    Admin: Manage Users
+    Manage Users
 {% endblock %}
 
 {% block content %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Add User</h3>
+  </div>
+  <div class="panel-body">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">{{ userCreationForm.non_field_errors }}</div>
+    {% endif %}
+    {% if form.username.errors %}
+    <div class="alert alert-danger" role="alert">{{ userCreationForm.username.errors }}</div>
+    {% endif %}
+    {% if form.password.errors %}
+    <div class="alert alert-danger" role="alert">{{ userCreationForm.password.errors }}</div>
+    {% endif %}
+    {% if form.password2.errors %}
+    <div class="alert alert-danger" role="alert">{{ userCreationForm.password2.errors }}</div>
+    {% endif %}
+    {% if form.firstName.errors %}
+    <div class="alert alert-danger" role="alert">{{ userCreationForm.firstName.errors }}</div>
+    {% endif %}
+    {% if form.lastName.errors %}
+    <div class="alert alert-danger" role="alert">{{ userCreationForm.lastName.errors }}</div>
+    {% endif %}
+    {% if form.email.errors %}
+    <div class="alert alert-danger" role="alert">{{ userCreationForm.email.errors }}</div>
+    {% endif %}
+    <form class="form-horizontal" action="{% url 'userManageAddUserView' %}" method="post">
+    {% csrf_token %}
+      <div class="form-inline text-center">
+        <label for="username" class="required">{{ userCreationForm.username.label }}</label>
+        {{ userCreationForm.username }}
+        <label for="password" class="required">{{ userCreationForm.password.label }}</label>
+        {{ userCreationForm.password }}
+        <label for="password2" class="required">{{ userCreationForm.password2.label }}</label>
+        {{ userCreationForm.password2 }}
+      </div>
+      <div class="form-inline text-center">
+        <label for="firstName">{{ userCreationForm.firstName.label }}</label>
+        {{ userCreationForm.firstName }}
+        <label for="lastName">{{ userCreationForm.lastName.label }}</label>
+        {{ userCreationForm.lastName }}
+        <label for="email">{{ userCreationForm.email.label }}</label>
+        {{ userCreationForm.email }}
+      </div>
+      <div class="form-inline text-center">
+        <span class="red">*Required</span>
+      </div>
+      <div class="form-inline text-center">
+        <button class="btn btn-default">Add User</button>
+        <button class="btn btn-default" onclick="this.form.reset(); return false;">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-        <div style="width:95%">
-            <div class="search" style="margin-bottom:1em;">
-                <form action="{% url 'userManageAddUserView' %}" method="post">
-                     <table>
-                        <tr>
-                            <td colspan="7">{{ userCreationForm.non_field_errors }}</td>
-                        </tr> 
-                        <tr>
-                            <th>Required</th>
-                            <td>{{ userCreationForm.username.label }}{{ userCreationForm.username.errors }}</td> 
-                            <td>{{ userCreationForm.username }}</td>
-                            <td>{{ userCreationForm.password.label }}{{ userCreationForm.password.errors }}</td> 
-                            <td>{{ userCreationForm.password }}</td>
-                            <td>{{ userCreationForm.password2.label }}{{ userCreationForm.password2.errors }}</td> 
-                            <td>{{ userCreationForm.password2 }}</td>
-                        </tr>
-                        <tr>
-                            <th>Optional</th>
-                            <td>{{ userCreationForm.firstName.label }}{{ userCreationForm.firstName.errors }}</td>
-                            <td>{{ userCreationForm.firstName }}</td>
-                            <td>{{ userCreationForm.lastName.label }}{{ userCreationForm.lastName.errors }}</td>
-                            <td>{{ userCreationForm.lastName }}</td>
-                            <td>{{ userCreationForm.email.label }}{{ userCreationForm.email.errors }}</td>
-                            <td>{{ userCreationForm.email }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="7" style="text-align:center;"> 
-                                {% csrf_token %}
-                                <button class="searchButton">Add New User</button>
-                                <button class="searchButton" onclick="this.form.reset(); return false;">Reset</button>
-                            </td>
-                        </tr>
-                     </table>
-                </form>
-            </div>
-
-            <table class="listTable" style="width:100%">
-                <tr>
-                    <th class="listTableHeadCell">Username</th>
-                    <th class="listTableHeadCell">Real Name</th>
-                    <th class="listTableHeadCell">Email</th>
-                    <th class="listTableHeadCell">Superuser</th>
-                    <th class="listTableHeadCell">Active</th>
-                    <th class="listTableHeadCell">&nbsp;</th>
-                </tr>
-                {% for user in users %}
-                    <tr>
-                        <td class="listTableDataCell">{{ user.username }}</td>
-                        <td class="listTableDataCell">{{ user.first_name }} {{ user.last_name }}</td>
-                        <td class="listTableDataCell">{{ user.email }}</td>
-                        <td class="listTableDataCell" style="text-align:center;">
-                            {% if user.is_superuser %}
-                                <img src="{% static "good_checkmark.png" %}" alt="superuser" />
-                            {% else %}
-                                <img src="{% static "bad_x.png" %}" alt="regular user" />
-                            {% endif %}
-                        </td>
-                        <td class="listTableDataCell" style="text-align:center;">
-                            {% if user.is_active %}
-                                <img src="{% static "good_checkmark.png" %}" alt="superuser" />
-                            {% else %}
-                                <img src="{% static "bad_x.png" %}" alt="regular user" />
-                            {% endif %}
-                        </td>
-                        <td class="listTableDataCell">
-                            <a href="{% url 'userUpdate' user.id %}">update</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-         </div>
+<table class="table table-bordered">
+  <tr>
+    <th>Username</th>
+    <th>Real Name</th>
+    <th>Email</th>
+    <th>Superuser</th>
+    <th>Active</th>
+    <th>&nbsp;</th>
+  </tr>
+  {% for user in users %}
+  <tr>
+    <td>{{ user.username }}</td>
+    <td>{{ user.first_name }} {{ user.last_name }}</td>
+    <td>{{ user.email }}</td>
+    <td class="text-center">
+      {% if user.is_superuser %}
+      <img src="{% static "good_checkmark.png" %}" alt="superuser" />
+      {% else %}
+      <img src="{% static "bad_x.png" %}" alt="regular user" />
+      {% endif %}
+    </td>
+    <td class="text-center">
+      {% if user.is_active %}
+      <img src="{% static "good_checkmark.png" %}" alt="superuser" />
+      {% else %}
+      <img src="{% static "bad_x.png" %}" alt="regular user" />
+      {% endif %}
+    </td>
+    <td class="text-center">
+      <a href="{% url 'userUpdate' user.id %}">Update User</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
 
 {% endblock %}

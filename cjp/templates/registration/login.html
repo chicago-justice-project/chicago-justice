@@ -1,35 +1,38 @@
 {% extends "common/base.html" %}
 
-{% block title %}
-    Login
-{% endblock %}
-
 {% block content %}
-
-    <div class="login">
+<div class="container-fluid">
+    <div class="col-md-6 col-md-offset-3">
         {% if form.errors %}
-            <p>Your username and password didn't match. Please try again.</p>
+            <div class="alert alert-danger" role="alert">Your username and password didn&rsquo;t match. Please try again.</div>
         {% endif %}
-
-        <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-            {% csrf_token %}
-            <table>
-                <tr>
-                    <td>{{ form.username.label_tag }}</td>
-                    <td>{{ form.username }}</td>
-                </tr>
-                <tr>
-                    <td>{{ form.password.label_tag }}</td>
-                    <td>{{ form.password }}</td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align:right;">
-                        <input type="submit" value="login" class="loginButton" />
-                        <input type="hidden" name="next" value="{{ next }}" />
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">Login</h3></div>
+            <div class="panel-body">
+                <form class="form-horizontal" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+                {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username" class="col-sm-4 control-label">{{ form.username.label }}</label>
+                        <div class="col-sm-8">
+                            {{ form.username }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-sm-4 control-label">{{ form.password.label }}</label>
+                        <div class="col-sm-8">
+                            {{ form.password }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-4">
+                            <input type="submit" value="Login" class="btn btn-default" />
+                            <input type="hidden" name="next" value="{{ next }}" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>
+</div>
 
 {% endblock %}

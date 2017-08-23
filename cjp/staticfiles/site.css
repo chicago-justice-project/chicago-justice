@@ -1,60 +1,53 @@
-#sidebar {
-    float: left;
-    width: 160px;
-    background: #DFDFDF;
-    padding: 20px;
-    font-size: .8em;
-    border: 1px solid black;
+@media (max-width: 992px) { /* Only affix coding sidebar if on desktop */
+    nav#codingSidebar.affix {
+        position: static;
+    }
 }
 
-#content {
-    margin-left: 220px;
+nav.coding-form {
+  margin-top: 1em;
+  width: 275px;
+  max-height: 65%;
+  overflow-y: auto;
 }
 
-.sidebarSubmenu {
-    padding-left: 30px;
+nav.coding-form ul, li {
+  list-style: none;
 }
 
-div.article {
-    margin-top: 2em;
-    margin-bottom: 2em;
-    border: 1px solid black;
-    font-size: .8em;
-}
-div.articleHeader {
-    background-color: #ccccff;
-}
-div.articleHeaderRow {
-    border: 1px solid black;
-}
-div.articleHeaderLabel {
-    font-weight: bold;
-    display:inline;
-}
-div.articleHeaderContent {
-    position: relative;
-    display:inline;
+nav.coding-form ul {
+  padding-left: 2px;
+  margin-left: 2px;
+  font-weight: bold;
 }
 
-div.articleFeed {
-    display:inline;
-    margin-right: 10px;
+nav.coding-form li {
+  padding-left: 3px;
+  margin-left: 3px;
 }
-div.articleCreated {
-    display:inline;
-    margin-right: 10px;
+
+nav.coding-form li label {
+  font-weight: bold;
+  margin-bottom: 0px;
 }
-div.articleModified {
-    display:inline;
-    margin-right: 10px;
+
+nav.coding-form ul li label {
+  font-weight: normal;
 }
-div.articleRelevant {
-    display:inline;
-    margin-right: 10px;
+
+input#pageNumberInput.form-control {
+  width: 50px;
 }
+
+table#articleTable {
+  margin-top: 1em;
+}
+
 div.articleBody {
     line-height: 2em;
-    white-space: pre;
+    word-wrap: break-word;
+    white-space: -moz-pre-wrap;
+    white-space: pre-wrap;
 }
 
 .articleBody::-moz-selection {
@@ -73,52 +66,6 @@ mark {
 
 mark:hover {
     cursor: pointer;
-}
-
-div.articleFunction {
-    display:inline;
-}
-button.articleButton, input.articleButton {
-    font-size: .8em;
-}
-
-div.pagination {
-    font-size: .8em;
-    width: 100%;
-    display: inline;
-}
-div.paginationTotal {
-    width: 50%;
-    float: left;
-}
-div.paginationLinks {
-    width: 100%;
-    text-align: right;
-}
-
-.scraperlogStartend {
-    background-color: #aaaaff;
-}
-.scraperlogError {
-    background-color: #ffaaaa;
-}
-table.scraperlog {
-    border-collapse: collapse;
-}
-table.scraperlog, td.scraperlog, th.scraperlog {
-    border: 1px solid black;
-    font-size: .8em;
-}
-th.scraperlog {
-    background-color: #dddddd;
-}
-td.scraperlog {
-    vertical-align: top;
-}
-
-td.scraperlogSeperator {
-    background-color: black;
-    height: 3em;
 }
 
 div.export {
@@ -144,8 +91,13 @@ button.searchButton, select {
     font-size: .8em;
 }
 
-div.login, .loginButton {
-    font-size: .8em;
+label.required:after {
+  content: "*";
+  color: red;
+}
+
+.red {
+  color: red;
 }
 
 table.listTable {
@@ -163,64 +115,16 @@ td.listTableDataCell {
     border: 1px solid black;
 }
 
-th.leftHead {
-    text-align: left;
-    vertical-align: top;
-}
-
-.message {
-    text-align: center;
-    font-size: .8em;
-    font-weight: bold;
-}
-
 table.crimeReportTable {
     border-collapse:collapse;
 }
 
 th.crimeReportHead {
-    font-size: .8em;
-    border: 1px solid black;
-    background-color: #ccccff;
-}
-
-td.crimeReportContent {
-    font-size: .8em;
-    border: 1px solid black;
+    background-color: #D9EDF7;
+    color: #31708F;
 }
 
 button.listTableAction {
-    font-size: .8em;
-}
-
-table.statTable {
-    border-collapse:collapse;
-}
-
-th.statTable {
-    font-size: .8em;
-    border: 1px solid black;
-    background-color: #ccccff;
-    text-align: left;
-}
-
-td.statTable {
-    font-size: .8em;
-    border: 1px solid black;
-    text-align: right;
-}
-
-.statTableBlank {
-    border: 0px;
-}
-
-.statTableTitle {
-    margin-top: 1em;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-.countButton {
     font-size: .8em;
 }
 
