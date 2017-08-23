@@ -1,0 +1,442 @@
+[
+{
+  "fields": {
+    "abbreviation": "OEMC",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-25T10:49:06.569",
+    "title": "Office of Emergency Management & Communications"
+  },
+  "model": "newsarticles.category",
+  "pk": 1
+},
+{
+  "fields": {
+    "abbreviation": "CPD",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:16:27.480",
+    "title": "Chicago Police Department"
+  },
+  "model": "newsarticles.category",
+  "pk": 2
+},
+{
+  "fields": {
+    "abbreviation": "SAO",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:16:53.005",
+    "title": "Cook County State's Attorney's Office"
+  },
+  "model": "newsarticles.category",
+  "pk": 3
+},
+{
+  "fields": {
+    "abbreviation": "CCCC",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:17:32.200",
+    "title": "Cook County Circuit Court"
+  },
+  "model": "newsarticles.category",
+  "pk": 4
+},
+{
+  "fields": {
+    "abbreviation": "CCJ",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:17:45.062",
+    "title": "Cook County Jail"
+  },
+  "model": "newsarticles.category",
+  "pk": 5
+},
+{
+  "fields": {
+    "abbreviation": "CCSP",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:18:03.825",
+    "title": "Cook County Sheriff's Police"
+  },
+  "model": "newsarticles.category",
+  "pk": 6
+},
+{
+  "fields": {
+    "abbreviation": "CPUB",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:18:52.323",
+    "title": "Cook County Public Defender's Office"
+  },
+  "model": "newsarticles.category",
+  "pk": 7
+},
+{
+  "fields": {
+    "abbreviation": "IDOC",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:19:31.308",
+    "title": "Illinois Department of Corrections"
+  },
+  "model": "newsarticles.category",
+  "pk": 8
+},
+{
+  "fields": {
+    "abbreviation": "DOMV",
+    "active": true,
+    "kind": "crimes",
+    "created": "2011-08-26T15:19:47.881",
+    "title": "Domestic Violence"
+  },
+  "model": "newsarticles.category",
+  "pk": 9
+},
+{
+  "fields": {
+    "abbreviation": "SEXA",
+    "active": true,
+    "kind": "crimes",
+    "created": "2011-08-26T15:20:38.071",
+    "title": "Sexual Assault"
+  },
+  "model": "newsarticles.category",
+  "pk": 10
+},
+{
+  "fields": {
+    "abbreviation": "POLB",
+    "active": true,
+    "kind": "policing",
+    "created": "2011-08-26T15:20:53.565",
+    "title": "Police Brutality"
+  },
+  "model": "newsarticles.category",
+  "pk": 11
+},
+{
+  "fields": {
+    "abbreviation": "POLM",
+    "active": true,
+    "kind": "policing",
+    "created": "2011-08-26T15:21:04.201",
+    "title": "Police Misconduct"
+  },
+  "model": "newsarticles.category",
+  "pk": 12
+},
+{
+  "fields": {
+    "abbreviation": "GUNV",
+    "active": true,
+    "kind": "crimes",
+    "created": "2011-08-26T15:21:24.513",
+    "title": "Gun Violence"
+  },
+  "model": "newsarticles.category",
+  "pk": 13
+},
+{
+  "fields": {
+    "abbreviation": "GLBTQ",
+    "active": true,
+    "kind": "crimes",
+    "created": "2011-08-26T15:21:54.769",
+    "title": "GLBTQ"
+  },
+  "model": "newsarticles.category",
+  "pk": 14
+},
+{
+  "fields": {
+    "abbreviation": "JUVE",
+    "active": true,
+    "kind": "other",
+    "created": "2011-08-26T15:22:06.828",
+    "title": "Juvenile"
+  },
+  "model": "newsarticles.category",
+  "pk": 15
+},
+{
+  "fields": {
+    "abbreviation": "REEN",
+    "active": true,
+    "kind": "other",
+    "created": "2011-08-26T15:22:20.557",
+    "title": "Re-Entry"
+  },
+  "model": "newsarticles.category",
+  "pk": 16
+},
+{
+  "fields": {
+    "abbreviation": "VIOL",
+    "active": true,
+    "kind": "other",
+    "created": "2011-08-26T15:22:33.659",
+    "title": "Violence"
+  },
+  "model": "newsarticles.category",
+  "pk": 17
+},
+{
+  "fields": {
+    "abbreviation": "BEAT",
+    "active": true,
+    "kind": "policing",
+    "created": "2011-08-26T15:22:51.626",
+    "title": "Beat Realignment / Police Resouce Allocation"
+  },
+  "model": "newsarticles.category",
+  "pk": 18
+},
+{
+  "fields": {
+    "abbreviation": "PROB",
+    "active": true,
+    "kind": "other",
+    "created": "2011-08-26T15:23:14.245",
+    "title": "Probation"
+  },
+  "model": "newsarticles.category",
+  "pk": 19
+},
+{
+  "fields": {
+    "abbreviation": "PARL",
+    "active": true,
+    "kind": "other",
+    "created": "2011-08-26T15:23:20.964",
+    "title": "Parole"
+  },
+  "model": "newsarticles.category",
+  "pk": 20
+},
+{
+  "fields": {
+    "abbreviation": "CPLY",
+    "active": true,
+    "kind": "other",
+    "created": "2011-08-26T15:23:35.241",
+    "title": "Criminal Justice Policy"
+  },
+  "model": "newsarticles.category",
+  "pk": 21
+},
+{
+  "fields": {
+    "abbreviation": "DRUG",
+    "active": true,
+    "kind": "crimes",
+    "created": "2011-08-26T15:23:42.081",
+    "title": "Drugs"
+  },
+  "model": "newsarticles.category",
+  "pk": 22
+},
+{
+  "fields": {
+    "abbreviation": "CPS",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:23:52.582",
+    "title": "Chicago Public Schools"
+  },
+  "model": "newsarticles.category",
+  "pk": 23
+},
+{
+  "fields": {
+    "abbreviation": "GANG",
+    "active": true,
+    "kind": "crimes",
+    "created": "2011-08-26T15:23:59.845",
+    "title": "Gangs"
+  },
+  "model": "newsarticles.category",
+  "pk": 24
+},
+{
+  "fields": {
+    "abbreviation": "ILSP",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-08-26T15:24:11.965",
+    "title": "Illinois State Police"
+  },
+  "model": "newsarticles.category",
+  "pk": 25
+},
+{
+  "fields": {
+    "abbreviation": "HOMI",
+    "active": true,
+    "kind": "crimes",
+    "created": "2011-08-26T15:24:23.339",
+    "title": "Homicides"
+  },
+  "model": "newsarticles.category",
+  "pk": 26
+},
+{
+  "fields": {
+    "abbreviation": "IPRA",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-09-06T15:53:58.289",
+    "title": "Independent Police Review Authority"
+  },
+  "model": "newsarticles.category",
+  "pk": 27
+},
+{
+  "fields": {
+    "abbreviation": "CPBD",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-09-06T15:54:59.505",
+    "title": "Chicago Police Board"
+  },
+  "model": "newsarticles.category",
+  "pk": 28
+},
+{
+  "fields": {
+    "abbreviation": "IMMG",
+    "active": true,
+    "kind": "other",
+    "created": "2011-09-06T15:55:25.596",
+    "title": "Immigration"
+  },
+  "model": "newsarticles.category",
+  "pk": 29
+},
+{
+  "fields": {
+    "abbreviation": "ENVI",
+    "active": true,
+    "kind": "crimes",
+    "created": "2011-09-07T17:06:48.627",
+    "title": "Environmental Crimes"
+  },
+  "model": "newsarticles.category",
+  "pk": 30
+},
+{
+  "fields": {
+    "abbreviation": "UNSPC",
+    "active": true,
+    "kind": "other",
+    "created": "2011-10-07T13:55:52.911",
+    "title": "Unspecified Crime"
+  },
+  "model": "newsarticles.category",
+  "pk": 31
+},
+{
+  "fields": {
+    "abbreviation": "ILSC",
+    "active": true,
+    "kind": "orgs",
+    "created": "2011-10-07T13:56:14.664",
+    "title": "Illinois State Court"
+  },
+  "model": "newsarticles.category",
+  "pk": 32
+},
+{
+  "fields": {
+    "abbreviation": "ARSN",
+    "active": true,
+    "kind": "crimes",
+    "created": "2012-03-27T16:22:12.636",
+    "title": "Arson"
+  },
+  "model": "newsarticles.category",
+  "pk": 33
+},
+{
+  "fields": {
+    "abbreviation": "BURG",
+    "active": true,
+    "kind": "crimes",
+    "created": "2012-03-27T16:22:24.563",
+    "title": "Burlgary"
+  },
+  "model": "newsarticles.category",
+  "pk": 34
+},
+{
+  "fields": {
+    "abbreviation": "DUI",
+    "active": true,
+    "kind": "crimes",
+    "created": "2012-03-27T16:22:44.588",
+    "title": "Driving Under the Influence"
+  },
+  "model": "newsarticles.category",
+  "pk": 35
+},
+{
+  "fields": {
+    "abbreviation": "FRUD",
+    "active": true,
+    "kind": "crimes",
+    "created": "2012-03-27T16:22:56.963",
+    "title": "Fraud"
+  },
+  "model": "newsarticles.category",
+  "pk": 36
+},
+{
+  "fields": {
+    "abbreviation": "ROBB",
+    "active": true,
+    "kind": "crimes",
+    "created": "2012-03-27T16:23:04.531",
+    "title": "Robbery"
+  },
+  "model": "newsarticles.category",
+  "pk": 37
+},
+{
+  "fields": {
+    "abbreviation": "TASR",
+    "active": true,
+    "kind": "policing",
+    "created": "2012-03-27T16:23:26.656",
+    "title": "Police Use of Taser"
+  },
+  "model": "newsarticles.category",
+  "pk": 38
+},
+{
+  "fields": {
+    "abbreviation": "COPA",
+    "active": true,
+    "kind": "orgs",
+    "created": "2017-05-12T14:02:36.800",
+    "title": "Civilian Office for Police Accountability"
+  },
+  "model": "newsarticles.category",
+  "pk": 39
+},
+{
+  "fields": {
+    "abbreviation": "DIGP",
+    "active": true,
+    "kind": "orgs",
+    "created": "2017-05-12T14:02:54.114",
+    "title": "Deputy Inspector General for Police"
+  },
+  "model": "newsarticles.category",
+  "pk": 40
+}
+]

@@ -1,0 +1,299 @@
+[
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "Unknown",
+    "short_name": "unknown"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 97
+},
+{
+  "fields": {
+    "legacy_feed_id": "A",
+    "name": "ABC Local",
+    "short_name": "abc-local"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 98
+},
+{
+  "fields": {
+    "legacy_feed_id": "C",
+    "name": "Beachwood Reporter",
+    "short_name": "beachwood-reporter"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 99
+},
+{
+  "fields": {
+    "legacy_feed_id": "L",
+    "name": "CBS Local",
+    "short_name": "cbs-local"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 100
+},
+{
+  "fields": {
+    "legacy_feed_id": "D",
+    "name": "Chicago Defender",
+    "short_name": "chicago-defender"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 101
+},
+{
+  "fields": {
+    "legacy_feed_id": "M",
+    "name": "Chicago Magazine",
+    "short_name": "chicago-magazine"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 102
+},
+{
+  "fields": {
+    "legacy_feed_id": "J",
+    "name": "Chicago Journal",
+    "short_name": "chicago-journal"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 103
+},
+{
+  "fields": {
+    "legacy_feed_id": "O",
+    "name": "Chicago Now",
+    "short_name": "chicago-now"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 104
+},
+{
+  "fields": {
+    "legacy_feed_id": "E",
+    "name": "Chicago Reader",
+    "short_name": "chicago-reader"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 105
+},
+{
+  "fields": {
+    "legacy_feed_id": "X",
+    "name": "Chicago Reporter",
+    "short_name": "chicago-reporter"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 106
+},
+{
+  "fields": {
+    "legacy_feed_id": "R",
+    "name": "Crains",
+    "short_name": "crains"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 107
+},
+{
+  "fields": {
+    "legacy_feed_id": "I",
+    "name": "DNAInfo Chicago",
+    "short_name": "dnainfo-chicago"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 108
+},
+{
+  "fields": {
+    "legacy_feed_id": "F",
+    "name": "Fox Chicago",
+    "short_name": "fox-chicago"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 109
+},
+{
+  "fields": {
+    "legacy_feed_id": "B",
+    "name": "NBC Local",
+    "short_name": "nbc-local"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 110
+},
+{
+  "fields": {
+    "legacy_feed_id": "N",
+    "name": "Chicago News Cooperative",
+    "short_name": "chicago-news-cooperative"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 111
+},
+{
+  "fields": {
+    "legacy_feed_id": "S",
+    "name": "Chicago Sun-Times",
+    "short_name": "chicago-sun-times"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 112
+},
+{
+  "fields": {
+    "legacy_feed_id": "T",
+    "name": "Chicago Tribune",
+    "short_name": "chicago-tribune"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 113
+},
+{
+  "fields": {
+    "legacy_feed_id": "Z",
+    "name": "WBEZ",
+    "short_name": "wbez"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 114
+},
+{
+  "fields": {
+    "legacy_feed_id": "G",
+    "name": "WGN TV",
+    "short_name": "wgn-tv"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 115
+},
+{
+  "fields": {
+    "legacy_feed_id": "V",
+    "name": "Windy City Times",
+    "short_name": "windy-city-times"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 116
+},
+{
+  "fields": {
+    "legacy_feed_id": "U",
+    "name": "WLS AM",
+    "short_name": "wls-am"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 117
+},
+{
+  "fields": {
+    "legacy_feed_id": "W",
+    "name": "WTTW",
+    "short_name": "wttw"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 118
+},
+{
+  "fields": {
+    "legacy_feed_id": "a",
+    "name": "Daily Herald",
+    "short_name": "daily-herald"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 119
+},
+{
+  "fields": {
+    "legacy_feed_id": "b",
+    "name": "Better Government Association",
+    "short_name": "better-government-association"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 120
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "Capitol Fax",
+    "short_name": "capitol-fax"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 121
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "Columbia Chronicle",
+    "short_name": "columbia-chronicle"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 122
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "Daily Line",
+    "short_name": "daily-line"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 123
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "Northwestern Medill",
+    "short_name": "medill"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 124
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "Politico Illinois Playbook",
+    "short_name": "politico"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 125
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "South Side Weekly",
+    "short_name": "south-side-weekly"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 126
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "State Journal Register",
+    "short_name": "state-journal-register"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 127
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "Blue Voice Blog",
+    "short_name": "fop-blog"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 128
+},
+{
+  "fields": {
+    "legacy_feed_id": "",
+    "name": "fop-news",
+    "short_name": "fop-news"
+  },
+  "model": "newsarticles.newssource",
+  "pk": 129
+}
+]

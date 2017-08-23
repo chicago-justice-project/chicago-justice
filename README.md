@@ -157,6 +157,7 @@ pip2 install -r requirements.txt
 
 ```shell
 ./manage.py syncdb
+./manage.py loaddata category news_source
 ./manage.py runserver
 ```
 
@@ -195,7 +196,7 @@ available in `conf/etc/nginx/default`.
 ## Code updates to the existing deployment
 
 The code is deployed via git repository. Deployment of code changes should
-simply require `git pull` inside the application repository, and likely 
+simply require `git pull` inside the application repository, and likely
 `sudo service chicagojustice restart` (please check the name of the service with what
 is in the upstart configs under `/etc/init`)
 
