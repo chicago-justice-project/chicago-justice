@@ -1,5 +1,5 @@
 from cjp.settings.base import CJP_ROOT      # TODO: don't rely on this
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django import forms
@@ -8,14 +8,14 @@ class UserForm(forms.Form):
     firstName = forms.CharField(label="First Name", required=False, max_length=30)
     lastName = forms.CharField(label="Last Name", required=False, max_length=30)
     email = forms.EmailField(label="Email", required=False, max_length=75)
-    
+
     def clean(self):
         cleanedData = self.cleaned_data
         password = cleanedData.get("password")
         password2 = cleanedData.get("password2")
 
-        if ((password and not password2) or 
-            (not password and password2) or 
+        if ((password and not password2) or
+            (not password and password2) or
             (password and password2 and password != password2)):
 
             msg = u"passwords do not match."
@@ -63,9 +63,7 @@ def manage(request, action = None):
 
     data = {'users' : users,
             'userCreationForm': addUserForm}
-    return render_to_response('registration/users.html', data,
-                              context_instance=RequestContext(request))
-    
+    return render(request, 'registration/users.html', data)
 
 
 def userUpdate(request, userId):
@@ -92,7 +90,7 @@ def userUpdate(request, userId):
 
                 managedUser.save()
                 updateSuccess = True
-            
+
                 userForm = UpdateUserForm({
                     'firstName' : managedUser.first_name,
                     'lastName' : managedUser.last_name,
@@ -113,9 +111,4 @@ def userUpdate(request, userId):
             'userForm': userForm,
             'updateSuccess': updateSuccess}
 
-    return render_to_response('registration/userUpdate.html', data,
-                              context_instance=RequestContext(request))
-    
-
-
-
+    return render(request, 'registration/userUpdate.html', data)

@@ -37,9 +37,9 @@
                 <li><a href="{% url 'mainCrimeReportView' %}">Crime Reports</a></li>
                 <li><a href="{% url 'statsTotalCounts' %}">Scraper Counts</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'logoutView' %}">Logout</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
-                <li><a href="{% url 'loginView' %}">Login</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
                 {% endif %}
                 {% if user.is_superuser %}
                 <li><a href="{% url 'userManageView' %}">Manage Users</a></li>

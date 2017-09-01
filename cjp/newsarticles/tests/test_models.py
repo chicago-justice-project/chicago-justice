@@ -5,7 +5,7 @@ from newsarticles.models import Article, UserCoding, NewsSource, Category
 
 def make_article(save=True):
     url = 'http://example.com/{}'.format(uuid4())
-    article = Article(news_source_id=0, url=url, title='', bodytext='', relevant=True)
+    article = Article(url=url, title='', bodytext='', relevant=True)
 
     if save:
         article.save()
@@ -29,7 +29,6 @@ class ArticleTest(TestCase):
     def test_is_coded_coded(self):
         UserCoding.objects.create(
             article=self.article,
-            user_id=0,
             relevant=True,
         )
 
@@ -41,7 +40,6 @@ class ArticleTest(TestCase):
     def test_relevant_one_coding_true(self):
         UserCoding.objects.create(
             article=self.article,
-            user_id=0,
             relevant=True,
         )
         self.assertTrue(self.article.is_relevant())
@@ -49,7 +47,6 @@ class ArticleTest(TestCase):
     def test_relevant_one_coding_false(self):
         UserCoding.objects.create(
             article=self.article,
-            user_id=0,
             relevant=False,
         )
         self.assertFalse(self.article.is_relevant())
@@ -62,7 +59,6 @@ class ArticleTest(TestCase):
 
         coding = UserCoding.objects.create(
             article=self.article,
-            user_id=0,
             relevant=True,
         )
         coding.categories = expected_categories
@@ -87,12 +83,12 @@ class ArticleManagerTest(TestCase):
         a3 = make_article()
         a4 = make_article()
 
-        uc1 = UserCoding.objects.create(article=a1, user_id=0, relevant=True)
+        uc1 = UserCoding.objects.create(article=a1, relevant=True)
         uc1.categories = [cls.c1]
 
-        uc2 = UserCoding.objects.create(article=a2, user_id=0, relevant=False)
+        uc2 = UserCoding.objects.create(article=a2, relevant=False)
 
-        uc3 = UserCoding.objects.create(article=a3, user_id=0, relevant=True)
+        uc3 = UserCoding.objects.create(article=a3, relevant=True)
         uc3.categories = [cls.c1, cls.c2]
 
     def test_relevant_queryset(self):

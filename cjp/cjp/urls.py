@@ -20,8 +20,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     # user login and admin
-    url(r'^user/login/$', django.contrib.auth.views.login, name='loginView'),
-    url(r'^user/logout/$', django.contrib.auth.views.logout, kwargs={'next_page': 'mainArticleView'}, name='logoutView'),
+    url(r'^user/login/$', django.contrib.auth.views.login, name='login'),
+    url(r'^user/logout/$', django.contrib.auth.views.logout, kwargs={'next_page': 'mainArticleView'}, name='logout'),
     url(r'^user/manage/$', cjpusers.views.manage, name='userManageView'),
     url(r'^user/manage/adduser/$', cjpusers.views.manage, kwargs={'action': 'addUser'}, name='userManageAddUserView'),
     url(r'^user/manage/update/(\d+)/$', cjpusers.views.userUpdate, name='userUpdate'),

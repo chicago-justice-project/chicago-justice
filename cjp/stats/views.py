@@ -3,7 +3,7 @@ from crimedata.models import CrimeReport
 from newsarticles.models import Article, Category, NewsSource
 from django.db import connection
 from django.db.models import Count
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 
 def totalCounts(request):
@@ -28,6 +28,5 @@ def totalCounts(request):
         WHERE a.relevant=TRUE AND a.id=nac.article_id""")
     data['categorizedArticleCount'] = cursor.fetchone()[0]
 
-    return render_to_response('stats/totalCounts.html', data,
-                              context_instance=RequestContext(request))
+    return render(request, 'stats/totalCounts.html', data)
 
