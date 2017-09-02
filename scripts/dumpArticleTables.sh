@@ -21,7 +21,7 @@ mkdir cjp_tables
 for table in "${PG_TABLES[@]}"
 do
     psql cjpweb_prd -h $DATABASE_URL -U cjpuser -c "\\copy $table to 'cjp_tables/$table.csv' with csv"
-    psql cjpweb_prd -h $DATABASE_URL -U cjpuser -c "\\d $table" >> column_names.txt
+    psql cjpweb_prd -h $DATABASE_URL -U cjpuser -c "\\d $table" >> cjp_tables/column_names.txt
 done
 
 tar -czf cjp_tables.tgz cjp_tables/
