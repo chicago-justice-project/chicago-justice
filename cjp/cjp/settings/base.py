@@ -117,9 +117,18 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'debug_toolbar',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'rest_framework',
 )
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'PAGE_SIZE': 20,
+}
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
