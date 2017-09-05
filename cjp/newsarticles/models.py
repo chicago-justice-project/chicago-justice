@@ -144,16 +144,15 @@ class UserCoding(models.Model):
     class Meta:
         unique_together = (("article", "user"),)
 
-#class TrainedCoding(models.Model):
-#    article = models.OneToOneField(Article, db_index=True)
-#    date = models.DateTimeField(auto_now=True)
-#    model_info = models.TextField()
-#
-#    categories = models.ManyToManyField(Category, through='TrainedCategoryRelevance')
-#    relevance = models.FloatField()
-#
-#class TrainedCategoryRelevance(models.Model):
-#    coding = models.ForeignKey(TrainedCoding)
-#    category = models.ForeignKey(Category)
-#    relevance = models.FloatField()
-#
+class TrainedCoding(models.Model):
+    article = models.OneToOneField(Article, db_index=True)
+    date = models.DateTimeField(auto_now=True)
+    model_info = models.TextField()
+
+    categories = models.ManyToManyField(Category, through='TrainedCategoryRelevance')
+    relevance = models.FloatField()
+
+class TrainedCategoryRelevance(models.Model):
+    coding = models.ForeignKey(TrainedCoding)
+    category = models.ForeignKey(Category)
+    relevance = models.FloatField()
