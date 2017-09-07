@@ -76,7 +76,7 @@ SECRET_KEY = get_env_variable('SECRET_KEY')
 # Show the debug_toolbar to the following IPs
 INTERNAL_IPS = ['127.0.0.1']
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
