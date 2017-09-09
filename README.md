@@ -87,11 +87,10 @@ Alternatively, you can create a virtual environment to house the environment
 variables and the app's dependencies.
 
 If not already installed, install python's `virtualenv` and
-`virtualenvwrapper` (as we use python 2, we want to make sure we install the
-python 2 versions of all packages):
+`virtualenvwrapper`:
 
 ```shell
-pip2 install virtualenv virtualenvwrapper
+pip install virtualenv virtualenvwrapper
 mkdir ~/.virtualenvs
 ```
 
@@ -105,15 +104,15 @@ source /usr/local/bin/virtualenvwrapper.sh
 Find out the path to your python installation:
 
 ```shell
-which python2
+which python
 ```
 
 Create your working environment, naming it whatever you'd like (e.g.,
-`cjp_dev`), where `usr/local/bin/python2` is whatever path the previous command
+`cjp_dev`), where `usr/local/bin/python` is whatever path the previous command
 returned:
 
 ```shell
-mkvirtualenv --python=/usr/local/bin/python2 cjp_dev
+mkvirtualenv --python=/usr/local/bin/python cjp_dev
 ```
 
 You may now use `workon cjp_dev` and `deactivate` to activate and deactivate
@@ -150,7 +149,7 @@ With the environment variables set, we're now ready to install the necessary
 dependencies:
 
 ```shell
-pip2 install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Initialize Django models and start server
