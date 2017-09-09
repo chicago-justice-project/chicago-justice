@@ -1,6 +1,15 @@
-import urlparse
-import urllib2
-from cookielib import CookieJar
+try: # Try loading Python 3 modules, except to Python 2 modules
+    from urllib.parse import urlparse
+    from urllib import request as urlopen
+except ImportError:
+    from urlparse import urlparse
+    import urllib2 as urlopen
+
+try: # Try loading Python 3 modules, except to Python 2 modules
+    from http.cookiejar import CookieJar
+except ImportError:
+    from cookielib import CookieJar
+
 import feedparser
 from bs4 import BeautifulSoup
 
@@ -20,7 +29,7 @@ def get_rss_links(url, link_selector):
 def parse_html_links(soup, url, link_selector):
     results = soup.select(link_selector)
 
-    parsed_url = urlparse.urlparse(url, 'http')
+    parsed_url = urlparse(url, 'http')
     base_url = '{}://{}'.format(parsed_url.scheme, parsed_url.netloc)
 
     links = set()
@@ -39,11 +48,11 @@ def load_html(url, with_cookies=False, headers={}):
     any networking or parsing exceptions"""
     if with_cookies:
         cj = CookieJar()
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        opener = urlopen.build_opener(urlopen.HTTPCookieProcessor(cj))
     else:
-        opener = urllib2.build_opener()
+        opener = urlopen.build_opener()
 
-    request = urllib2.Request(url, headers=headers)
+    request = urlopen.Request(url, headers=headers)
 
     response = opener.open(request)
     html = response.read().decode('utf-8', errors='replace')
