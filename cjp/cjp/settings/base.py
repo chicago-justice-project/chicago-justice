@@ -118,6 +118,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'debug_toolbar',
     'rest_framework',
+    'rest_framework.authtoken',
 )
 
 REST_FRAMEWORK = {
@@ -125,7 +126,9 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
-        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'PAGE_SIZE': 20,
 }
