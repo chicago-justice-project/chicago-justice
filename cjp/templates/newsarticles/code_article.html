@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block title %}
-{{ article.title }}<small>(Coding Article)</small>
 {% endblock %}
 
 {% block content %}
@@ -24,6 +23,7 @@
     </form>
   </div>
   <div class="col-md-9" role="main">
+    <h1>{{ article.title }}<small> (Coding Article) </small></h1>
     <table class="table table-bordered">
     <tr>
         <th class="crimeReportHead">Source</th>

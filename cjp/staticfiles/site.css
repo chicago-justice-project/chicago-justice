@@ -5,9 +5,9 @@
 }
 
 nav.coding-form {
-  margin-top: 1em;
+  margin-top: 0em;
   width: 275px;
-  max-height: 65%;
+  max-height: 80%;
   overflow-y: auto;
 }
 
