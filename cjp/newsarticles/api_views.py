@@ -15,11 +15,14 @@ class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
 
     @detail_route(methods=['put'], url_path='trained-coding')
     def set_trained_coding(self, request, pk=None):
-        article = self.get_object()
+        request.data[article_id] = pk
+        print(request.data)
+        coding = TrainedCodingSerializer(data=request.data)
+
 
 
 class TrainedCodingViewSet(viewsets.ModelViewSet):
-    queryset = TrainedCoding.objects.all().order_by('article')
+    queryset = TrainedCoding.objects.all()
     serializer_class = TrainedCodingSerializer
 
 
@@ -27,6 +30,6 @@ def router_urls():
     router = routers.DefaultRouter(trailing_slash=False)
     router.register(r'articles', ArticleViewSet)
     router.register(r'categories', CategoryViewSet)
-    #router.register(r'trained-codings', TrainedCodingViewSet)
+    router.register(r'trained-codings', TrainedCodingViewSet)
 
     return router.urls

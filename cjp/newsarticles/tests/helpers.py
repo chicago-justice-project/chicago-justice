@@ -11,33 +11,30 @@ esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 """
 
-class TestFactory(object):
+class DataFactory(object):
     """
     Helper class for instantiating model data in tests.
     """
-    def __init__(self):
-        self.admin = self.seed_admin()
-        self.category = self.seed_category()
-        self.news_source = self.seed_news_source()
-        self.article = self.seed_article()
-
-    def seed_category(self):
+    def make_category(self):
         return Category.objects.create(
             title='Guns',
             abbreviation='GUN',
             kind='crimes',
         )
 
-    def seed_admin(self):
+    def make_admin(self):
         return User.objects.create_user(username='user1', password='12345', is_staff=True)
 
-    def seed_news_source(self):
+    def make_news_source(self):
         return NewsSource.objects.create(name='Daily Planet', short_name='planet')
 
-    def seed_article(self):
+    def make_article(self, title='Article title', news_source=None):
+        if not news_source:
+            news_source=NewsSource.objects.first()
+
         return Article.objects.create(
-            news_source=NewsSource.objects.first(),
+            news_source=news_source,
             url='http://example.com/1234',
-            title='Man bites dog',
+            title=title,
             author='Clark Kent',
             bodytext=TEST_BODY)
