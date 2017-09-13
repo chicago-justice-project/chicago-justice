@@ -222,3 +222,6 @@ def random_article(request):
     selected_pk = random.sample(uncoded_article_pks, 1)[0]
     
     return HttpResponseRedirect(reverse('code-article', args=(selected_pk,)))
+
+def help(request):
+    return render(request, 'newsarticles/help.html', {})
