@@ -13,13 +13,13 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-md-3" role="complementary">
+  <div class="col-md-3">
     <form action="" method="post">
       {% csrf_token %}
-      <nav id="codingSidebar" class="coding-form affix">
-        <input class="code-submit-btn btn btn-primary btn-lg btn-block" type="submit" value="Submit Coding" />
-        {{ form.as_ul }}
-      </nav>
+      <div class="codingSidebar affix">
+        <div class="code-submit-btn"><input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit Coding" /></div>
+        <div class="coding-form">{{ form.as_ul }}</div>
+      </div>
     </form>
   </div>
   <div class="col-md-9" role="main">

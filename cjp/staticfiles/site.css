@@ -1,37 +1,37 @@
 @media (max-width: 992px) { /* Only affix coding sidebar if on desktop */
-    nav#codingSidebar.affix {
+    div.codingSidebar {
         position: static;
     }
 }
 
-nav.coding-form {
+div.coding-form {
   margin-top: 0em;
   width: 275px;
-  max-height: 80%;
+  max-height: 80vh;
   overflow-y: auto;
 }
 
-nav.coding-form ul, li {
+div.coding-form ul, li {
   list-style: none;
 }
 
-nav.coding-form ul {
+div.coding-form ul {
   padding-left: 2px;
   margin-left: 2px;
   font-weight: bold;
 }
 
-nav.coding-form li {
+div.coding-form li {
   padding-left: 3px;
   margin-left: 3px;
 }
 
-nav.coding-form li label {
+div.coding-form li label {
   font-weight: bold;
   margin-bottom: 0px;
 }
 
-nav.coding-form ul li label {
+div.coding-form ul li label {
   font-weight: normal;
 }
 
