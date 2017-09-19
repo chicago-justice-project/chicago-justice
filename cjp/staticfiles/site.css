@@ -4,10 +4,15 @@
     }
 }
 
+@media (min-width: 992px) {
+  div.coding-form {
+    width: 275px;
+    max-height: 80vh;
+  }
+}
+
 div.coding-form {
   margin-top: 0em;
-  width: 275px;
-  max-height: 80vh;
   overflow-y: auto;
 }
 
