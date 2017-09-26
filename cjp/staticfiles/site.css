@@ -1,42 +1,42 @@
 @media (max-width: 992px) { /* Only affix coding sidebar if on desktop */
-    div.codingSidebar {
+    .codingSidebar {
         position: static;
     }
 }
 
 @media (min-width: 992px) {
-  div.coding-form {
+  .coding-form {
     width: 275px;
     max-height: 80vh;
   }
 }
 
-div.coding-form {
+.coding-form {
   margin-top: 0em;
   overflow-y: auto;
 }
 
-div.coding-form ul, li {
+.coding-form ul, li {
   list-style: none;
 }
 
-div.coding-form ul {
+.coding-form ul {
   padding-left: 2px;
   margin-left: 2px;
   font-weight: bold;
 }
 
-div.coding-form li {
+.coding-form li {
   padding-left: 3px;
   margin-left: 3px;
 }
 
-div.coding-form li label {
+.coding-form li label {
   font-weight: bold;
   margin-bottom: 0px;
 }
 
-div.coding-form ul li label {
+.coding-form ul li label {
   font-weight: normal;
 }
 
@@ -48,7 +48,7 @@ table#articleTable {
   margin-top: 1em;
 }
 
-div.articleBody {
+.articleBody {
     line-height: 2em;
     word-wrap: break-word;
     white-space: -moz-pre-wrap;
