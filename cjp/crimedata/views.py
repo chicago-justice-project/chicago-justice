@@ -260,7 +260,7 @@ def crimeReportExport(request):
             endDay = datetime.date(startDay.year + 1, 1, 1)
 
         crimeReport_list = crimeReport_list.filter(crime_date__gte = startDay).filter(crime_date__lt = endDay)
-    except Exception, e:
+    except Exception as e:
         # not a valid month
         return HttpResponse()
 

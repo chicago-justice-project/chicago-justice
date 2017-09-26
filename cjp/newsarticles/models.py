@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
 from itertools import groupby
 from collections import OrderedDict
 
@@ -7,12 +8,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
 
+@python_2_unicode_compatible
 class NewsSource(models.Model):
     name = models.CharField(max_length=256)
     short_name = models.CharField(max_length=256, db_index=True)
     legacy_feed_id = models.CharField(max_length=8, blank=True, db_index=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -24,6 +26,7 @@ class CategoryQuerySet(models.QuerySet):
         return self.filter(active=True)
 
 
+@python_2_unicode_compatible
 class Category(models.Model):
 
     KINDS = OrderedDict([
@@ -42,13 +45,14 @@ class Category(models.Model):
 
     objects = CategoryQuerySet.as_manager()
 
-    def __unicode__(self):
+    def __str__(self):
         return '{} ({})'.format(self.title, self.abbreviation)
 
     class Meta:
         ordering = ['kind', 'abbreviation']
 
 
+@python_2_unicode_compatible
 class ScraperResult(models.Model):
     """
     A single run of a scraper.
@@ -63,7 +67,7 @@ class ScraperResult(models.Model):
 
     output = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '{} - {}'.format(self.news_source.name, self.completed_time)
 
 class ArticleQuerySet(models.QuerySet):
@@ -83,6 +87,7 @@ class ArticleQuerySet(models.QuerySet):
         return self.filter(usercoding__categories__in=categories)
 
 
+@python_2_unicode_compatible
 class Article(models.Model):
     """
     Base article contents. Should never change after initial scraping
@@ -102,7 +107,7 @@ class Article(models.Model):
     relevant = models.NullBooleanField(db_index=True)
     categories = models.ManyToManyField(Category, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.url[:60]
 
     def is_coded(self):

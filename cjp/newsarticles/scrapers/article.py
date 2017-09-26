@@ -106,7 +106,7 @@ class ArticleScraper(object):
         results = []
         try:
             articles = self.read_articles(skip_existing)
-        except Exception, e:
+        except Exception as e:
             result = ScraperResult(news_source=self.news_source, success=False)
             result.output = 'Error getting article listing: {}'.format(e)
             result.save()
@@ -119,7 +119,7 @@ class ArticleScraper(object):
             if save and scrape_result.article and scrape_result.success:
                 try:
                     scrape_result.article.save()
-                except django.db.Error, e:
+                except django.db.Error as e:
                     final_result = ArticleResult(url=scrape_result.url, status=ArticleResult.ERROR,
                                                  error=e)
 
@@ -192,7 +192,7 @@ class ArticleScraper(object):
             soup = load_html(url,
                              headers=self.get_headers(),
                              with_cookies=self.use_cookies)
-        except Exception, e:
+        except Exception as e:
             LOG.debug('Error loading url [%s]', url, exc_info=True)
             return ArticleResult(url=url, status=ArticleResult.ERROR, error=e)
 
@@ -200,10 +200,10 @@ class ArticleScraper(object):
             title = self.extract_title(soup)
             body_html = self.extract_body(soup)
             author = self.extract_author(soup)
-        except ScraperException, e:
-            LOG.debug(e.message)
+        except ScraperException as e:
+            LOG.debug(e)
             return ArticleResult(url, status=ArticleResult.ERROR, error=e)
-        except Exception, e:
+        except Exception as e:
             LOG.debug('Error parsing URL [%s]', url, exc_info=True)
             return ArticleResult(url, status=ArticleResult.ERROR, error=e)
 

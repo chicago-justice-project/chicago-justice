@@ -18,7 +18,7 @@ class Command(BaseCommand):
         parser.add_argument('scraper', nargs='?')
 
     def handle(self, *args, **options):
-        cfg_file = file(CONFIG_PATH, 'r')
+        cfg_file = open(CONFIG_PATH, 'r')
         all_scrapers = yaml.load(cfg_file)
 
         if options['scraper']:
