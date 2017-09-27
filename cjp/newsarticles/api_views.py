@@ -1,6 +1,7 @@
 from newsarticles.models import Article, Category, TrainedCoding
 from newsarticles.api_serializers import ArticleSerializer, CategorySerializer, TrainedCodingSerializer
 from rest_framework import viewsets, routers
+from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 
 
@@ -15,10 +16,12 @@ class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
 
     @detail_route(methods=['put'], url_path='trained-coding')
     def set_trained_coding(self, request, pk=None):
-        request.data[article_id] = pk
-        print(request.data)
+        request.data['article'] = pk
         coding = TrainedCodingSerializer(data=request.data)
 
+        coding.is_valid(raise_exception=True)
+        coding.save()
+        return Response({'status': 'saved'})
 
 
 class TrainedCodingViewSet(viewsets.ModelViewSet):

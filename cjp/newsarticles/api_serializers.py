@@ -9,13 +9,15 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class TrainedCategoryRelevanceSerializer(serializers.ModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects)
+
     class Meta:
         model = TrainedCategoryRelevance
         fields = ('category', 'relevance')
 
 
 class TrainedCodingSerializer(serializers.ModelSerializer):
-    article = serializers.PrimaryKeyRelatedField(read_only=True)
+    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects)
     categories = TrainedCategoryRelevanceSerializer(many=True)
 
     class Meta:
@@ -24,10 +26,16 @@ class TrainedCodingSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         categories_data = validated_data.pop('categories')
-        coding = TrainedCoding.objects.create(**validated_data)
+        article = validated_data.pop('article')
 
+        coding, exists = TrainedCoding.objects.update_or_create(
+            defaults=validated_data,
+            article=article
+        )
+
+        TrainedCategoryRelevance.objects.filter(coding=coding.id).delete()
         for category_data in categories_data:
-            TrainedCategoryRelevance.objects.create(coding=coding, **categories_data)
+            TrainedCategoryRelevance.objects.create(coding=coding, **category_data)
 
         return coding
 
