@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block title %}
-{{ article.title }}<small>(Coding Article)</small>
 {% endblock %}
 
 {% block content %}
@@ -17,13 +16,14 @@
   <div class="col-md-3" role="complementary">
     <form action="" method="post">
       {% csrf_token %}
-      <nav id="codingSidebar" class="coding-form affix">
-        <input class="code-submit-btn btn btn-primary btn-lg btn-block" type="submit" value="Submit Coding" />
-        {{ form.as_ul }}
-      </nav>
+      <div class="codingSidebar affix">
+        <div class="code-submit-btn"><input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit Coding" /></div>
+        <div class="coding-form">{{ form.as_ul }}</div>
+      </div>
     </form>
   </div>
   <div class="col-md-9" role="main">
+    <h1>{{ article.title }}<small> (Coding Article) </small></h1>
     <table class="table table-bordered">
     <tr>
         <th class="crimeReportHead">Source</th>
