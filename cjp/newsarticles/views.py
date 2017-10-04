@@ -222,3 +222,7 @@ def random_article(request):
     selected_pk = random.choice(uncoded_article_pks)
     
     return HttpResponseRedirect(reverse('code-article', args=(selected_pk,)))
+
+@login_required
+def help(request):
+    return render(request, 'newsarticles/help.html', {})

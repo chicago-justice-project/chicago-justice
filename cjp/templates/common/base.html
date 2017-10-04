@@ -45,6 +45,9 @@
                 <li><a href="{% url 'userManageView' %}">Manage Users</a></li>
                 {% endif %}
             </ul>
+            {% if user.is_authenticated %}
+            <p class="navbar-text navbar-right"><a class="navbar-link" href="{% url 'help' %}" target="_blank">Help</a></p>
+            {% endif %}
           </div><!-- /.navbar-collapse-->
         </div><!-- /.container-fluid-->
       </nav>
