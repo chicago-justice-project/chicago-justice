@@ -17,11 +17,10 @@ STATIC_ROOT = '/tmp/cjpstatic'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': get_env_variable('DATABASE_NAME'),                      # Or path to database file if using sqlite3.
-        'USER': get_env_variable('DATABASE_USER'),                      # Not used with sqlite3.
-        'PASSWORD': get_env_variable('DATABASE_PASSWORD'),                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432,      # Set to empty string for default. Not used with sqlite3.
     }
 }
