@@ -155,7 +155,7 @@ pip install -r requirements.txt
 ### Initialize Django models and start server
 
 ```shell
-./manage.py syncdb
+./manage.py migrate
 ./manage.py loaddata category news_source
 ./manage.py runserver
 ```
