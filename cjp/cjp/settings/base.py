@@ -108,7 +108,6 @@ TEMPLATES = [
 INSTALLED_APPS = (
     'newsarticles',
     'crimedata',
-    'textanalysis',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
