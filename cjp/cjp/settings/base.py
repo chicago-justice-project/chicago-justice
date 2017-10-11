@@ -6,10 +6,12 @@ from os import environ
 from django.core.exceptions import ImproperlyConfigured
 
 # Function to get environment variables from os environment
-def get_env_variable(var_name):
+def get_env_variable(var_name, default=None):
     try:
         return os.environ[var_name]
     except KeyError:
+        if default is not None:
+            return default
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
 
