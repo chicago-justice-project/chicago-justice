@@ -14,23 +14,23 @@ class CrimeReportForm(forms.Form):
 
     caseNum = forms.CharField(label='case num', required=False, max_length=20)
 
-    codes = LookupCRCode.objects.all()
-    codeList = tuple((c.web_code, c.web_code) for c in codes)
-    code = forms.ChoiceField(label='code',
-                             choices=(('', ''), ) + codeList,
-                             required=False)
+    code = forms.ModelChoiceField(label='code',
+                                  required=False,
+                                  empty_label='All',
+                                  to_field_name='web_code',
+                                  queryset=LookupCRCode.objects.all())
 
-    crimeTypes = LookupCRCrimeType.objects.all()
-    crimeTypeList = tuple((c.web_crime_type, c.web_crime_type) for c in crimeTypes)
-    crimeType = forms.ChoiceField(label='crime type',
-                                    choices=(('', ''), ) + crimeTypeList,
-                                    required=False)
+    crimeType = forms.ModelChoiceField(label='crime type',
+                                       required=False,
+                                       empty_label='All',
+                                       to_field_name='web_crime_type',
+                                       queryset=LookupCRCrimeType.objects.all())
 
-    secondaries = LookupCRSecondary.objects.all()
-    secondaryList = tuple((c.web_secondary, c.web_secondary) for c in secondaries)
-    secondary = forms.ChoiceField(label='secondary',
-                                    choices=(('', ''), ) + secondaryList,
-                                    required=False)
+    secondary = forms.ModelChoiceField(label='secondary',
+                                       required=False,
+                                       empty_label='All',
+                                       to_field_name='web_secondary',
+                                       queryset=LookupCRSecondary.objects.all())
 
     location = forms.CharField(label='location', required=False, max_length=100)
     block = forms.CharField(label='block', required=False, max_length=200)
@@ -47,31 +47,31 @@ class CrimeReportForm(forms.Form):
                                  choices=(('', ''), ('Y', 'Yes'), ('N', 'No')),
                                  required=False)
 
-    beats = LookupCRBeat.objects.all()
-    beatList = tuple((c.web_beat, c.web_beat) for c in beats)
-    beat = forms.ChoiceField(label='beat',
-                             choices=(('', ''), ) + beatList,
-                             required=False)
+    beat = forms.ModelChoiceField(label='beat',
+                                  required=False,
+                                  empty_label='All',
+                                  to_field_name='web_beat',
+                                  queryset=LookupCRBeat.objects.all())
 
-    wards = LookupCRWard.objects.all()
-    wardList = tuple((c.web_ward, c.web_ward) for c in wards)
-    ward = forms.ChoiceField(label='ward',
-                             choices=(('', ''), ) + wardList,
-                             required=False)
+    ward = forms.ModelChoiceField(label='ward',
+                                  required=False,
+                                  empty_label='All',
+                                  to_field_name='web_ward',
+                                  queryset=LookupCRWard.objects.all())
 
-    nibrss = LookupCRNibrs.objects.all()
-    nibrsList = tuple((c.web_nibrs, c.web_nibrs) for c in nibrss)
-    nibrs = forms.ChoiceField(label='nibrs',
-                             choices=(('', ''), ) + nibrsList,
-                             required=False)
+    nibrss = forms.ModelChoiceField(label='nibrs',
+                                  required=False,
+                                  empty_label='All',
+                                  to_field_name='web_nibrs',
+                                  queryset=LookupCRNibrs.objects.all())
+
 
 class CrimeReportExportForm(forms.Form):
-    months = ["%d-%02d" % (m.year, m.month) for m in LookupCRCrimeDateMonth.objects.all()]
-    months = tuple((m, m) for m in months)
+    dateGroup = forms.ModelChoiceField(label='Month',
+                                       required=False,
+                                       empty_label='All',
+                                       queryset=LookupCRCrimeDateMonth.objects.all())
 
-    dateGroup = forms.ChoiceField(label='Month',
-                                 choices=((('', ''), ) + months),
-                                 required=False)
 
 def crimeReportList(request):
     form = CrimeReportForm(request.POST)
