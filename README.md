@@ -2,66 +2,16 @@
 
 ## Local installation instructions
 
-### Postgres installation
+### Install Postgres via Docker
 
-#### macOS
+The easiest way to install the Postgres database is via Docker.
+We use `docker-compose`, which you can install via the instructions
+on the [Docker site](https://docs.docker.com/compose/install/#install-compose).
 
-The easiest way to install PostgreSQL for Mac is with a prebuilt Postgres
-installation, like [Postgres.app](http://postgresapp.com/).
-
-Alternatively, you may use [Homebrew](https://brew.sh/):
-
-```shell
-brew install postgres
-brew services start postgresql
-```
-
-#### GNU/Linux
-
-The version of PostgreSQL provided in most distros' repositories should be
-adequate and can be installed through your distro's package manager.
-
-Ubuntu 16.04:
+Then, from the root project directory, start the database rby running:
 
 ```shell
-sudo apt-get update
-sudo apt-get install postgresql
-```
-
-Arch Linux:
-
-```shell
-sudo pacman -S postgresql
-sudo -u postgres initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
-sudo systemctl start postgresql.service
-```
-
-### Postgres setup
-
-Once PostgreSQL is installed and running, you can create the database you'll
-use locally for this app.
-
-As a user with Postgres database privileges:
-
-```shell
-createdb cjpdb
-```
-
-The name of the database (e.g., `cjpdb`) may be anything you choose, but
-keep track of what you name it along with the user and password we're about to
-create. You'll need these for setting up your virtual environment.
-
-Create the Postgres user and give it a password:
-
-```shell
-createuser --interactive --pwprompt
-```
-
-Finally, grant privileges on the database you just created to the user you just
-created. For instance, if we created database `cjpdb` and the user `cjpuser`:
-
-```shell
-psql -d postgres -c "GRANT ALL ON DATABASE cjpdb TO cjpuser;"
+docker-compose up -d
 ```
 
 ### Setup Environment Variables
@@ -79,7 +29,9 @@ An example `.env` file is provided. You should copy it:
 cp .env-example .env
 ```
 
-Then, you can edit the file in your preferred editor.
+Then, you can edit the file in your preferred editor. The defaults in the example
+are configured for connecting to the docker Postgres, so you shouldn't
+need to change anything.
 
 #### Create a python virtual environment
 
@@ -152,11 +104,15 @@ dependencies:
 pip install -r requirements.txt
 ```
 
-### Initialize Django models and start server
+### Initialize Django models
 
 ```shell
-./manage.py migrate
-./manage.py loaddata category news_source
+./setup_db.sh
+```
+
+### Finally, run the server
+
+```shell
 ./manage.py runserver
 ```
 
