@@ -57,6 +57,10 @@ class LookupCRCrimeDateMonth(models.Model):
                                            the_date=datetime.date(int(m['the_year']), int(m['the_month']), 1))
             lcrm.save()
 
+    def __str__(self):
+        return "{}-{:02d}".format(self.year, self.month)
+
+
 class LookupCRCode(models.Model):
     web_code = models.CharField(max_length=20, db_index=True)
 
@@ -68,6 +72,10 @@ class LookupCRCode(models.Model):
         for code in codes:
             lcr = LookupCRCode(web_code=code['web_code'])
             lcr.save()
+
+    def __str__(self):
+        return self.web_code
+
 
 class LookupCRCrimeType(models.Model):
     web_crime_type = models.CharField(max_length=100, db_index=True)
@@ -82,6 +90,9 @@ class LookupCRCrimeType(models.Model):
                 lcrt = LookupCRCrimeType(web_crime_type=crimeType['web_crime_type'])
                 lcrt.save()
 
+    def __str__(self):
+        return self.web_crime_type
+
 class LookupCRSecondary(models.Model):
     web_secondary = models.CharField(max_length=150, db_index=True)
 
@@ -94,6 +105,9 @@ class LookupCRSecondary(models.Model):
             if len(secondary['web_secondary']) > 0:
                 lcrs = LookupCRSecondary(web_secondary=secondary['web_secondary'])
                 lcrs.save()
+
+    def __str__(self):
+        return self.web_secondary
 
 class LookupCRBeat(models.Model):
     web_beat = models.CharField(max_length=8, db_index=True)
@@ -108,6 +122,9 @@ class LookupCRBeat(models.Model):
                 lcrb = LookupCRBeat(web_beat=beat['web_beat'])
                 lcrb.save()
 
+    def __str__(self):
+        return self.web_beat
+
 class LookupCRWard(models.Model):
     web_ward = models.CharField(max_length=5, db_index=True)
 
@@ -121,6 +138,9 @@ class LookupCRWard(models.Model):
                 lcrw = LookupCRWard(web_ward=ward['web_ward'])
                 lcrw.save()
 
+    def __str__(self):
+        return self.web_ward
+
 class LookupCRNibrs(models.Model):
     web_nibrs = models.CharField(max_length=11, db_index=True)
 
@@ -133,3 +153,6 @@ class LookupCRNibrs(models.Model):
             if len(nibrs['web_nibrs']) > 0:
                 lcrn = LookupCRNibrs(web_nibrs=nibrs['web_nibrs'])
                 lcrn.save()
+
+    def __str__(self):
+        return self.web_nibrs
