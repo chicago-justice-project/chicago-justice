@@ -16,8 +16,10 @@ class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
 
     @detail_route(methods=['put'], url_path='trained-coding')
     def set_trained_coding(self, request, pk=None):
-        request.data['article'] = pk
-        coding = TrainedCodingSerializer(data=request.data)
+        data = request.data.copy()
+
+        data['article'] = pk
+        coding = TrainedCodingSerializer(data=data)
 
         coding.is_valid(raise_exception=True)
         coding.save()

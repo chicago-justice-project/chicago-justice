@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from .helpers import DataFactory
 
-from newsarticles.models import Article, NewsSource, Category
+from newsarticles.models import Article, NewsSource, Category, TrainedCoding
 
 
 class ApiCategoryTest(APITestCase):
@@ -63,23 +63,33 @@ class ApiCategoryTest(APITestCase):
     def test_create_coding(self):
         article = self.factory.make_article(title='Test article')
         cat1 = self.factory.make_category()
+        cat2 = self.factory.make_category()
 
         self.client.force_authenticate(user=self.user)
 
         coding = {
             'model_info': 'testcoder',
             'relevance': 0.25,
-            # 'categories': {
-            #     cat1.id : 0.8,
-            # }
+            'categories': [
+                {'category': cat1.id, 'relevance': 0.1},
+                {'category': cat2.id, 'relevance': 0.2},
+            ],
         }
 
         response = self.client.put(
             '/api/articles/{}/trained-coding'.format(article.id),
-            data=coding
+            data=coding,
+            format='json'
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        coding = article.trained_coding
+        coding = TrainedCoding.objects.get(article=article)
 
         self.assertEqual(coding.relevance, 0.25)
+
+        self.assertEqual(coding.trainedcategoryrelevance_set.count(), 2)
+
+        category_coding = coding.trainedcategoryrelevance_set.first()
+
+        self.assertEqual(category_coding.category_id, cat1.id)
+        self.assertEqual(category_coding.relevance, 0.1)
