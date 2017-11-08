@@ -21,6 +21,6 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(models.UserCoding)
 class UserCodingAdmin(admin.ModelAdmin):
     list_display = ('user', 'article', 'date')
-
+    search_fields = ['user__username']
     fields = ('article', 'date', 'user', 'relevant', 'categories', 'locations')
     readonly_fields = ('article', 'date')
