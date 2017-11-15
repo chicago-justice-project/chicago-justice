@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
+from rest_framework import routers
 
 import django.contrib.auth.views
 import cjpusers.views
@@ -9,15 +10,13 @@ import stats.views
 import crimedata.views
 import newsarticles.views
 
+from newsarticles.api_views import router_urls
+
 urlpatterns = [
-    # Examples:
-    # url(r'^$', 'cjp.views.home', name='home'),
-    # url(r'^cjp/', include('cjp.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^api/', include(router_urls())),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     # user login and admin
     url(r'^user/login/$', django.contrib.auth.views.login, name='login'),
@@ -45,7 +44,6 @@ urlpatterns = [
 
     # stats
     url(r'^stats/totalCounts$', stats.views.totalCounts, name='statsTotalCounts'),
-
 ]
 
 if settings.DEBUG:

@@ -1,6 +1,7 @@
 beautifulsoup4==4.6.0
 Django==1.11.4
 django-debug-toolbar==1.8
+djangorestframework==3.6.4
 feedparser==5.2.1
 gunicorn==19.7.1
 html2text==2016.9.19
