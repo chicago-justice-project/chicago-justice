@@ -14,6 +14,7 @@ import tagnews
 
 API_HOST = os.environ.get('API_HOST', 'http://127.0.0.1:8000')
 API_TOKEN = os.environ.get('API_TOKEN', '')
+MODEL_INFO = os.environ.get('MODEL_INFO', 'code_all_articles')
 
 class ApiClient(object):
     TIMEOUT_S = 2.0
@@ -23,9 +24,12 @@ class ApiClient(object):
         self.token = token
 
     def fetch_categories(self):
-        url = ''.join([self.host, '/api/categories'])
-
+        url = self.absolute('/api/categories')
         return [article for article in self.url_cursor(url)]
+
+    def set_trained_coding(self, article_id, coding):
+        url = self.absolute('/api/articles/{}/trained-coding'.format(article_id))
+        return self.put(url, json=coding)
 
     def url_cursor(self, url, params=None):
         resp = self.get(url, params)
@@ -40,18 +44,20 @@ class ApiClient(object):
         if next_url:
             yield from self.url_cursor(next_url)
 
-
-    def articles_cursor(self, params={}, limit=100):
+    def articles_cursor(self, params={}, limit=None):
         count = 0
 
         url = ''.join([self.host, '/api/articles'])
 
         for article in self.url_cursor(url, params=params):
-            if count > limit:
+            if limit and count > limit:
                 break
 
             count += 1
             yield article
+
+    def absolute(self, path):
+        return ''.join([self.host, path])
 
     def headers(self):
         return {
@@ -64,17 +70,18 @@ class ApiClient(object):
             params=params,
             timeout=ApiClient.TIMEOUT_S)
 
-    def put(self, url, params=None):
+    def put(self, url, json=None, params=None):
         return requests.put(url,
             headers=self.headers(),
             params=params,
+            json=json,
             timeout=ApiClient.TIMEOUT_S)
 
 
 class Coder(object):
     MIN_SCORE = 0.01
 
-    def __init__(self, categories=[], model_info='Test run 1'):
+    def __init__(self, categories=[], model_info='unknown'):
         self.tagger = tagnews.Tagger()
         self.categories = {cat['abbreviation']: cat['id'] for cat in categories}
         self.model_info = model_info
@@ -114,9 +121,17 @@ class Coder(object):
 
 client = ApiClient(API_HOST, API_TOKEN)
 
-coder = Coder(categories=client.fetch_categories())
+coder = Coder(categories=client.fetch_categories(), model_info=MODEL_INFO)
 
-for article in client.articles_cursor(limit=5):
-    print(article.get('title'))
-    print(coder.code_article(article))
+count = 0
+for article in client.articles_cursor():
+    coding = coder.code_article(article)
+    resp = client.set_trained_coding(article['id'], coding)
+
+    count += 1
+    if count % 100 == 0:
+        print("Count: {} id: {}".format(count, article['id']))
+
+    if not resp.ok:
+        print("ERROR: {}".format(resp.text))
 
