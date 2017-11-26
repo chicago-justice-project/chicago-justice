@@ -24,3 +24,19 @@ class UserCodingAdmin(admin.ModelAdmin):
     search_fields = ['user__username']
     fields = ('article', 'date', 'user', 'relevant', 'categories', 'locations')
     readonly_fields = ('article', 'date')
+
+class TrainedCategoryRelevanceInline(admin.TabularInline):
+    model = models.TrainedCategoryRelevance
+    extra = 0
+    can_delete = False
+    readonly_fields = ('category', 'relevance',)
+
+    def has_add_permission(self, request):
+        False
+
+
+@admin.register(models.TrainedCoding)
+class TrainedCodingAdmin(admin.ModelAdmin):
+    list_display = ('article', 'model_info', 'relevance')
+    inlines = [TrainedCategoryRelevanceInline]
+    readonly_fields = ('article', 'date', 'model_info', 'relevance',)
