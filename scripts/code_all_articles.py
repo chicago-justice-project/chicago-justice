@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-#pip install scipy
-
-# should we include all categories or just above a threshold relevance?
+# Before running:
 # import nltk
 # nltk.download('punkt')
 # nltk.download('wordnet')
