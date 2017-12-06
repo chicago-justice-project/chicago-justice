@@ -12,6 +12,12 @@
 # body_selector: CSS selector for the article text
 # body_exclude_selector: CSS selector for elements to remove from the body.
 
+- news_source: cwb-chicago
+  index_url: http://www.cwbchicago.com/feeds/posts/default
+  rss_index: true
+  title_selector: .post-title
+  body_selector: .post-body
+
 - news_source: fop-news
   index_url: https://fop7blog.org/news?format=RSS
   rss_index: True
