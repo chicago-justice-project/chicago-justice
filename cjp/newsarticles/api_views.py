@@ -11,7 +11,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Article.objects.all().order_by('-last_modified')
+    queryset = Article.objects.select_related('news_source').order_by('created')
     serializer_class = ArticleSerializer
 
     @detail_route(methods=['put'], url_path='trained-coding')
