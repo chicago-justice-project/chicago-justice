@@ -177,6 +177,14 @@
   body_selector: article .story-text
   exclude_selector: .story-continued, .story-interrupt, .story-intro
 
+- news_source: propublica-illinois
+  index_url: https://www.propublica.org/archive/illinois/
+  rss_index: False
+  index_url_selector: .river .hed a
+  title_selector: .article-header .hed
+  body_selector: .article-body
+  author_selector: .article-header .name
+
 - news_source: south-side-weekly
   index_url: http://southsideweekly.com/feed/
   rss_articles: True
