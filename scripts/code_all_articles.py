@@ -9,6 +9,8 @@
 
 import os
 import requests
+from requests.exceptions import ReadTimeout, ConnectTimeout
+from datetime import datetime
 
 import tagnews
 
@@ -17,7 +19,7 @@ API_TOKEN = os.environ.get('API_TOKEN', '')
 MODEL_INFO = os.environ.get('MODEL_INFO', 'code_all_articles')
 
 class ApiClient(object):
-    TIMEOUT_S = 2.0
+    TIMEOUT_S = 10.0
 
     def __init__(self, host, token):
         self.host = host
@@ -32,17 +34,22 @@ class ApiClient(object):
         return self.put(url, json=coding)
 
     def url_cursor(self, url, params=None):
-        resp = self.get(url, params)
-        resp.raise_for_status()
+        next_url = url
+        next_params = params
 
-        data = resp.json()
+        while next_url:
+            resp = self.get(next_url, next_params)
+            resp.raise_for_status()
 
-        for item in data.get('results', []):
-            yield item
+            data = resp.json()
 
-        next_url = data.get('next')
-        if next_url:
-            yield from self.url_cursor(next_url)
+            print("{} fetching {} {}".format(datetime.now().isoformat(), next_url, next_params))
+
+            for item in data.get('results', []):
+                yield item
+
+            next_url = data.get('next')
+            next_params = None
 
     def articles_cursor(self, params={}, limit=None):
         count = 0
@@ -64,18 +71,28 @@ class ApiClient(object):
             'Authorization': 'Token {}'.format(self.token),
         }
 
-    def get(self, url, params=None):
-        return requests.get(url,
-            headers=self.headers(),
-            params=params,
-            timeout=ApiClient.TIMEOUT_S)
+    def get(self, url, params=None, retries=3):
+        try:
+            return requests.get(url,
+                headers=self.headers(),
+                params=params,
+                timeout=ApiClient.TIMEOUT_S)
+        except (ReadTimeout, ConnectTimeout):
+            if retries >= 1:
+                print("retrying GET {}".format(url))
+                return self.get(url, params=params, retries=retries-1)
 
-    def put(self, url, json=None, params=None):
-        return requests.put(url,
-            headers=self.headers(),
-            params=params,
-            json=json,
-            timeout=ApiClient.TIMEOUT_S)
+    def put(self, url, json=None, params=None, retries=3):
+        try:
+            return requests.put(url,
+                headers=self.headers(),
+                params=params,
+                json=json,
+                timeout=ApiClient.TIMEOUT_S)
+        except (ReadTimeout, ConnectTimeout):
+            if retries >= 1:
+                print("retrying PUT {}".format(url))
+                return self.put(url, json=json, params=params, retries=retries-1)
 
 
 class Coder(object):
@@ -124,13 +141,11 @@ client = ApiClient(API_HOST, API_TOKEN)
 coder = Coder(categories=client.fetch_categories(), model_info=MODEL_INFO)
 
 count = 0
-for article in client.articles_cursor():
+for article in client.articles_cursor(params={'page': 3772}):
     coding = coder.code_article(article)
     resp = client.set_trained_coding(article['id'], coding)
 
-    count += 1
-    if count % 100 == 0:
-        print("Count: {} id: {}".format(count, article['id']))
+    #print("{} - {}".format(article['id'], article['url']))
 
     if not resp.ok:
         print("ERROR: {}".format(resp.text))
