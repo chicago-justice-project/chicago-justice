@@ -1,22 +1,23 @@
+from django.core.exceptions import ObjectDoesNotExist
+from functools import lru_cache
+import json
 import tagnews
 from newsarticles.models import TrainedCategoryRelevance, TrainedCoding, Category
 
-# Lazy load taggers, no need to re-instantiate during the lifetime of the process
-crime_tagger = None
-geo_extractor = None
+MIN_CATEGORY_RELEVANCE = 0.05
 
-def init_taggers():
-    if crime_tagger is None:
-        crime_tagger = tagnews.CrimeTags()
+# Memoize taggers, they are slow to instantiate
+@lru_cache(maxsize=1)
+def crime_tagger():
+    return tagnews.CrimeTags()
 
-    # if geo_extractor is None:
-    #     geo_extractor = tagnews.GeoCoder()
+@lru_cache(maxsize=1)
+def geo_tagger():
+    return tagnews.GeoCoder()
 
 
 def tag_article(article):
-    init_taggers()
-
-    location_text = '' # tag_location(article)
+    location_text = tag_location(article)
     category_scores, max_score = tag_categories(article)
 
     data = {
@@ -31,32 +32,40 @@ def tag_article(article):
     )
 
     TrainedCategoryRelevance.objects.filter(coding=coding.id).delete()
-    for (category_id, relevance) in category_scores:
+    for (category, relevance) in category_scores:
         TrainedCategoryRelevance.objects.create(
             coding=coding,
-            category=category_id,
+            category=category,
             relevance=relevance
         )
 
 
 def tag_categories(article):
-    probs = crime_tagger.tagtext_proba(article.body)
+    if len(article.bodytext) < 10:
+        return [], 0
+
+    probs = crime_tagger().tagtext_proba(article.bodytext)
 
     category_scores = []
     max_score = 0
 
     for abbr, score in zip(probs.index, probs.values):
-        category = Category.objects.find(abbreviation=abbr)
-        if category:
-            category_scores.append((category.id, score))
+        try:
+            category = Category.objects.get(abbreviation=abbr)
+            category_scores.append((category, score))
             max_score = max(score, max_score)
+        except ObjectDoesNotExist:
+            print("category not found: {}".format(abbr))
 
     return category_scores, max_score
 
 def tag_location(article):
-    strings = geo_extractor.extract_geostrings(article.body, prob_thresh=0.5)
+    if len(article.bodytext) < 10:
+        return '[]'
 
-    if len(strings) < 1:
-        return ''
+    tokenized_locations = geo_tagger().extract_geostrings(article.bodytext,
+                                                          prob_thresh=0.5)
 
-    return ' '.join(strings[0])
+    strings = [' '.join(tokens) for tokens in tokenized_locations]
+
+    return json.dumps(strings)
