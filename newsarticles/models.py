@@ -148,7 +148,6 @@ class TrainedCoding(models.Model):
     article = models.OneToOneField(Article, db_index=True)
     date = models.DateTimeField(auto_now=True)
     model_info = models.TextField()
-    location_text = models.TextField(default='', blank=True)
 
     categories = models.ManyToManyField(Category, through='TrainedCategoryRelevance')
     relevance = models.FloatField()

@@ -43,6 +43,16 @@ class TrainedLocationInline(admin.TabularInline):
     def has_add_permission(self, request):
         False
 
+class TrainedLocationInline(admin.TabularInline):
+    model = models.TrainedLocation
+    extra = 0
+    can_delete = False
+    readonly_fields = ('text', 'latitude', 'longitude',)
+
+    def has_add_permission(self, request):
+        False
+
+
 @admin.register(models.TrainedCoding)
 class TrainedCodingAdmin(admin.ModelAdmin):
     list_display = ('article', 'model_info', 'relevance')
