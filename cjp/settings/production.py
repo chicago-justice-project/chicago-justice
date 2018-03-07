@@ -5,8 +5,9 @@
 from .base import *
 
 ALLOWED_HOSTS = [
-    'ec2-54-88-218-235.compute-1.amazonaws.com',
     'data.chicagojustice.org',
+    '.amazonaws.com',
+    '.elasticbeanstalk.com',
 ]
 
 CJP_ROOT = "/"
@@ -26,16 +27,11 @@ ADMINS = (
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/usr/share/nginx/chicagojustice'
-
-# URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
-# TODO: fix nginx config to serve out of separate static dir
-STATIC_URL = '/'
+STATIC_ROOT = os.path.join(BASE_DIR, "public-static")
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'cjpweb_prd',
         'USER': 'cjpuser',
         'PASSWORD': 'cjpuser',

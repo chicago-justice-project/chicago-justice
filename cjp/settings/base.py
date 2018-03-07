@@ -152,7 +152,7 @@ LOGGING = {
         }
     },
     'root': {
-        'handlers': ['console', 'logfile']
+        'handlers': ['console']
     },
     'handlers': {
         'mail_admins': {
@@ -165,14 +165,6 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
-        'logfile': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'verbose',
-            'filename': environ.get('LOGFILE', os.path.join(BASE_DIR, 'django.log')),
-            'maxBytes': 100000,
-            'backupCount': 5,
-        }
     },
     'formatters': {
         'verbose': {
