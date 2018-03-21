@@ -7,6 +7,7 @@ import django.db
 from django.core.exceptions import ObjectDoesNotExist
 from newsarticles.models import Article, NewsSource, ScraperResult
 from .util import get_rss_links, parse_html_links, load_html, get_rss_articles
+from newsarticles.tagging import tag_article
 
 USER_AGENT = 'CJP scraper (chicagojustice.org)'
 FAKE_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'
@@ -119,6 +120,7 @@ class ArticleScraper(object):
             if save and scrape_result.article and scrape_result.success:
                 try:
                     scrape_result.article.save()
+                    tag_article(scrape_result.article)
                 except django.db.Error as e:
                     final_result = ArticleResult(url=scrape_result.url, status=ArticleResult.ERROR,
                                                  error=e)

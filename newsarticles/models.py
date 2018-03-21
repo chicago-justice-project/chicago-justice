@@ -108,7 +108,7 @@ class Article(models.Model):
     categories = models.ManyToManyField(Category, blank=True)
 
     def __str__(self):
-        return self.url[:60]
+        return self.url[:90]
 
     def is_coded(self):
         return hasattr(self, 'usercoding')
@@ -151,6 +151,12 @@ class TrainedCoding(models.Model):
 
     categories = models.ManyToManyField(Category, through='TrainedCategoryRelevance')
     relevance = models.FloatField()
+
+class TrainedLocation(models.Model):
+    coding = models.ForeignKey(TrainedCoding)
+    text = models.TextField()
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
 class TrainedCategoryRelevance(models.Model):
     coding = models.ForeignKey(TrainedCoding)
