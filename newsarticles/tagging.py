@@ -20,6 +20,8 @@ def crime_tagger():
 def geo_tagger():
     return tagnews.GeoCoder()
 
+def current_model_info():
+    return 'tagnews {}'.format(tagnews.__version__)
 
 def tag_article(article):
     locations = tag_locations(article)
@@ -29,7 +31,7 @@ def tag_article(article):
 
     coding = TrainedCoding.objects.create(
         article=article,
-        model_info='tagnews {}'.format(tagnews.__version__),
+        model_info=current_model_info(),
         relevance=max_score
     )
 
