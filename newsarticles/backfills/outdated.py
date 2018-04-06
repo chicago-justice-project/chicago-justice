@@ -22,7 +22,7 @@ def run():
 
         count += 1
 
-        if count % 100 == 1:
+        if count % 1000 == 1:
             LOG.info('Tagging article %d of %d', count, total)
 
     LOG.info('Done tagging %d articles', count)

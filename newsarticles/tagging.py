@@ -24,8 +24,12 @@ def current_model_info():
     return 'tagnews {}'.format(tagnews.__version__)
 
 def tag_article(article):
-    locations = tag_locations(article)
-    category_scores, max_score = tag_categories(article)
+    try:
+        locations = tag_locations(article)
+        category_scores, max_score = tag_categories(article)
+    except Exception as e:
+        LOG.exception(e)
+        return
 
     TrainedCoding.objects.filter(article=article).delete()
 
