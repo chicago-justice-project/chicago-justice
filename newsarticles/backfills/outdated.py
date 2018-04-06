@@ -2,6 +2,7 @@ import logging
 
 from newsarticles.tagging import tag_article, current_model_info
 from newsarticles.models import Article
+from newsarticles.utils.migration import queryset_iterator
 
 LOG = logging.getLogger(__name__)
 
@@ -11,9 +12,12 @@ def run():
     )
 
     count = 0
+
     total = outdated_articles.count()
 
-    for article in outdated_articles:
+    LOG.info('Tagging %d articles', total)
+
+    for article in queryset_iterator(outdated_articles, chunksize=500):
         tag_article(article)
 
         count += 1

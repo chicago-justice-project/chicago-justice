@@ -11,11 +11,9 @@ class Command(BaseCommand):
     help = "Re-run tagging on articles"
 
     def add_arguments(self, parser):
-        parser.add_argument('backfill_type', nargs='?')
+        parser.add_argument('backfill_type', nargs='?', default=BACKFILL_TYPE_OUTDATED)
 
     def handle(self, *args, **options):
-        backfill = options.get('backfill_type', BACKFILL_TYPE_OUTDATED)
-
-        if backfill == BACKFILL_TYPE_OUTDATED:
+        if options['backfill_type'] == BACKFILL_TYPE_OUTDATED:
             LOG.info('Running backfill on outdated articles')
             outdated.run()
