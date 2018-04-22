@@ -2,6 +2,7 @@
 *.log
 .vscode
 .env
+public-static/*
 
 
 # Elastic Beanstalk Files
