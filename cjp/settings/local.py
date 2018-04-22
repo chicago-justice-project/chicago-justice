@@ -13,7 +13,7 @@ MANAGERS = ADMINS
 # Don't put anything in this directory yourself-
 # just needs to be somewhere Django can write to
 # TODO: fail hard if this doesn't exist
-STATIC_ROOT = '/tmp/cjpstatic'
+STATIC_ROOT = os.path.join(BASE_DIR, "public-static")
 
 DATABASES = {
     'default': {
