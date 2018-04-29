@@ -226,10 +226,10 @@ class ArticleScraper(object):
         return ArticleResult(url=url, status=status, article=article)
 
     def get_headers(self):
-        if self.fake_user_agent and isinstance(self.fake_user_agent, basestring):
-            user_agent = self.fake_user_agent
-        elif self.fake_user_agent:
+        if self.fake_user_agent is True:
             user_agent = FAKE_USER_AGENT
+        elif self.fake_user_agent:
+            user_agent = self.fake_user_agent
         else:
             user_agent = USER_AGENT
 

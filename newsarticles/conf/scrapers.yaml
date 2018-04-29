@@ -47,8 +47,8 @@
   rss_index: False
   index_url_selector: '.node-article a'
   title_selector: '.node-article h1'
-  author_selector: '.field-name-field-article-author .name'
-  body_selector: '.field-name-body'
+  author_selector: '.byline .name'
+  body_selector: '.field-body'
 
 - news_source: capitol-fax
   index_url: https://capitolfax.com/feed/
@@ -80,12 +80,12 @@
   body_selector: '.post-content'
 
 - news_source: chicago-reader
-  index_url: http://www.chicagoreader.com/chicago/Rss.xml?section=846996
+  index_url: https://www.chicagoreader.com/chicago/Rss.xml?category=939135&topic=939182
   rss_index: True
-  title_selector: h1.headline
+  title_selector: .postTitle a
   author_selector: '[rel="author"]'
-  body_selector: '#storyBody'
-  exclude_selsctor: .teads-inread
+  body_selector: .postBody
+  exclude_selector: .contentImageCenter
 
 - news_source: chicago-reporter
   index_url: http://chicagoreporter.com/feed/
