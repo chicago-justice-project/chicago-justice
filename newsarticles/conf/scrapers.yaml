@@ -43,10 +43,9 @@
   rss_articles: True
 
 - news_source: better-government-association
-  index_url: http://www.bettergov.org/criminal-justice
-  rss_index: False
-  index_url_selector: '.node-article a'
-  title_selector: '.node-article h1'
+  index_url: http://www.bettergov.org/rss/
+  rss_index: True
+  title_selector: '.headline'
   author_selector: '.byline .name'
   body_selector: '.field-body'
 
@@ -96,7 +95,7 @@
   body_selector: '[itemprop="articleBody"]'
 
 - news_source: chicago-sun-times
-  index_url: http://chicago.suntimes.com/section/crime/feed/
+  index_url: http://chicago.suntimes.com/feed/
   rss_index: True
   title_selector:
   author_selector: .post-meta-author
@@ -148,7 +147,7 @@
   body_selector: .story .entry
 
 - news_source: fox-chicago
-  index_url: http://www.fox32chicago.com/news/local/crime
+  index_url: http://www.fox32chicago.com/news/local
   rss_index: False
   index_url_selector: a.story-link
   title_selector: .story-header h1
