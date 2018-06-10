@@ -59,6 +59,12 @@
   index_url: http://chicago.cbslocal.com/feed/
   rss_articles: True
 
+- news_source: chicago-city-wire
+  index_url: https://chicagocitywire.com/stories.rss
+  rss_index: True
+  title_selector: '.content h2'
+  body_selector: '.content > div:nth-of-type(2)'
+
 - news_source: chicago-defender
   index_url: http://chicagodefender.com/feed/
   rss_articles: True
