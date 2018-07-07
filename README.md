@@ -174,55 +174,47 @@ To run a single scraper, enter the scraper name as an argument, e.g.:
 
 ----
 
-## Transfering EC2 and RDS instances:
+## Deployment
 
-* <https://aws.amazon.com/premiumsupport/knowledge-center/account-transfer-ec2-instance/>
-* <https://aws.amazon.com/premiumsupport/knowledge-center/account-transfer-rds/>
+### CLI setup
 
-# Deployment
+The app runs on AWS Elastic Beanstalk. In order to manage the production app, a project maintainer must grant
+you an AWS login and access key.
 
-This is a standard Django project. The following information is specific to an Ubuntu based deployment using Nginx with Gunicorn. This information will not necessarily apply to all deployment setups. For details on deploying Django applications, see the Django deployment documentation: https://docs.djangoproject.com/en/1.10/howto/deployment/
+The Elastic Beanstalk CLI is separate from the main AWS CLI. Install it as described
+[in the docs](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html).
 
-Current deployment is done via reverse-proxied Nginx with gunicorn running the application. To achieve this, be sure gunicorn is running the application on a port. How you do this will vary according to your system. On Ubuntu, consider using Upstart to manage Gunicorn.
+The most reliable way to configure your credentials is to set the key ID and secret as environment
+variables. If you use a different AWS account normally, you can create a file that sets the
+envvars to the CJP account, and only source the file when working on the project.
 
-An example upstart config is available in `conf/etc/init/chicagojustice.conf`.
+Create a file `cjp-aws.env` with the following lines, or add them to your shell configuration.
+**Make sure that these values don't get checked into version control!**
 
-The application can then be managed via: `sudo service chicagojustice [start|stop|restart]`
-
-Your Nginx configuration should contain information to proxy requests to the application port. Example nginx config is
-available in `conf/etc/nginx/default`.
-
-## Code updates to the existing deployment
-
-The code is deployed via git repository. Deployment of code changes should
-simply require `git pull` inside the application repository, and likely
-`sudo service chicagojustice restart` (please check the name of the service with what
-is in the upstart configs under `/etc/init`)
-
-In some cases (ie. model changes) a schema migration is required. Migrate via
-`./manage.py migrate`. Be sure to source the virtual environment before running
-migrations. See the Django docs for details on schema migrations:
-<https://docs.djangoproject.com/en/1.10/topics/migrations/>
-
-To copy static files into place for production, you must run
-`python manage.py collectstatic`.
-
-## Accessing the data via SFTP
-
-The script `dumpArticleTables.sh` currently runs every 24 hours. This script exports the article and category tables in CSV format, then packs them into a tar archive in `/home/sftp_users/files`.
-
-Users in the `sftp_users` group can access `/home/sftp_users` via SFTP only. These users do not have shell access and cannot access any other directories.
-
-To create a user in this group, use the command `adduser --home /home/sftp_users/files --ingroup sftp_users`.
-
-The current SSHD config for this group is as follows:
 ```
-Match Group sftp_users
-        ForceCommand internal-sftp
-        PasswordAuthentication yes
-        ChrootDirectory /home/sftp_users
-        PermitTunnel no
-        AllowAgentForwarding no
-        AllowTcpForwarding no
-        X11Forwarding no
+export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX
+export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
+
+If you create a standalone file, you can enable the CJP credentials in your current
+terminal session with `source cjp-aws.env`.
+
+Test that you have the CLI configured correctly by running the following from the
+`chicago-justice` project directory:
+
+```
+eb status
+```
+
+### Deploying
+
+To deploy to production, run `eb deploy` from the project directory. It will deploy
+whatever is on your local filesystem, even if it isn't checked into git. To maintain
+consistency between production and git, it's recommended to merge changes to master
+and then `git checkout master && git pull` before deploying.
+
+Elastic Beanstalk will run any database migrations as part of the deployment. You can check on the
+status of the deployment with `eb status`, or `eb logs` for the most recent logs from
+various important logfiles.
+
+Environment variables can also be configured with the CLI or from the AWS web interface.
