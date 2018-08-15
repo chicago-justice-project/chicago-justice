@@ -157,6 +157,8 @@ class TrainedLocation(models.Model):
     text = models.TextField()
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+    confidence = models.FloatField(null=True, blank=True)
+    neighborhood = models.TextField(default="", blank=True)
 
 class TrainedCategoryRelevance(models.Model):
     coding = models.ForeignKey(TrainedCoding)
