@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from functools import lru_cache
 import logging
+from math import isnan
 from django.core.exceptions import ObjectDoesNotExist
 import tagnews
 
@@ -25,7 +26,7 @@ def current_model_info():
 
 def tag_article(article):
     try:
-        locations = tag_locations(article)
+        locations = extract_locations(article)
         category_scores, max_score = tag_categories(article)
     except Exception as e:
         LOG.exception(e)
@@ -48,10 +49,7 @@ def tag_article(article):
             )
 
     for location in locations:
-        TrainedLocation.objects.create(
-            coding=coding,
-            text=location
-        )
+        TrainedLocation.objects.create(coding=coding, **location)
 
 def tag_categories(article):
     if len(article.bodytext) < 10:
@@ -72,7 +70,7 @@ def tag_categories(article):
 
     return category_scores, max_score
 
-def tag_locations(article):
+def extract_locations(article):
     if len(article.bodytext) < 10:
         return []
 
@@ -80,5 +78,23 @@ def tag_locations(article):
         article.bodytext,
         prob_thresh=MIN_LOCATION_RELEVANCE
     )
+    location_strings = [' '.join(gl) for gl in tokenized_locations]
 
-    return [' '.join(tokens) for tokens in tokenized_locations]
+    (coords, scores) = geo_tagger().lat_longs_from_geostring_lists(tokenized_locations)
+    com_areas = geo_tagger().community_area_from_coords(coords)
+    lats = coords['lat'].tolist()
+    lngs = coords['long'].tolist()
+
+    combined = zip(location_strings, lats, lngs, scores, com_areas)
+    trained_locations = []
+    for location, lat, lng, confidence, neighborhood in combined:
+        if not isnan(lat) and not isnan(lng) and not isnan(confidence):
+            trained_locations.append({
+                'text': location,
+                'latitude': lat,
+                'longitude': lng,
+                'confidence': confidence,
+                'neighborhood': neighborhood,
+            })
+    return trained_locations
+

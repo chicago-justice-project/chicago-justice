@@ -47,7 +47,7 @@ class TrainedLocationInline(admin.TabularInline):
     model = models.TrainedLocation
     extra = 0
     can_delete = False
-    readonly_fields = ('text', 'latitude', 'longitude',)
+    readonly_fields = ('text', 'latitude', 'longitude', 'confidence', 'neighborhood')
 
     def has_add_permission(self, request):
         False
