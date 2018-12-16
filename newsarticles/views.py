@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q, Max, Min
 from django.shortcuts import render, get_object_or_404
 from django import forms
-from newsarticles.models import Article, Category, NewsSource, UserCoding
+from newsarticles.models import Article, Category, NewsSource, UserCoding, SENTIMENT_CHOICES
 from newsarticles.forms import GroupedMultModelChoiceField
 
 
@@ -37,6 +37,7 @@ class ArticleSearchForm(forms.Form):
                                            queryset=Category.objects.active(),
                                            group_by_field='kind',
                                            group_label=Category.KINDS.get)
+
 
 def articleList(request):
     form = ArticleSearchForm(request.POST)
@@ -111,18 +112,21 @@ def articleList(request):
     if news_source:
         article_list = article_list.filter(news_source=news_source)
     if startDate != None:
-        startDate = datetime.strptime("%s 00:00:00" % startDate, "%Y-%m-%d %H:%M:%S")
+        startDate = datetime.strptime(
+            "%s 00:00:00" % startDate, "%Y-%m-%d %H:%M:%S")
         article_list = article_list.filter(created__gte=startDate)
     if endDate != None:
-        endDate = datetime.strptime("%s 23:59:59" % endDate, "%Y-%m-%d %H:%M:%S")
+        endDate = datetime.strptime("%s 23:59:59" %
+                                    endDate, "%Y-%m-%d %H:%M:%S")
         article_list = article_list.filter(created__lte=endDate)
     if searchTerms:
-        article_list = article_list.filter(Q(title__icontains=searchTerms) | Q(bodytext__icontains=searchTerms))
+        article_list = article_list.filter(
+            Q(title__icontains=searchTerms) | Q(bodytext__icontains=searchTerms))
     if categories:
         article_list = article_list.filter_categories(categories)
 
-    dateRange = Article.objects.all().aggregate(minDate = Min('created'),
-                                                maxDate = Max('created'))
+    dateRange = Article.objects.all().aggregate(minDate=Min('created'),
+                                                maxDate=Max('created'))
 
     data = {
         'articles': _paginate(article_list, 20, page),
@@ -131,6 +135,7 @@ def articleList(request):
     }
 
     return render(request, 'newsarticles/articleList.html', data)
+
 
 def _paginate(iter, count, pagenum):
     paginator = Paginator(iter, count)
@@ -143,6 +148,7 @@ def _paginate(iter, count, pagenum):
 
 
 PREVIEW_LENGTH = 300
+
 
 def view_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
@@ -176,14 +182,24 @@ class UserCodingSubmitForm(forms.Form):
                                     required=False,
                                     widget=forms.HiddenInput(attrs={'id': 'locsHiddenInput'}))
 
+    sentiment = forms.TypedChoiceField(
+        choices=SENTIMENT_CHOICES,
+        required=False,
+        coerce=int,
+        empty_value=None,
+    )
+
     """ Validates location_data as JSON, but doesn't check the structure at all """
+
     def clean_location_data(self):
         jdata = self.cleaned_data['location_data'] or '[]'
         try:
             json_data = json.loads(jdata)
         except ValueError:
-            raise forms.ValidationError('Invalid JSON in location_data', code='jsonerror')
+            raise forms.ValidationError(
+                'Invalid JSON in location_data', code='jsonerror')
         return jdata
+
 
 @login_required
 def code_article(request, pk):
@@ -197,7 +213,10 @@ def code_article(request, pk):
                 defaults={
                     'user': request.user,
                     'relevant': form.cleaned_data['relevant'],
-                    'locations': form.cleaned_data['location_data']})
+                    'locations': form.cleaned_data['location_data'],
+                    'sentiment': form.cleaned_data['sentiment'],
+                }
+            )
 
             # ManyToMany relationships need to be added after the record is created
             user_coding.categories = form.cleaned_data['categories']
@@ -205,9 +224,12 @@ def code_article(request, pk):
             return HttpResponseRedirect(reverse('random-article'))
     else:
         if article.is_coded():
-            initial_data = {'categories': article.usercoding.categories.all(),
-                            'relevant': article.usercoding.relevant,
-                            'location_data': article.usercoding.locations}
+            initial_data = {
+                'categories': article.usercoding.categories.all(),
+                'relevant': article.usercoding.relevant,
+                'location_data': article.usercoding.locations,
+                'sentiment': article.usercoding.sentiment,
+            }
         else:
             initial_data = None
 
@@ -216,12 +238,14 @@ def code_article(request, pk):
     return render(request, 'newsarticles/code_article.html',
                   {'form': form, 'article': article})
 
+
 @login_required
 def random_article(request):
     uncoded_article_pks = Article.objects.uncoded().values_list('pk', flat=True)
     selected_pk = random.choice(uncoded_article_pks)
-    
+
     return HttpResponseRedirect(reverse('code-article', args=(selected_pk,)))
+
 
 @login_required
 def help(request):

@@ -40,7 +40,8 @@ class Category(models.Model):
     title = models.CharField(max_length=256)
     abbreviation = models.CharField(max_length=5)
     active = models.BooleanField(default=True)
-    kind = models.CharField(max_length=50, choices=KINDS.items(), default=DEFAULT_KIND)
+    kind = models.CharField(
+        max_length=50, choices=KINDS.items(), default=DEFAULT_KIND)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     objects = CategoryQuerySet.as_manager()
@@ -69,6 +70,7 @@ class ScraperResult(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.news_source.name, self.completed_time)
+
 
 class ArticleQuerySet(models.QuerySet):
     def exclude_irrelevant(self):
@@ -128,7 +130,17 @@ class Article(models.Model):
             return []
 
     # Deprecated, use news_source instead.
-    feedname = models.CharField(max_length=1, editable=False, null=True, db_index=True)
+    feedname = models.CharField(
+        max_length=1, editable=False, null=True, db_index=True)
+
+
+SENTIMENT_CHOICES = (
+    (None, 'Not coded'),
+    (1, 'Positive'),
+    (0, 'Neutral'),
+    (-1, 'Negative'),
+)
+
 
 class UserCoding(models.Model):
     article = models.OneToOneField(Article, db_index=True)
@@ -140,17 +152,23 @@ class UserCoding(models.Model):
     relevant = models.BooleanField()
     categories = models.ManyToManyField(Category, blank=True)
     locations = models.TextField(default='[]', blank=True)
+    sentiment = models.IntegerField(
+        blank=True, null=True, choices=SENTIMENT_CHOICES)
 
     class Meta:
         unique_together = (("article", "user"),)
+
 
 class TrainedCoding(models.Model):
     article = models.OneToOneField(Article, db_index=True)
     date = models.DateTimeField(auto_now=True)
     model_info = models.TextField()
 
-    categories = models.ManyToManyField(Category, through='TrainedCategoryRelevance')
+    categories = models.ManyToManyField(
+        Category, through='TrainedCategoryRelevance')
     relevance = models.FloatField()
+    sentiment = models.FloatField(null=True)
+
 
 class TrainedLocation(models.Model):
     coding = models.ForeignKey(TrainedCoding)
@@ -159,6 +177,7 @@ class TrainedLocation(models.Model):
     longitude = models.FloatField(null=True, blank=True)
     confidence = models.FloatField(null=True, blank=True)
     neighborhood = models.TextField(default="", blank=True)
+
 
 class TrainedCategoryRelevance(models.Model):
     coding = models.ForeignKey(TrainedCoding)
