@@ -9,6 +9,7 @@ export PGPASSWORD=$DATABASE_PASSWORD
 OUTPUT_DIRECTORY=/tmp
 
 PG_TABLES=(
+    "newsarticles_newssource"
     "newsarticles_article"
     "newsarticles_usercoding"
     "newsarticles_category"
