@@ -76,6 +76,9 @@ class ArticleQuerySet(models.QuerySet):
     def exclude_irrelevant(self):
         return self.exclude(usercoding__relevant=False)
 
+    def relevant_trained(self):
+        return self.filter(trainedcoding__relevance__gt=0.5)
+
     def relevant(self):
         return self.filter(usercoding__relevant=True)
 
