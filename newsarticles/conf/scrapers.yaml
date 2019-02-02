@@ -43,10 +43,10 @@
   rss_articles: True
 
 - news_source: better-government-association
-  index_url: http://www.bettergov.org/rss/
+  index_url: http://www.bettergov.org/feed/all/rss.xml
   rss_index: True
-  title_selector: '.headline'
-  author_selector: '.byline .name'
+  title_selector: h1.headline
+  author_selector: .name
   body_selector: '.field-body'
 
 - news_source: block-club-chicago
@@ -130,12 +130,12 @@
   body_selector: '[itemprop="articleBody"]'
 
 - news_source: crains
-  index_url: http://www.chicagobusiness.com/section/news-all&template=rss&mime=xml
-  rss_index: True
-  use_cookies: True
-  title_selector: '#seo-headline-dest'
-  author_selector: '[rel="author"]'
-  body_selector: '#left-container'
+  index_url: http://www.chicagobusiness.com/news
+  rss_index: False
+  index_url_selector: .top-stories-title a, .feature-article-headline a
+  title_selector: '[itemprop="headline"]'
+  author_selector: '[itemprop="author"]'
+  body_selector: '[itemprop="articleBody"]'
 
 - news_source: daily-herald
   index_url: http://www.dailyherald.com/rss/feed/?feed=news_chicago
@@ -145,8 +145,9 @@
   body_selector: '[itemprop="articleBody"]'
 
 - news_source: daily-line
-  index_url: http://thedailyline.net/feed/
-  rss_index: True
+  index_url: http://thedailyline.net/
+  rss_index: False
+  index_url_selector: a.title, .post-title a
   title_selector: article .post-title
   author_selector: 'article [rel="author"]'
   body_selector: article .post-entry
@@ -226,9 +227,8 @@
   exclude_selector: .related-module, .ooyala-container
 
 - news_source: windy-city-times
-  index_url: http://www.windycitymediagroup.com/gaynewsarticles.php
-  rss_index: False
-  index_url_selector: a.page-c-head
+  index_url: http://www.windycitymediagroup.com/feedmaker.php
+  rss_index: True
   title_selector: .fp-newshead
   body_selector: '[colspan="2"] .article-body'
 
