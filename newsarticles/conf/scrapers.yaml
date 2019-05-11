@@ -123,11 +123,11 @@
   exclude_selector: .trb_embed
 
 - news_source: columbia-chronicle
-  index_url: http://www.columbiachronicle.com/search/?f=rss&t=article
+  index_url: http://columbiachronicle.com/feed/
   rss_index: True
-  title_selector: '[itemprop="headline"]'
-  author_selector: '[itemprop="author"]'
-  body_selector: '[itemprop="articleBody"]'
+  title_selector: .storyheadline
+  author_selector: .storybyline
+  body_selector: .storycontent
 
 - news_source: crains
   index_url: http://www.chicagobusiness.com/news
