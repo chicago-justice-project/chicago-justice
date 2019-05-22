@@ -108,11 +108,11 @@
   body_selector: '[itemprop="articleBody"]'
 
 - news_source: chicago-sun-times
-  index_url: http://chicago.suntimes.com/feed/
+  index_url: https://chicago.suntimes.com/rss/index.xml
   rss_index: True
-  title_selector:
-  author_selector: .post-meta-author
-  body_selector: .post-content
+  title_selector: h1.c-page-title
+  author_selector: .c-byline__item a
+  body_selector: .c-entry-content
 
 - news_source: chicago-tribune
   index_url: http://www.chicagotribune.com/rss2.0.xml
