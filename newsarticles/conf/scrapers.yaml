@@ -198,6 +198,12 @@
   body_selector: .article-body
   author_selector: .article-header .name
 
+- news_source: second-city-cop
+  index_url: http://secondcitycop.blogspot.com/feeds/posts/default?alt=rss
+  rss_index: True
+  title_selector: .post-title
+  body_selector: .post-body
+
 - news_source: south-side-weekly
   index_url: http://southsideweekly.com/feed/
   rss_articles: True
