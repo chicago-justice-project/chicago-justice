@@ -79,6 +79,9 @@ class ArticleQuerySet(models.QuerySet):
     def relevant_trained(self):
         return self.filter(trainedcoding__relevance__gt=0.5)
 
+    def relevant_cpd_trained(self):
+        return self.filter(trainedcoding__trainedcategoryrelevance__category=2, trainedcoding__trainedcategoryrelevance__relevance__gt=0.5)
+
     def relevant(self):
         return self.filter(usercoding__relevant=True)
 

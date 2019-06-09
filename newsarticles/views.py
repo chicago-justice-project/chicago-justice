@@ -241,7 +241,7 @@ def code_article(request, pk):
 
 @login_required
 def random_article(request):
-    uncoded_relevant_article_pks = Article.objects.uncoded().relevant_trained().values_list('pk', flat=True)
+    uncoded_relevant_article_pks = Article.objects.uncoded().relevant_cpd_trained().values_list('pk', flat=True)
     selected_pk = random.choice(uncoded_relevant_article_pks)
 
     return HttpResponseRedirect(reverse('code-article', args=(selected_pk,)))
