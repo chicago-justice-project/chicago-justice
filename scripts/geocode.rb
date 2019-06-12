@@ -16,15 +16,36 @@ BASE_URL = "http://ec2-34-228-58-223.compute-1.amazonaws.com:4000/v1/search?text
 ADDRESS_COLUMN = "address"
 ZIP_CODE_COLUMN = "zipcode"
 
+ADDR_REXP = /^(?<num>[\dX\s-]*)(?<blk>BLK)?\s*(?<dir>[NESW])?\.?\s*(?<street>[\w\d\s]+)/
+STREET_REXP = /(?<name>[\w\d\s]*)(?<type>(AV|PL|RD|DR|ST|BL))$/
+STREET_LOOKUP = {
+  "AV" => "AVE",
+  "BL" => "BLVD",
+  "PL" => "PL",
+  "DR" => "DR",
+  "ST" => "ST",
+  "RD" => "RD",
+}
+
+def transform_address(raw)
+  addr_data = ADDR_REXP.match(raw)
+  return raw if !addr_data
+
+  number = addr_data[:num].gsub("X", "0").split("-").first || ""
+
+  st_match = STREET_REXP.match(addr_data[:street])
+  street = st_match ?
+    "#{st_match[:name].strip} #{STREET_LOOKUP[st_match[:type]]}" :
+    addr_data[:street]
+
+  "#{number} #{addr_data[:dir]} #{street}"
+end
+
 # Modifies the given row to add lat/lng as well as extra metadata from pelias
 def geocode(row)
   return if !row
 
-  address = row[ADDRESS_COLUMN]
-    .gsub(/\sAV\s*$/, " AVE")
-    .gsub(/\sBL\s*$/, " BLVD")
-    .gsub("XX", "00")
-    .gsub("BLK", "")
+  address = transform_address(row[ADDRESS_COLUMN])
 
   address += ", #{row[ZIP_CODE_COLUMN]}" if row[ZIP_CODE_COLUMN]
 
@@ -84,8 +105,8 @@ def run(args=ARGV)
   puts "geocoded #{count} rows, writing to #{out_filename}"
 
   dump(csv_table, out_filename)
-rescue
-  puts "unknown error"
+rescue Exception => e
+  puts "unknown error #{e}"
 
   dump(csv_table, out_filename, count)
 end
