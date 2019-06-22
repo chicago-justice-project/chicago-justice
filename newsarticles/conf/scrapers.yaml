@@ -117,10 +117,9 @@
 - news_source: chicago-tribune
   index_url: http://www.chicagotribune.com/rss2.0.xml
   rss_index: True
-  title_selector: '[itemprop="headline"]'
-  author_selector: '[itemprop="author"]'
-  body_selector: '[itemprop="articleBody"]'
-  exclude_selector: .trb_embed
+  title_selector: h1
+  author_selector: '[rel="author"]'
+  body_selector: .pb-f-article-body
 
 - news_source: columbia-chronicle
   index_url: http://columbiachronicle.com/feed/
