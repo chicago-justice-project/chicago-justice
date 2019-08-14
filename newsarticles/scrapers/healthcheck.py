@@ -11,7 +11,7 @@ def run(min_fails):
     yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
     for news_source in news_sources:
         try:
-            successful = ScraperResult.objects.filter(news_source=news_source, success = True, completed_time__gt = yesterday).count()
+            failure = ScraperResult.objects.filter(news_source=news_source, success=False, completed_time__gt=yesterday).count()
         except ObjectDoesNotExist:
-            successful = False
-        print('The source %s %s', news_source.name, successful)
+            failure = True
+        print('The source %s has failed %d times' %(news_source.name, failure))
