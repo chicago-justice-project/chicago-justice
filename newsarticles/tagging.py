@@ -74,10 +74,11 @@ def extract_locations(article):
     if len(article.bodytext) < 10:
         return []
 
-    tokenized_locations = geo_tagger().extract_geostrings(
+    tokenized_locations, tokenized_scores = geo_tagger().extract_geostrings(
         article.bodytext,
         prob_thresh=MIN_LOCATION_RELEVANCE
     )
+    best_location = geo_tagger().best_geostring((tokenized_locations, tokenized_scores))
     location_strings = [' '.join(gl) for gl in tokenized_locations]
 
     (coords, scores) = geo_tagger().lat_longs_from_geostring_lists(tokenized_locations)
@@ -95,6 +96,7 @@ def extract_locations(article):
                 'longitude': lng,
                 'confidence': confidence,
                 'neighborhood': neighborhood,
+                'is_best': location == ' '.join(best_location)
             })
     return trained_locations
 
