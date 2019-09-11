@@ -16,10 +16,10 @@ CJP_ADMIN_USER = "cjpadmin"
 DEBUG = False
 
 ADMINS = (
-    ('Chris Shenton', 'chris@koansys.com',),
+    #('Chris Shenton', 'chris@koansys.com',),
     # 2012-01-22 chris@koansys.com: missing 404.html sends tons of mail, don't bother Tracy
     #('Tracy Siska',   'tsiska@chicagojustice.org',),
-    ("Reed O'Brien", 'reed@koansys.com',),
+    #("Reed O'Brien", 'reed@koansys.com',),
     # ('Your Name', 'your_email@example.com'),
 )
 
