@@ -183,6 +183,7 @@ class TrainedLocation(models.Model):
     longitude = models.FloatField(null=True, blank=True)
     confidence = models.FloatField(null=True, blank=True)
     neighborhood = models.TextField(default="", blank=True)
+    is_best = models.BooleanField(default=False)
 
 
 class TrainedCategoryRelevance(models.Model):
