@@ -12,7 +12,7 @@ def run(min_fails, from_email, to_email):
     yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
     failed_scrapers = {} # dictionary to store failed scrapers
     subject = 'CJP Scraper Healthcheck Status'
-    message = "The following scraper(s) have failed more than {0} time(s) in the past 24 hours:\n".format(min_fails)
+    message = "The following scraper(s) failed more than {0} time(s) in the past 24 hours:\n".format(min_fails)
 
     for news_source in news_sources:
         try:
