@@ -231,11 +231,11 @@
   body_selector: .entry-content
   exclude_selector: .related-module, .ooyala-container
 
-- news_source: windy-city-times
-  index_url: http://www.windycitymediagroup.com/feedmaker.php
-  rss_index: True
-  title_selector: .fp-newshead
-  body_selector: '[colspan="2"] .article-body'
+#- news_source: windy-city-times
+#  index_url: http://www.windycitymediagroup.com/feedmaker.php
+#  rss_index: True
+#  title_selector: .fp-newshead
+#  body_selector: '[colspan="2"] .article-body'
 
 - news_source: wls-am
   index_url: http://www.wlsam.com/feed/
