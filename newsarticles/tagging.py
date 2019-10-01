@@ -101,4 +101,3 @@ def extract_locations(article):
                 'is_best': location == ' '.join(best_location)
             })
     return trained_locations
-

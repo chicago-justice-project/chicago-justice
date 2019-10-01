@@ -10,13 +10,14 @@
 # title_selector: CSS selector for the title of the article. Default is the <title> tag
 # author_selector: CSS selector for the article author. Optional
 # body_selector: CSS selector for the article text
-# body_exclude_selector: CSS selector for elements to remove from the body.
+# exclude_selector: CSS selector for elements to remove from the body.
 
 - news_source: cwb-chicago
-  index_url: http://www.cwbchicago.com/feeds/posts/default
+  index_url: http://www.cwbchicago.com/feed
   rss_index: true
-  title_selector: .post-title
-  body_selector: .post-body
+  title_selector: .entry-title
+  body_selector: .entry-content
+  exclude_selector: .mh-social-bottom
 
 - news_source: fop-news
   index_url: https://fop7blog.org/news?format=RSS
@@ -162,10 +163,9 @@
 - news_source: fox-chicago
   index_url: http://www.fox32chicago.com/news/local
   rss_index: False
-  index_url_selector: a.story-link
-  title_selector: .story-header h1
-  body_selector: .story-content
-  exclude_selector: '#relatedStoriesDiv'
+  index_url_selector: h3.title a
+  title_selector: h1.headline
+  body_selector: .article-body
 
 - news_source: medill
   index_url: http://news.medill.northwestern.edu/chicago/feed/
@@ -231,11 +231,11 @@
   body_selector: .entry-content
   exclude_selector: .related-module, .ooyala-container
 
-- news_source: windy-city-times
-  index_url: http://www.windycitymediagroup.com/feedmaker.php
-  rss_index: True
-  title_selector: .fp-newshead
-  body_selector: '[colspan="2"] .article-body'
+#- news_source: windy-city-times
+#  index_url: http://www.windycitymediagroup.com/feedmaker.php
+#  rss_index: True
+#  title_selector: .fp-newshead
+#  body_selector: '[colspan="2"] .article-body'
 
 - news_source: wls-am
   index_url: http://www.wlsam.com/feed/

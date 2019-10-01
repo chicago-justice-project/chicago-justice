@@ -16,10 +16,10 @@ CJP_ADMIN_USER = "cjpadmin"
 DEBUG = False
 
 ADMINS = (
-    ('Chris Shenton', 'chris@koansys.com',),
+    #('Chris Shenton', 'chris@koansys.com',),
     # 2012-01-22 chris@koansys.com: missing 404.html sends tons of mail, don't bother Tracy
     #('Tracy Siska',   'tsiska@chicagojustice.org',),
-    ("Reed O'Brien", 'reed@koansys.com',),
+    #("Reed O'Brien", 'reed@koansys.com',),
     # ('Your Name', 'your_email@example.com'),
 )
 
@@ -39,3 +39,10 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+EMAIL_HOST = get_env_variable('EMAIL_HOST')
+EMAIL_HOST_USER = get_env_variable('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'cjpdatasite@gmail.com'
