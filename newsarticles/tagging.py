@@ -78,7 +78,7 @@ def extract_locations(article):
         article.bodytext,
         prob_thresh=MIN_LOCATION_RELEVANCE
     )
-    best_location = "False"
+    best_location = []
     if tokenized_locations:
         best_location = geo_tagger().best_geostring((tokenized_locations, tokenized_scores))
     location_strings = [' '.join(gl) for gl in tokenized_locations]
