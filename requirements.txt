@@ -38,7 +38,7 @@ scipy==1.0.0
 Shapely==1.6.4.post2
 six==1.11.0
 sqlparse==0.2.3
-tagnews==1.2.2
+tagnews==1.2.4
 tensorflow==1.5.0
 tensorflow-tensorboard==1.5.1
 urllib3==1.22
