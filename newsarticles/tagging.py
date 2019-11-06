@@ -21,6 +21,10 @@ def crime_tagger():
 def geo_tagger():
     return tagnews.GeoCoder()
 
+@lru_cache(maxsize=1)
+def sent_evaller():
+    return tagnews.SentimentGoogler()
+
 def current_model_info():
     return 'tagnews {}'.format(tagnews.__version__)
 
