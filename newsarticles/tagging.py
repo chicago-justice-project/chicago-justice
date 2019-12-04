@@ -42,7 +42,8 @@ def tag_article(article):
     coding = TrainedCoding.objects.create(
         article=article,
         model_info=current_model_info(),
-        relevance=max_score
+        relevance=max_score,
+        bin=bin
     )
 
     for (category, relevance) in category_scores:
