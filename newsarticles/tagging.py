@@ -32,6 +32,7 @@ def tag_article(article):
     try:
         locations = extract_locations(article)
         category_scores, max_score = tag_categories(article)
+        bin = bin_article_for_sentiment(article)
     except Exception as e:
         LOG.exception(e)
         return
@@ -105,3 +106,10 @@ def extract_locations(article):
                 'is_best': location == ' '.join(best_location)
             })
     return trained_locations
+
+def bin_article_for_sentiment(article):
+    if len(article.bodytext) < 10:
+        return -1
+
+    bin = sent_evaller().extract_google_priority_bin(article)
+    return bin
