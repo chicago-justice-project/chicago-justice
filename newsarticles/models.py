@@ -174,6 +174,7 @@ class TrainedCoding(models.Model):
         Category, through='TrainedCategoryRelevance')
     relevance = models.FloatField()
     sentiment = models.FloatField(null=True)
+    bin = models.IntegerField(null=True, blank=True)
 
 
 class TrainedLocation(models.Model):
@@ -191,9 +192,11 @@ class TrainedCategoryRelevance(models.Model):
     category = models.ForeignKey(Category)
     relevance = models.FloatField()
 
+
 class TrainedSentiment(models.Model):
-    article = models.OneToOneField(Article, db_index=True)
+    coding = models.ForeignKey(TrainedCoding)
     date = models.DateTimeField(auto_now=True)
     api_response = models.TextField()
     police_entity_number = models.IntegerField(null=True, blank=True)
     police_entity_words = models.TextField()
+    sentiment = models.FloatField(null=True)
