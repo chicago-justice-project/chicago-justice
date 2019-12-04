@@ -116,7 +116,7 @@ def bin_article_for_sentiment(article):
     return bin
 
 def extract_sentiment_information(article):
-    sentiment_ = sent_evaller().call_api(doc_text)
+    sentiment_ = sent_evaller().call_api(article)
     for ix, entity in enumerate(sentiment_.entities):
         police_entity = sent_evaller().is_police_entity(entity)
         if police_entity:
