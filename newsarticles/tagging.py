@@ -114,3 +114,10 @@ def bin_article_for_sentiment(article):
 
     bin = sent_evaller().extract_google_priority_bin(article)
     return bin
+
+def extract_sentiment_information(article):
+    sentiment_ = sent_evaller().call_api(doc_text)
+    for ix, entity in enumerate(sentiment_.entities):
+        police_entity = sent_evaller().is_police_entity(entity)
+        if police_entity:
+            return ix, sent_evaller().sentiment_from_entity(police_entity)
