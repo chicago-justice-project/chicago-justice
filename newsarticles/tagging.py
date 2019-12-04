@@ -116,8 +116,17 @@ def bin_article_for_sentiment(article):
     return bin
 
 def extract_sentiment_information(article):
-    sentiment_ = sent_evaller().call_api(article)
-    for ix, entity in enumerate(sentiment_.entities):
+    """
+    :param article: article text
+    :return: sentiment_json: full json response
+             ix: list index of this police entity
+             entity: words of the entity phrase
+             sent_val: sent score
+    """
+    sentiment_json = sent_evaller().call_api(article)
+    for ix, entity in enumerate(sentiment_json.entities):
         police_entity = sent_evaller().is_police_entity(entity)
         if police_entity:
-            return ix, sent_evaller().sentiment_from_entity(police_entity)
+            sent_val = sent_evaller().sentiment_from_entity(police_entity)
+            return sentiment_json, ix, entity, sent_val
+    return sentiment_json
