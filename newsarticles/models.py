@@ -198,5 +198,5 @@ class TrainedSentiment(models.Model):
     date = models.DateTimeField(auto_now=True)
     api_response = models.TextField()
     police_entity_number = models.IntegerField(null=True, blank=True)
-    police_entity_words = models.TextField()
+    police_entity_words = models.TextField(blank=True)
     sentiment = models.FloatField(null=True)
