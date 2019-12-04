@@ -129,4 +129,4 @@ def extract_sentiment_information(article):
         if police_entity:
             sent_val = sent_evaller().sentiment_from_entity(police_entity)
             return sentiment_json, ix, entity, sent_val
-    return sentiment_json
+    return sentiment_json, "", "", ""
