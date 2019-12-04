@@ -190,3 +190,10 @@ class TrainedCategoryRelevance(models.Model):
     coding = models.ForeignKey(TrainedCoding)
     category = models.ForeignKey(Category)
     relevance = models.FloatField()
+
+class TrainedSentiment(models.Model):
+    article = models.OneToOneField(Article, db_index=True)
+    date = models.DateTimeField(auto_now=True)
+    api_response = models.TextField()
+    police_entity_number = models.IntegerField(null=True, blank=True)
+    police_entity_words = models.TextField()
