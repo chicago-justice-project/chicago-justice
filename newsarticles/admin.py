@@ -63,8 +63,18 @@ class TrainedLocationInline(admin.TabularInline):
         False
 
 
+class TrainedSentimentInline(admin.TabularInline):
+    model = models.TrainedSentiment
+    extra = 0
+    can_delete = False
+    readonly_fields = ('police_entity_number', 'police_entity_words', 'sentiment')
+
+    def has_add_permission(self, request):
+        False
+
+
 @admin.register(models.TrainedCoding)
 class TrainedCodingAdmin(admin.ModelAdmin):
-    list_display = ('article', 'model_info', 'relevance')
-    inlines = [TrainedCategoryRelevanceInline, TrainedLocationInline]
+    list_display = ('article', 'model_info', 'relevance', 'bin')
+    inlines = [TrainedCategoryRelevanceInline, TrainedLocationInline, TrainedSentimentInline]
     readonly_fields = ('article', 'date', 'model_info', 'relevance',)
