@@ -67,6 +67,7 @@ class TrainedSentimentInline(admin.TabularInline):
     model = models.TrainedSentiment
     extra = 0
     can_delete = False
+    fields = ('police_entity_number', 'police_entity_words', 'sentiment')
     readonly_fields = ('police_entity_number', 'police_entity_words', 'sentiment')
 
     def has_add_permission(self, request):
