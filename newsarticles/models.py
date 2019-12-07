@@ -199,4 +199,4 @@ class TrainedSentiment(models.Model):
     api_response = models.TextField()
     police_entity_number = models.IntegerField(null=True, blank=True)
     police_entity_words = models.TextField(blank=True)
-    sentiment = models.FloatField(null=True)
+    sentiment = models.FloatField(null=True, blank=True)
