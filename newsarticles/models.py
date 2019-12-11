@@ -197,6 +197,10 @@ class TrainedSentiment(models.Model):
     coding = models.ForeignKey(TrainedCoding)
     date = models.DateTimeField(auto_now=True)
     api_response = models.TextField()
-    police_entity_number = models.IntegerField(null=True, blank=True)
-    police_entity_words = models.TextField(blank=True)
+
+class TrainedSentimentEntities(models.Model):
+    coding = models.ForeignKey(TrainedCoding)
+    response = models.ForeignKey(TrainedSentiment)
+    index = models.IntegerField(null=True, blank=True)
+    entity = models.TextField(blank=True)
     sentiment = models.FloatField(null=True, blank=True)

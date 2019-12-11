@@ -65,10 +65,18 @@ class TrainedLocationInline(admin.TabularInline):
 
 class TrainedSentimentInline(admin.TabularInline):
     model = models.TrainedSentiment
+    fields = ('date', 'api_response')
+    readonly_fields = ('date',)
+
+    def has_add_permission(self, request):
+        False
+
+
+class TrainedSentimentEntitiesInline(admin.TabularInline):
+    model = models.TrainedSentimentEntities
     extra = 0
     can_delete = False
-    fields = ('police_entity_number', 'police_entity_words', 'sentiment')
-    readonly_fields = ('police_entity_number', 'police_entity_words', 'sentiment')
+    readonly_fields = ('response', 'index', 'entity', 'sentiment')
 
     def has_add_permission(self, request):
         False
@@ -77,5 +85,5 @@ class TrainedSentimentInline(admin.TabularInline):
 @admin.register(models.TrainedCoding)
 class TrainedCodingAdmin(admin.ModelAdmin):
     list_display = ('article', 'model_info', 'relevance', 'bin')
-    inlines = [TrainedCategoryRelevanceInline, TrainedLocationInline, TrainedSentimentInline]
+    inlines = [TrainedCategoryRelevanceInline, TrainedLocationInline, TrainedSentimentInline, TrainedSentimentEntitiesInline]
     readonly_fields = ('article', 'date', 'model_info', 'relevance',)
