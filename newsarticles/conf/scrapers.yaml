@@ -178,10 +178,10 @@
 - news_source: nbc-local
   index_url: http://www.nbcchicago.com/news/local/?rss=y
   rss_index: True
-  title_selector: h1.headline
-  author_selector: article .byline
-  body_selector: '[itemprop="articleBody"]'
-  exclude_selector: '.articleAutoFooter'
+  title_selector: h1.article-headline
+  author_selector: .article-byline
+  body_selector: .article-content
+  exclude_selector: .articleAutoFooter, .recirc-module
 
 - news_source: politico
   index_url: http://www.politico.com/rss/illinois-playbook.xml
