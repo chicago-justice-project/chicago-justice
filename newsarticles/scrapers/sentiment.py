@@ -3,7 +3,7 @@ import datetime
 import django.db
 
 from django.core.exceptions import ObjectDoesNotExist
-from newsarticles.models import Article, TrainedCoding, TrainedSentiment
+from newsarticles.models import Article, TrainedCoding, TrainedSentiment, TrainedSentimentEntities
 from newsarticles.tagging import bin_article_for_sentiment,
                                  extract_sentiment_information,
                                  calculate_units
@@ -19,7 +19,7 @@ def run():
 
     while remaining_calls > 0 and current_bin <= NUM_BINS:
         bin_articles = get_bin_articles(current_bin)
-        articles_and_units = [(article, calculate_units(article))
+        articles_and_units = [(article, calculate_units(article.article.bodytext))
             for article in bin_articles]
 
         articles_to_run = []
@@ -35,11 +35,11 @@ def run():
             TrainedSentiment.objects.create(coding=article, api_response=sent_json)
             more_to_return = True
             while more_to_return:
-                entity_tuple = extract_sentiment_information(article.article.bodytext)
+                entity_tuple = extract_sentiment_information(sent_json)
                 more_to_return = bool(entity_tuple)
                 if more_to_return:
                     ix, entity, sent_val = entity_tuple
-                    TrainedSentiment.objects.append(coding=article, police_entity_number=ix, police_entity_words=entity, sentiment=sent_val)
+                    TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
             remaining_calls -= units
         current_bin += 1
 
