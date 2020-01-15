@@ -175,6 +175,7 @@ class TrainedCoding(models.Model):
     relevance = models.FloatField()
     sentiment = models.FloatField(null=True)
     bin = models.IntegerField(null=True, blank=True)
+    sentiment_processed = models.BooleanField(default=False)
 
 
 class TrainedLocation(models.Model):

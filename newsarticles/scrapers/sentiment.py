@@ -48,8 +48,10 @@ def run():
                 if more_to_return:
                     ix, entity, sent_val = entity_tuple
                     TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
+            article.sentiment_processed = True
             remaining_calls -= units
         current_bin += 1
 
 def get_bin_articles(current_bin):
-    return TrainedCoding.objects.filter(bin=current_bin)
+    return TrainedCoding.objects.filter(bin=current_bin,
+                                        sentiment_processed=False)

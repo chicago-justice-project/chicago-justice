@@ -84,6 +84,6 @@ class TrainedSentimentEntitiesInline(admin.TabularInline):
 
 @admin.register(models.TrainedCoding)
 class TrainedCodingAdmin(admin.ModelAdmin):
-    list_display = ('article', 'model_info', 'relevance', 'bin')
+    list_display = ('article', 'model_info', 'relevance', 'bin', 'sentiment_processed')
     inlines = [TrainedCategoryRelevanceInline, TrainedLocationInline, TrainedSentimentInline, TrainedSentimentEntitiesInline]
     readonly_fields = ('article', 'date', 'model_info', 'relevance',)

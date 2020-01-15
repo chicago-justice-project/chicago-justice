@@ -113,7 +113,7 @@ def bin_article_for_sentiment(article):
     if len(article.bodytext) < 10:
         return -1
 
-    bin = sent_evaller().extract_google_priority_bin(article)
+    bin = sent_evaller().extract_google_priority_bin(article.bodytext, 1, 1)
     return bin
 
 def calculate_units(article):
