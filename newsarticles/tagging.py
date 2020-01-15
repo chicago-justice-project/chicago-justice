@@ -21,6 +21,10 @@ def crime_tagger():
 def geo_tagger():
     return tagnews.GeoCoder()
 
+@lru_cache(maxsize=1)
+def sent_evaller():
+    return tagnews.SentimentGoogler()
+
 def current_model_info():
     return 'tagnews {}'.format(tagnews.__version__)
 
@@ -28,6 +32,7 @@ def tag_article(article):
     try:
         locations = extract_locations(article)
         category_scores, max_score = tag_categories(article)
+        bin = bin_article_for_sentiment(article)
     except Exception as e:
         LOG.exception(e)
         return
@@ -37,7 +42,8 @@ def tag_article(article):
     coding = TrainedCoding.objects.create(
         article=article,
         model_info=current_model_info(),
-        relevance=max_score
+        relevance=max_score,
+        bin=bin
     )
 
     for (category, relevance) in category_scores:
@@ -101,3 +107,26 @@ def extract_locations(article):
                 'is_best': location == ' '.join(best_location)
             })
     return trained_locations
+
+def bin_article_for_sentiment(article):
+    if len(article.bodytext) < 10:
+        return -1
+
+    bin = sent_evaller().extract_google_priority_bin(article)
+    return bin
+
+def extract_sentiment_information(article):
+    """
+    :param article: article text
+    :return: sentiment_json: full json response
+             ix: list index of this police entity
+             entity: words of the entity phrase
+             sent_val: sent score
+    """
+    sentiment_json = sent_evaller().call_api(article)
+    for ix, entity in enumerate(sentiment_json.entities):
+        police_entity = sent_evaller().is_police_entity(entity)
+        if police_entity:
+            sent_val = sent_evaller().sentiment_from_entity(police_entity)
+            return sentiment_json, ix, entity, sent_val
+    return sentiment_json, "", "", ""
