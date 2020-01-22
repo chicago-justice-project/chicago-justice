@@ -16,27 +16,27 @@ NUM_BINS = sent_evaller.num_bins
 
 def run():
     count = 0
-    remaining_calls = MAX_API_CALLS
+    remaining_units = MAX_API_CALLS
     current_bin = 1
-    assert remaining_calls > 0
-    while remaining_calls > 0 and current_bin <= NUM_BINS:
+    assert remaining_units > 0
+    while remaining_units > 0 and current_bin <= NUM_BINS:
         bin_articles = get_bin_articles(current_bin)
         articles_and_units = [(article, calculate_units(article.article.bodytext))
             for article in bin_articles]
-        assert remaining_calls > 0
+        assert remaining_units > 0
         articles_to_run = []
-        units_left_in_bin = remaining_calls
+        units_left_in_bin = remaining_units
         while units_left_in_bin:
             for art, units in articles_and_units:
                 if units_left_in_bin - units:
                     articles_to_run.append((art, units))
                     units_left_in_bin -= units
-                assert remaining_calls > 0
+                assert remaining_units > 0
 
         for article, units in articles_to_run:
-            assert remaining_calls > 0
+            assert remaining_units > 0
             LOG.info("Title: {title}\n\tRemaining Calls: {remaining}\n\tLen: {length}\t\tUnits: {units}\n\n".format(title=article.article.title,
-                                                                                                                remaining=remaining_calls,
+                                                                                                                remaining=remaining_units,
                                                                                                                 length=len(article.article.bodytext),
                                                                                                                 units=calculate_units(article.article.bodytext)))
             sent_json = get_api_reponse(article.article.bodytext)
@@ -49,7 +49,7 @@ def run():
                     ix, entity, sent_val = entity_tuple
                     TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
             article.sentiment_processed = True
-            remaining_calls -= units
+            remaining_units -= units
         current_bin += 1
 
 def get_bin_articles(current_bin):
