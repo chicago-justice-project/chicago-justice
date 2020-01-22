@@ -10,5 +10,5 @@ class Command(BaseCommand):
     help = "Run sentiment analysis on articles"
 
     def handle(self, *args, **options):
-        LOG.info('Running backfill on outdated articles')
+        LOG.info('Running sentiment analysis on articles')
         sentiment.run()
