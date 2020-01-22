@@ -33,7 +33,6 @@ def tag_article(article):
     try:
         locations = extract_locations(article)
         category_scores, max_score = tag_categories(article)
-        bin = bin_article_for_sentiment(article)
     except Exception as e:
         LOG.exception(e)
         return
@@ -44,7 +43,7 @@ def tag_article(article):
         article=article,
         model_info=current_model_info(),
         relevance=max_score,
-        bin=bin
+        bin=None
     )
 
     for (category, relevance) in category_scores:
@@ -109,11 +108,11 @@ def extract_locations(article):
             })
     return trained_locations
 
-def bin_article_for_sentiment(article):
+def bin_article_for_sentiment(article, cpd_user_val, cpd_model_val):
     if len(article.bodytext) < 10:
         return -1
 
-    bin = sent_evaller().extract_google_priority_bin(article.bodytext, 1, 1)
+    bin = sent_evaller().extract_google_priority_bin(article.bodytext, cpd_user_val, cpd_model_val)
     return bin
 
 def calculate_units(article):

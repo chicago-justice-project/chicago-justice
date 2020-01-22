@@ -18,6 +18,7 @@ def run():
     count = 0
     remaining_units = MAX_API_CALLS
     current_bin = 1
+    bin_all_articles()
     assert remaining_units > 0
     while remaining_units > 0 and current_bin <= NUM_BINS:
         bin_articles = get_bin_articles(current_bin)
@@ -55,3 +56,8 @@ def run():
 def get_bin_articles(current_bin):
     return TrainedCoding.objects.filter(bin=current_bin,
                                         sentiment_processed=False)
+
+def bin_all_articles():
+    articles = TrainedCoding.objects.all()
+    for article in articles:
+        if 
