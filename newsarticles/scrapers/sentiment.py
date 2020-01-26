@@ -8,8 +8,7 @@ from newsarticles.tagging import bin_article_for_sentiment, extract_sentiment_in
 
 LOG = logging.getLogger(__name__)
 MAX_API_CALLS = 5000
-#NUM_BINS = sent_evaller.num_bins
-NUM_BINS = 10
+NUM_BINS = sent_evaller().num_bins
 
 def analyze_all_articles():
     count = 0
@@ -46,8 +45,7 @@ def analyze_all_articles():
                 if more_to_return:
                     ix, entity, sent_val = entity_tuple
                     TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
-            article.sentiment_processed = True
-            article.save()
+            article.update(sentiment_processed=True)
             remaining_units -= units
         current_bin += 1
 
@@ -56,14 +54,13 @@ def get_bin_articles(current_bin):
                                         sentiment_processed=False)
 
 def bin_all_articles():
-    cpd_user_val = 0
-    cpd_trained_val = 0
     articles = Article.objects.all()
     for article in articles:
+        cpd_user_val = 0
+        cpd_trained_val = 0
         try:
             user_coding = UserCoding.objects.get(article=article)
         except ObjectDoesNotExist:
-            LOG.warn('No user coding exists for article: %s', article.title)
             user_coding = False
         try:
             trained_coding = TrainedCoding.objects.get(article=article)
