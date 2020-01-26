@@ -3,18 +3,15 @@ import datetime
 import django.db
 
 from django.core.exceptions import ObjectDoesNotExist
-from newsarticles.models import Article, TrainedCoding, TrainedSentiment, TrainedSentimentEntities
-from newsarticles.tagging import bin_article_for_sentiment,
-                                 extract_sentiment_information,
-                                 calculate_units,
-                                 get_api_reponse,
-                                 sent_evaller
+from newsarticles.models import Article, Category, UserCoding, TrainedCoding, TrainedCategoryRelevance, TrainedSentiment, TrainedSentimentEntities
+from newsarticles.tagging import bin_article_for_sentiment, extract_sentiment_information, calculate_units, get_api_reponse, sent_evaller
 
 LOG = logging.getLogger(__name__)
 MAX_API_CALLS = 5000
-NUM_BINS = sent_evaller.num_bins
+#NUM_BINS = sent_evaller.num_bins
+NUM_BINS = 10
 
-def run():
+def analyze_all_articles():
     count = 0
     remaining_units = MAX_API_CALLS
     current_bin = 1
@@ -50,6 +47,7 @@ def run():
                     ix, entity, sent_val = entity_tuple
                     TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
             article.sentiment_processed = True
+            article.save()
             remaining_units -= units
         current_bin += 1
 
@@ -58,6 +56,31 @@ def get_bin_articles(current_bin):
                                         sentiment_processed=False)
 
 def bin_all_articles():
-    articles = TrainedCoding.objects.all()
+    cpd_user_val = 0
+    cpd_trained_val = 0
+    articles = Article.objects.all()
     for article in articles:
-        if 
+        try:
+            user_coding = UserCoding.objects.get(article=article)
+        except ObjectDoesNotExist:
+            LOG.warn('No user coding exists for article: %s', article.title)
+            user_coding = False
+        try:
+            trained_coding = TrainedCoding.objects.get(article=article)
+        except ObjectDoesNotExist:
+            LOG.warn('No trained coding exists for article: %s', article.title)
+            trained_coding = False
+        if user_coding:
+            cpd_user_val = 1 if user_coding.categories.filter(abbreviation='CPD').exists() else 0
+        if trained_coding:
+            try:
+                trained_coding_cats = TrainedCategoryRelevance.objects.filter(coding=trained_coding)
+            except:
+                LOG.warn('Trained coding of article contains no categories')
+                trained_coding_cats = False
+            if trained_coding_cats:
+                for cat in trained_coding_cats:
+                    if 'CPD' in str(cat.category):
+                        cpd_trained_val = cat.relevance
+        trained_coding.bin = bin_article_for_sentiment(article, cpd_user_val, cpd_trained_val)
+        trained_coding.save()
