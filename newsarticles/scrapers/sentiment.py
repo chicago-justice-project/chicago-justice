@@ -13,10 +13,10 @@ NUM_BINS = sent_evaller().num_bins
 def analyze_all_articles():
     count = 0
     remaining_units = MAX_API_CALLS
-    current_bin = 1
+    current_bin = 0
     bin_all_articles()
     assert remaining_units > 0
-    while remaining_units > 0 and current_bin <= NUM_BINS:
+    while remaining_units > 0 and current_bin < NUM_BINS:
         bin_articles = get_bin_articles(current_bin)
         articles_and_units = [(article, calculate_units(article.article.bodytext))
             for article in bin_articles]
