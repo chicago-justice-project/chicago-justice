@@ -7,30 +7,34 @@ from newsarticles.models import Article, Category, UserCoding, TrainedCoding, Tr
 from newsarticles.tagging import bin_article_for_sentiment, extract_sentiment_information, calculate_units, get_api_reponse, sent_evaller
 
 LOG = logging.getLogger(__name__)
-MAX_API_CALLS = 5000
+MAX_API_CALLS = 200
 NUM_BINS = sent_evaller().num_bins
 
 def analyze_all_articles():
     count = 0
     remaining_units = MAX_API_CALLS
     current_bin = 0
-    bin_all_articles()
     assert remaining_units > 0
     while remaining_units > 0 and current_bin < NUM_BINS:
+        print(f"remaining units {remaining_units},\t Current bin: {current_bin}")
         bin_articles = get_bin_articles(current_bin)
+        print(f"num arts in bin: {len(bin_articles)}")
         articles_and_units = [(article, calculate_units(article.article.bodytext))
             for article in bin_articles]
         assert remaining_units > 0
         articles_to_run = []
         units_left_in_bin = remaining_units
-        while units_left_in_bin:
-            for art, units in articles_and_units:
-                if units_left_in_bin - units:
-                    articles_to_run.append((art, units))
+        if bin_articles:
+            while units_left_in_bin > 0:
+                print(f"units_left_in_bin: {units_left_in_bin}")
+                print(f"articles to run count {len(articles_to_run)}")
+                for art, units in articles_and_units:
+                    if (units_left_in_bin - units) > 0:
+                        articles_to_run.append((art, units))
                     units_left_in_bin -= units
-                assert remaining_units > 0
+                    assert remaining_units > 0
 
-        for article, units in articles_to_run:
+        for (article, units) in articles_to_run:
             assert remaining_units > 0
             LOG.info("Title: {title}\n\tRemaining Calls: {remaining}\n\tLen: {length}\t\tUnits: {units}\n\n".format(title=article.article.title,
                                                                                                                 remaining=remaining_units,
@@ -43,6 +47,7 @@ def analyze_all_articles():
                 entity_tuple = extract_sentiment_information(sent_json)
                 more_to_return = bool(entity_tuple)
                 if more_to_return:
+                    print(entity_tuple)
                     ix, entity, sent_val = entity_tuple
                     TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
             article.update(sentiment_processed=True)
