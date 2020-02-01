@@ -4,8 +4,14 @@ from itertools import groupby
 from collections import OrderedDict
 
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import User
+
+
+def validate_only_one_instance(obj):
+    model = obj.__class__
+    if (model.objects.count() > 1 and obj.pk != model.objects.get().pk):
+        raise ValidationError("Can only create 1 {} instance".format(model.__name__))
 
 
 @python_2_unicode_compatible
@@ -205,3 +211,10 @@ class TrainedSentimentEntities(models.Model):
     index = models.IntegerField(null=True, blank=True)
     entity = models.TextField(blank=True)
     sentiment = models.FloatField(null=True, blank=True)
+
+class SentimentCallsCounter(models.Model):
+    last_updated = models.DateTimeField(auto_now=True)
+    remaining_calls = models.PositiveIntegerField(default=0)
+
+    def clean(self):
+        validate_only_one_instance(self)
