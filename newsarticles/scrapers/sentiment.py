@@ -53,12 +53,8 @@ def analyze_all_articles():
             remaining_units_obj.save() #need to use save() rather than update() to auto update last_updated to now
             TrainedSentiment.objects.create(coding=article, api_response=sent_json)
             entity_tuple = extract_sentiment_information(sent_json)
-            while True:
-                try:
-                    ix, entity, sent_val = next(entity_tuple)
-                except StopIteration:
-                    break
-                print(entity_tuple)
+            for ix, entity, sent_val in entity_tuple:
+                print(ix, entity, sent_val)
                 TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
             article.update(sentiment_processed=True)
             remaining_units = remaining_units_obj.remaining_calls
