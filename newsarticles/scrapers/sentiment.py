@@ -48,19 +48,19 @@ def analyze_all_articles():
                                                                                                                 remaining=remaining_units,
                                                                                                                 length=len(article.article.bodytext),
                                                                                                                 units=calculate_units(article.article.bodytext)))
-            #sent_json = get_api_reponse(article.article.bodytext)
+            sent_json = get_api_reponse(article.article.bodytext)
             remaining_units_obj.remaining_calls = remaining_units - units
             remaining_units_obj.save() #need to use save() rather than update() to auto update last_updated to now
-            #TrainedSentiment.objects.create(coding=article, api_response=sent_json)
-            more_to_return = False
-            while more_to_return:
-                entity_tuple = extract_sentiment_information(sent_json)
-                more_to_return = bool(entity_tuple)
-                if more_to_return:
-                    print(entity_tuple)
-                    #ix, entity, sent_val = entity_tuple
-                    #TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
-            #article.update(sentiment_processed=True)
+            TrainedSentiment.objects.create(coding=article, api_response=sent_json)
+            entity_tuple = extract_sentiment_information(sent_json)
+            while True:
+                try:
+                    ix, entity, sent_val = next(entity_tuple)
+                except StopIteration:
+                    break
+                print(entity_tuple)
+                TrainedSentimentEntities.objects.create(coding=article, response=sent_json, index=ix, entity=entity, sentiment=sent_val)
+            article.update(sentiment_processed=True)
             remaining_units = remaining_units_obj.remaining_calls
         current_bin += 1
 
