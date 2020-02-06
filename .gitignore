@@ -3,6 +3,7 @@
 .vscode
 .env
 public-static/*
+google-account.json
 
 
 # Elastic Beanstalk Files

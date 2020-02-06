@@ -46,16 +46,6 @@ class TrainedLocationInline(admin.TabularInline):
     model = models.TrainedLocation
     extra = 0
     can_delete = False
-    readonly_fields = ('text', 'latitude', 'longitude',)
-
-    def has_add_permission(self, request):
-        False
-
-
-class TrainedLocationInline(admin.TabularInline):
-    model = models.TrainedLocation
-    extra = 0
-    can_delete = False
     readonly_fields = ('text', 'latitude', 'longitude',
                        'confidence', 'neighborhood')
 
@@ -63,8 +53,27 @@ class TrainedLocationInline(admin.TabularInline):
         False
 
 
+class TrainedSentimentInline(admin.TabularInline):
+    model = models.TrainedSentiment
+    fields = ('date', 'api_response')
+    readonly_fields = ('date',)
+
+    def has_add_permission(self, request):
+        False
+
+
+class TrainedSentimentEntitiesInline(admin.TabularInline):
+    model = models.TrainedSentimentEntities
+    extra = 0
+    can_delete = False
+    readonly_fields = ('response', 'index', 'entity', 'sentiment')
+
+    def has_add_permission(self, request):
+        False
+
+
 @admin.register(models.TrainedCoding)
 class TrainedCodingAdmin(admin.ModelAdmin):
-    list_display = ('article', 'model_info', 'relevance')
-    inlines = [TrainedCategoryRelevanceInline, TrainedLocationInline]
+    list_display = ('article', 'model_info', 'relevance', 'bin', 'sentiment_processed')
+    inlines = [TrainedCategoryRelevanceInline, TrainedLocationInline, TrainedSentimentInline, TrainedSentimentEntitiesInline]
     readonly_fields = ('article', 'date', 'model_info', 'relevance',)
