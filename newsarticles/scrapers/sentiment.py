@@ -5,6 +5,7 @@ import django.db
 from django.core.exceptions import ObjectDoesNotExist
 from newsarticles.models import Article, Category, UserCoding, TrainedCoding, TrainedCategoryRelevance, TrainedSentiment, TrainedSentimentEntities, SentimentCallsCounter
 from newsarticles.tagging import bin_article_for_sentiment, extract_sentiment_information, calculate_units, get_api_reponse, sent_evaller
+from newsarticles.utils.migration import queryset_iterator
 
 LOG = logging.getLogger(__name__)
 MAX_API_CALLS = 200
@@ -67,7 +68,13 @@ def get_bin_articles(current_bin):
 
 def bin_all_articles():
     articles = Article.objects.all()
-    for article in articles:
+    count = 0
+    total = articles.count()
+    LOG.info('Binning %d articles', total)
+    for article in queryset_iterator(articles, chunksize=500):
+        count += 1
+        if count % 1000 == 1:
+            LOG.info('Binning article %d of %d', count, total)
         cpd_user_val = 0
         cpd_trained_val = 0
         try:
@@ -93,6 +100,7 @@ def bin_all_articles():
                         cpd_trained_val = cat.relevance
         trained_coding.bin = bin_article_for_sentiment(article, cpd_user_val, cpd_trained_val)
         trained_coding.save()
+    LOG.info('Done binning %d articles', count)
 
 def new_month(last_call_obj):
     now = datetime.datetime.now()
