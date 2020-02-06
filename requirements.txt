@@ -9,7 +9,7 @@ click==6.7
 decorator==4.2.1
 Django==1.11.4
 django-debug-toolbar==1.8
-djangorestframework==3.6.4
+djangorestframework==3.9.1
 feedparser==5.2.1
 future==0.16.0
 geocoder==1.38.0
