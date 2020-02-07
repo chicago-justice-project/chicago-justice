@@ -75,32 +75,47 @@ def bin_all_articles():
         count += 1
         if count % 1000 == 1:
             LOG.info('Binning article %d of %d', count, total)
-        cpd_user_val = 0
-        cpd_trained_val = 0
-        try:
-            user_coding = UserCoding.objects.get(article=article)
-        except ObjectDoesNotExist:
-            user_coding = False
-        try:
-            trained_coding = TrainedCoding.objects.get(article=article)
-        except ObjectDoesNotExist:
-            LOG.warn('No trained coding exists for article: %s', article.title)
-            trained_coding = False
-        if user_coding:
-            cpd_user_val = 1 if user_coding.categories.filter(abbreviation='CPD').exists() else 0
-        if trained_coding:
-            try:
-                trained_coding_cats = TrainedCategoryRelevance.objects.filter(coding=trained_coding)
-            except:
-                LOG.warn('Trained coding of article contains no categories')
-                trained_coding_cats = False
-            if trained_coding_cats:
-                for cat in trained_coding_cats:
-                    if 'CPD' in str(cat.category):
-                        cpd_trained_val = cat.relevance
-        trained_coding.bin = bin_article_for_sentiment(article, cpd_user_val, cpd_trained_val)
-        trained_coding.save()
+        bin_article(article)
     LOG.info('Done binning %d articles', count)
+
+def bin_unbinned_articles():
+    articles = Article.objects.filter(trainedcoding__bin=None).distinct()
+    count = 0
+    total = articles.count()
+    LOG.info('Binning %d unbinned articles', total)
+    for article in queryset_iterator(articles, chunksize=500):
+        count += 1
+        if count % 1000 == 1:
+            LOG.info('Binning article %d of %d', count, total)
+        bin_article(article)
+    LOG.info('Done binning %d unbinned articles', count)
+
+def bin_article(article):
+    cpd_user_val = 0
+    cpd_trained_val = 0
+    try:
+        user_coding = UserCoding.objects.get(article=article)
+    except ObjectDoesNotExist:
+        user_coding = False
+    try:
+        trained_coding = TrainedCoding.objects.get(article=article)
+    except ObjectDoesNotExist:
+        LOG.warn('No trained coding exists for article: %s', article.title)
+        trained_coding = False
+    if user_coding:
+        cpd_user_val = 1 if user_coding.categories.filter(abbreviation='CPD').exists() else 0
+    if trained_coding:
+        try:
+            trained_coding_cats = TrainedCategoryRelevance.objects.filter(coding=trained_coding)
+        except:
+            LOG.warn('Trained coding of article contains no categories')
+            trained_coding_cats = False
+        if trained_coding_cats:
+            for cat in trained_coding_cats:
+                if 'CPD' in str(cat.category):
+                    cpd_trained_val = cat.relevance
+    trained_coding.bin = bin_article_for_sentiment(article, cpd_user_val, cpd_trained_val)
+    trained_coding.save()
 
 def new_month(last_call_obj):
     now = datetime.datetime.now()
