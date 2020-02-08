@@ -25,18 +25,18 @@ def analyze_all_articles():
         remaining_units = 0
     assert remaining_units > 0
     while remaining_units > 0 and current_bin < NUM_BINS:
-        print(f"remaining units {remaining_units},\t Current bin: {current_bin}")
+        LOG.info(f"remaining units {remaining_units},\t Current bin: {current_bin}")
         bin_articles = get_bin_articles(current_bin)
-        print(f"num arts in bin: {len(bin_articles)}")
+        LOG.info(f"num arts in bin: {len(bin_articles)}")
         articles_and_units = [(article, calculate_units(article.article.bodytext))
-            for article in bin_articles]
+            for article in queryset_iterator(bin_articles)]
         assert remaining_units > 0
         articles_to_run = []
         units_left_in_bin = remaining_units
         if bin_articles:
             while units_left_in_bin > 0:
-                print(f"units_left_in_bin: {units_left_in_bin}")
-                print(f"articles to run count {len(articles_to_run)}")
+                LOG.info(f"units_left_in_bin: {units_left_in_bin}")
+                LOG.info(f"articles to run count {len(articles_to_run)}")
                 for art, units in articles_and_units:
                     if (units_left_in_bin - units) > 0:
                         articles_to_run.append((art, units))
@@ -55,7 +55,6 @@ def analyze_all_articles():
             trained_sent = TrainedSentiment.objects.create(coding=article, api_response=sent_json)
             entity_tuple = extract_sentiment_information(sent_json)
             for ix, entity, sent_val in entity_tuple:
-                print(ix, entity, sent_val)
                 TrainedSentimentEntities.objects.create(coding=article, response=trained_sent, index=ix, entity=entity, sentiment=sent_val)
             article.sentiment_processed=True
             article.save()
