@@ -28,20 +28,18 @@ def analyze_all_articles():
         LOG.info(f"remaining units {remaining_units},\t Current bin: {current_bin}")
         bin_articles = get_bin_articles(current_bin)
         LOG.info(f"num arts in bin: {len(bin_articles)}")
-        articles_and_units = [(article, calculate_units(article.article.bodytext))
-            for article in queryset_iterator(bin_articles)]
-        assert remaining_units > 0
         articles_to_run = []
         units_left_in_bin = remaining_units
-        if bin_articles:
-            while units_left_in_bin > 0:
+        for article in queryset_iterator(bin_articles, chunksize=500):
+            assert remaining_units > 0
+            if units_left_in_bin > 0:
+                assert remaining_units > 0
+                units = calculate_units(article.article.bodytext)
                 LOG.info(f"units_left_in_bin: {units_left_in_bin}")
-                LOG.info(f"articles to run count {len(articles_to_run)}")
-                for art, units in articles_and_units:
-                    if (units_left_in_bin - units) > 0:
-                        articles_to_run.append((art, units))
-                    units_left_in_bin -= units
-                    assert remaining_units > 0
+                LOG.info(f"articles to run count: {len(articles_to_run)}")
+                if (units_left_in_bin - units) > 0:
+                    articles_to_run.append((article, units))
+                units_left_in_bin -= units
 
         for (article, units) in articles_to_run:
             assert remaining_units > 0
