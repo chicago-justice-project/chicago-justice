@@ -10,3 +10,6 @@ google-account.json
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# PyCharm Files
+.idea/*

@@ -1,23 +1,23 @@
 import logging
 import datetime
+from math import floor
 import django.db
 
 from django.core.exceptions import ObjectDoesNotExist
-from newsarticles.models import Article, Category, UserCoding, TrainedCoding, TrainedCategoryRelevance, TrainedSentiment, TrainedSentimentEntities, SentimentCallsCounter
+from newsarticles.models import Article, UserCoding, TrainedCoding, TrainedCategoryRelevance, TrainedSentiment, TrainedSentimentEntities, SentimentCallsCounter
 from newsarticles.tagging import bin_article_for_sentiment, extract_sentiment_information, calculate_units, get_api_reponse, sent_evaller
 from newsarticles.utils.migration import queryset_iterator
 
 LOG = logging.getLogger(__name__)
-MAX_API_CALLS = 200
+MAX_API_CALLS = floor(5000/31)  # 5000 units split over one month (31 days)
 NUM_BINS = sent_evaller().num_bins
 
 def analyze_all_articles():
-    count = 0
     current_bin = 0
     try:
         remaining_units_obj, created = SentimentCallsCounter.objects.get_or_create(defaults={'remaining_calls': MAX_API_CALLS})
         if not created:
-            if new_month(remaining_units_obj):
+            if new_day(remaining_units_obj):
                 reset_counter(remaining_units_obj, MAX_API_CALLS)
         remaining_units = remaining_units_obj.remaining_calls
     except:
@@ -114,19 +114,15 @@ def bin_article(article):
     trained_coding.bin = bin_article_for_sentiment(article, cpd_user_val, cpd_trained_val)
     trained_coding.save()
 
-def new_month(last_call_obj):
+def new_day(last_call_obj):
     now = datetime.datetime.now()
     last_call_datetime = last_call_obj.last_updated
-    if now.year - last_call_datetime.year:
-        return True
-    elif now.year == last_call_datetime.year and now.month - last_call_datetime.month > 0:
-        return True
-    else:
-        return False
+    # Assume that if day isn't the same it's a new future day
+    return now.day != last_call_datetime.day
 
 def reset_counter(last_call_obj, max_calls=0):
     try:
         last_call_obj.remaining_calls = max_calls
-        last_call_obj.save() #need to use save() rather than update() to auto update last_updated to now
+        last_call_obj.save()  # need to use save() rather than update() to auto update last_updated to now
     except:
         LOG.warn('Could not reset API counter')
