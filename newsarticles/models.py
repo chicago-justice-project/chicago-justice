@@ -4,8 +4,14 @@ from itertools import groupby
 from collections import OrderedDict
 
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import User
+
+
+def validate_only_one_instance(obj):
+    model = obj.__class__
+    if (model.objects.count() > 1 and obj.pk != model.objects.get().pk):
+        raise ValidationError("Can only create 1 {} instance".format(model.__name__))
 
 
 @python_2_unicode_compatible
@@ -174,6 +180,8 @@ class TrainedCoding(models.Model):
         Category, through='TrainedCategoryRelevance')
     relevance = models.FloatField()
     sentiment = models.FloatField(null=True)
+    bin = models.IntegerField(null=True, blank=True)
+    sentiment_processed = models.BooleanField(default=False)
 
 
 class TrainedLocation(models.Model):
@@ -190,3 +198,23 @@ class TrainedCategoryRelevance(models.Model):
     coding = models.ForeignKey(TrainedCoding)
     category = models.ForeignKey(Category)
     relevance = models.FloatField()
+
+
+class TrainedSentiment(models.Model):
+    coding = models.ForeignKey(TrainedCoding)
+    date = models.DateTimeField(auto_now=True)
+    api_response = models.TextField()
+
+class TrainedSentimentEntities(models.Model):
+    coding = models.ForeignKey(TrainedCoding)
+    response = models.ForeignKey(TrainedSentiment)
+    index = models.IntegerField(null=True, blank=True)
+    entity = models.TextField(blank=True)
+    sentiment = models.FloatField(null=True, blank=True)
+
+class SentimentCallsCounter(models.Model):
+    last_updated = models.DateTimeField(auto_now=True)
+    remaining_calls = models.PositiveIntegerField(default=0)
+
+    def clean(self):
+        validate_only_one_instance(self)

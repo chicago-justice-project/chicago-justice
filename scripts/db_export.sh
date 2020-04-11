@@ -17,6 +17,8 @@ PG_TABLES=(
     "newsarticles_trainedcoding"
     "newsarticles_trainedlocation"
     "newsarticles_trainedcategoryrelevance"
+    "newsarticles_trainedsentiment"
+    "newsarticles_trainedsentimententities"
 )
 
 cd $OUTPUT_DIRECTORY

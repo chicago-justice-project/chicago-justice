@@ -3,9 +3,13 @@
 .vscode
 .env
 public-static/*
+google-account.json
 
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# PyCharm Files
+.idea/*

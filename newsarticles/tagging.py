@@ -4,6 +4,7 @@ import logging
 from math import isnan
 from django.core.exceptions import ObjectDoesNotExist
 import tagnews
+import numpy as np
 
 from newsarticles.models import TrainedCategoryRelevance, TrainedCoding, TrainedLocation, Category
 
@@ -32,7 +33,6 @@ def tag_article(article):
     try:
         locations = extract_locations(article)
         category_scores, max_score = tag_categories(article)
-        bin = bin_article_for_sentiment(article)
     except Exception as e:
         LOG.exception(e)
         return
@@ -43,7 +43,7 @@ def tag_article(article):
         article=article,
         model_info=current_model_info(),
         relevance=max_score,
-        bin=bin
+        bin=None
     )
 
     for (category, relevance) in category_scores:
@@ -108,25 +108,31 @@ def extract_locations(article):
             })
     return trained_locations
 
-def bin_article_for_sentiment(article):
+def bin_article_for_sentiment(article, cpd_user_val, cpd_model_val):
     if len(article.bodytext) < 10:
         return -1
 
-    bin = sent_evaller().extract_google_priority_bin(article)
+    bin = sent_evaller().extract_google_priority_bin(article.bodytext, cpd_user_val, cpd_model_val)
     return bin
 
-def extract_sentiment_information(article):
+def calculate_units(article):
+    return np.ceil(len(article)/1000)
+
+def get_api_reponse(article):
+    sentiment_json = sent_evaller().call_api(article)
+    return sentiment_json
+
+def extract_sentiment_information(sentiment_json):
     """
-    :param article: article text
-    :return: sentiment_json: full json response
-             ix: list index of this police entity
+    :param sentiment_json: json response from api
+    :return: ix: list index of this police entity
              entity: words of the entity phrase
              sent_val: sent score
     """
-    sentiment_json = sent_evaller().call_api(article)
     for ix, entity in enumerate(sentiment_json.entities):
         police_entity = sent_evaller().is_police_entity(entity)
         if police_entity:
             sent_val = sent_evaller().sentiment_from_entity(police_entity)
-            return sentiment_json, ix, entity, sent_val
-    return sentiment_json, "", "", ""
+            assert bool((ix, entity, sent_val)) # bool of the yielded value is always True
+            yield (ix, entity, sent_val)
+    return False
