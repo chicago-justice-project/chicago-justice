@@ -38,7 +38,7 @@ pyasn1-modules==0.2.8
 pylint==1.8.1
 python-dateutil==2.6.1
 pytz==2017.2
-PyYAML==3.12
+PyYAML==5.1
 ratelim==0.1.6
 requests==2.18.4
 rsa==4.0
