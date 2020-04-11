@@ -4,6 +4,7 @@ from math import floor
 import django.db
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from newsarticles.models import Article, UserCoding, TrainedCoding, TrainedCategoryRelevance, TrainedSentiment, TrainedSentimentEntities, SentimentCallsCounter
 from newsarticles.tagging import bin_article_for_sentiment, extract_sentiment_information, calculate_units, get_api_reponse, sent_evaller
 from newsarticles.utils.migration import queryset_iterator
@@ -75,17 +76,22 @@ def bin_all_articles():
         bin_article(article)
     LOG.info('Done binning %d articles', count)
 
-def bin_unbinned_articles():
-    articles = Article.objects.filter(trainedcoding__bin=None).distinct()
+def bin_updated_articles():
+    try:
+        last_call_datetime = SentimentCallsCounter.objects.get().last_updated
+    except:
+        LOG.warn('No SentimentCallsCounter object exists')
+        last_call_datetime = datetime.datetime.now() # default to right now
+    articles = Article.objects.filter(Q(trainedcoding__bin=None) | Q(usercoding__date__gte=last_call_datetime)).distinct()
     count = 0
     total = articles.count()
-    LOG.info('Binning %d unbinned articles', total)
+    LOG.info('Binning %d unbinned or updated articles', total)
     for article in queryset_iterator(articles, chunksize=500):
         count += 1
         if count % 1000 == 1:
             LOG.info('Binning article %d of %d', count, total)
         bin_article(article)
-    LOG.info('Done binning %d unbinned articles', count)
+    LOG.info('Done binning %d unbinned or updated articles', count)
 
 def bin_article(article):
     cpd_user_val = 0
