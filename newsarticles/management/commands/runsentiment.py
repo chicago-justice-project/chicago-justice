@@ -18,14 +18,14 @@ class Command(BaseCommand):
             LOG.info('Running binning script on all articles')
             sentiment.bin_all_articles()
         elif options['run_script'] == 'binnew':
-            LOG.info('Running binning script on unbinned articles')
-            sentiment.bin_unbinned_articles()
+            LOG.info('Running binning script on updated or unbinned articles')
+            sentiment.bin_updated_articles()
         elif options['run_script'] == 'analyze':
             LOG.info('Running sentiment analysis on articles')
             sentiment.analyze_all_articles()
         elif options['run_script'] == RUN_SCRIPT_BOTH:
-            LOG.info('Running both unbinned binning script and sentiment analysis on articles')
-            sentiment.bin_unbinned_articles()
+            LOG.info('Running both updated binning script and sentiment analysis on articles')
+            sentiment.bin_updated_articles()
             sentiment.analyze_all_articles()
         else:
             raise CommandError('Command argument could not be parsed')
