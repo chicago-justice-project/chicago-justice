@@ -13,30 +13,47 @@ from newsarticles.forms import GroupedMultModelChoiceField
 
 
 class ArticleSearchForm(forms.Form):
-    showAll = forms.BooleanField(label='Show Non-Crime',
+    showAll = forms.BooleanField(label='Include User-Coded Articles Identified as Non-Crime Related',
                                  initial=False, required=False)
 
-    news_source = forms.ModelChoiceField(label='Source',
+    news_source = forms.ModelChoiceField(label='News Source',
                                          required=False,
                                          empty_label='All Sources',
+                                         widget=forms.Select(attrs={'class':'form-control'}),
                                          queryset=NewsSource.objects.all())
 
     startDate = forms.DateField(label='Start Date',
-                                widget=forms.DateInput(format="%m/%d/%Y"),
+                                widget=forms.DateInput(format="%m/%d/%Y", attrs={'class':'form-control'}),
                                 required=False)
 
     endDate = forms.DateField(label='End Date',
-                              widget=forms.DateInput(format="%m/%d/%Y"),
+                              widget=forms.DateInput(format="%m/%d/%Y", attrs={'class':'form-control'}),
                               required=False)
 
     searchTerms = forms.CharField(label='Search Terms', required=False,
-                                  max_length=1024)
+                                  max_length=1024,
+                                  widget=forms.TextInput(attrs={'class':'form-control'}))
 
     category = GroupedMultModelChoiceField(label='Categories',
                                            required=False,
                                            queryset=Category.objects.active(),
                                            group_by_field='kind',
-                                           group_label=Category.KINDS.get)
+                                           group_label=Category.KINDS.get,
+                                           widget=forms.SelectMultiple(attrs={'class':'form-control', 'size':'10'}))
+
+    trainedRelevance = forms.DecimalField(label='Overall Trained Relevance (0–1)',
+                                          required=False,
+                                          max_value=1,
+                                          min_value=0,
+                                          decimal_places=2,
+                                          widget=forms.NumberInput(attrs={'class':'form-control'}))
+
+    categoryRelevance = forms.DecimalField(label='Category Trained Relevance (0–1)',
+                                           required=False,
+                                           max_value=1,
+                                           min_value=0,
+                                           decimal_places=2,
+                                           widget=forms.NumberInput(attrs={'class':'form-control'}))
 
 
 def articleList(request):
@@ -52,6 +69,8 @@ def articleList(request):
         endDate = form.cleaned_data['endDate']
         searchTerms = form.cleaned_data['searchTerms']
         categories = form.cleaned_data['category']
+        trainedRelevance = form.cleaned_data['trainedRelevance']
+        categoryRelevance = form.cleaned_data['categoryRelevance']
         page = 1
 
         request.session['article_hasSearch'] = True
@@ -65,6 +84,8 @@ def articleList(request):
         endDate = request.session['article_endDate']
         searchTerms = request.session['article_searchTerms']
         categories = request.session['article_category']
+        trainedRelevance = request.session['article_trainedRelevance']
+        categoryRelevance = request.session['article_categoryRelevance']
 
         form = ArticleSearchForm({
             'showAll': showAll,
@@ -72,7 +93,9 @@ def articleList(request):
             'startDate': startDate,
             'endDate': endDate,
             'searchTerms': searchTerms,
-            'categories': categories
+            'categories': categories,
+            'trainedRelevance': trainedRelevance,
+            'categoryRelevance': categoryRelevance
         })
 
         try:
@@ -89,6 +112,8 @@ def articleList(request):
         endDate = None
         searchTerms = ''
         categories = []
+        trainedRelevance = None
+        categoryRelevance = None
 
         # added so paging works even when there is no search
         try:
@@ -105,6 +130,8 @@ def articleList(request):
     request.session['article_searchTerms'] = searchTerms
     request.session['article_category'] = categories
     request.session['article_page'] = page
+    request.session['article_trainedRelevance'] = trainedRelevance
+    request.session['article_categoryRelevance'] = categoryRelevance
 
     article_list = Article.objects.order_by('-created')
     if not showAll:
@@ -124,6 +151,10 @@ def articleList(request):
             Q(title__icontains=searchTerms) | Q(bodytext__icontains=searchTerms))
     if categories:
         article_list = article_list.filter_categories(categories)
+    if trainedRelevance:
+        article_list = article_list.filter_relevant_trained(trainedRelevance)
+    if categoryRelevance and categories:
+        article_list = article_list.filter_trained_categories(categories, categoryRelevance)
 
     dateRange = Article.objects.all().aggregate(minDate=Min('created'),
                                                 maxDate=Max('created'))

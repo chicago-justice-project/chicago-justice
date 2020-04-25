@@ -40,31 +40,49 @@
     {% if form.searchTerms.errors %}
     <div class="alert alert-danger" role="alert">{{ form.searchTerms.errors }}</div>
     {% endif %}
-    <form class="form-horizontal" action="{% url 'mainArticleView' %}" method="post">
+    {% if form.trainedRelevance.errors %}
+    <div class="alert alert-danager" role="alert">{{ form.trainedRelevance.errors }}</div>
+    {% endif %}
+    <form action="{% url 'mainArticleView' %}" method="post">
     {% csrf_token %}
-      <div class="form-inline text-center">
-          <label for="showAll">{{ form.showAll.label }}</label>
-          {{ form.showAll }}
+      <div class="form-group">
           <label for="news_source">{{ form.news_source.label }}</label>
           {{ form.news_source }}
+      </div>
+      <div class="form-group">
+        <label for="category">{{ form.category.label }}</label>
+        {{ form.category }}
+      </div>
+      <div class="row">
+          <div class="col-xs-3">
+        <label for="trainedRelevance">{{ form.trainedRelevance.label }}</label>
+        {{ form.trainedRelevance }}
+        </div>
+        <div class="col-xs-3">
+            <label for="categoryRelevance">{{ form.categoryRelevance.label }}</label>
+            {{ form.categoryRelevance }}
+            </div>
+            <div class="col-xs-3">
+        <label for="startDate">{{ form.startDate.label }}</label>
+        {{ form.startDate }}
+        </div>
+        <div class="col-xs-3">
+        <label for="endDate">{{ form.endDate.label }}</label>
+        {{ form.endDate }}
+        </div>
+        </div>
+      <div class="form-group">
           <label for="searchTerms">{{ form.searchTerms.label }}</label>
           {{ form.searchTerms }}
       </div>
-      <div class="form-inline text-center">
-        <label for="category">{{ form.category.label }}</label>
-        {{ form.category }}
-        <label for="startDate">{{ form.startDate.label }}</label>
-        {{ form.startDate }}
-        <label for="endDate">{{ form.endDate.label }}</label>
-        {{ form.endDate }}
-      </div>
-      <div class="form-inline text-center">
+          <div class="checkbox">
+              <label>{{ form.showAll }}{{ form.showAll.label }}</label>
+          </div>
         <input type="hidden" name="newSearch" value="True" />
         <input type="hidden" name="clearSearch" value="False" />
         <button class="btn btn-default">Search</button>
         <button class="btn btn-default" onclick="this.form.reset(); return false;">Reset</button>
         <button class="btn btn-default" onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
-      </div>
     </form>
   </div>
 </div>

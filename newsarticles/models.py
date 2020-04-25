@@ -100,6 +100,12 @@ class ArticleQuerySet(models.QuerySet):
     def filter_categories(self, categories):
         return self.filter(usercoding__categories__in=categories)
 
+    def filter_relevant_trained(self, relevance=0.85):
+        return self.filter(trainedcoding__relevance__gte=relevance)
+
+    def filter_trained_categories(self, categories, relevance=0.85):
+        return self.filter(trainedcoding__trainedcategoryrelevance__category__in=categories, trainedcoding__trainedcategoryrelevance__relevance__gte=relevance)
+
 
 @python_2_unicode_compatible
 class Article(models.Model):

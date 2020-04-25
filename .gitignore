@@ -2,6 +2,7 @@
 *.log
 .vscode
 .env
+.DS_Store
 public-static/*
 google-account.json
 
