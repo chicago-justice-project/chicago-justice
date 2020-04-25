@@ -43,6 +43,7 @@
                 {% endif %}
                 {% if user.is_superuser %}
                 <li><a href="{% url 'userManageView' %}">Manage Users</a></li>
+                <li><a href="{% url 'search-categories' %}">Search Categories</a></li>
                 {% endif %}
             </ul>
             {% if user.is_authenticated %}

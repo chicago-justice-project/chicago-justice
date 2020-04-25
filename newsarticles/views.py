@@ -1,7 +1,7 @@
 import json
 import random
 from datetime import datetime
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -249,4 +249,8 @@ def random_article(request):
 
 @login_required
 def help(request):
+    return render(request, 'newsarticles/help.html', {})
+
+@user_passes_test(lambda u: u.is_superuser)
+def search_categories(request):
     return render(request, 'newsarticles/help.html', {})
