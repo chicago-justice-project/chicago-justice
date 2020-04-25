@@ -4,6 +4,7 @@ from itertools import groupby
 from collections import OrderedDict
 
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import User
 
@@ -98,7 +99,7 @@ class ArticleQuerySet(models.QuerySet):
         return self.filter(usercoding__isnull=True)
 
     def filter_categories(self, categories):
-        return self.filter(usercoding__categories__in=categories)
+        return self.filter(Q(usercoding__categories__in=categories) | Q(trainedcoding__trainedcategoryrelevance__category__in=categories)).distinct()
 
     def filter_relevant_trained(self, relevance=0.85):
         return self.filter(trainedcoding__relevance__gte=relevance)
