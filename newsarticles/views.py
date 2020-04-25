@@ -281,7 +281,3 @@ def random_article(request):
 @login_required
 def help(request):
     return render(request, 'newsarticles/help.html', {})
-
-@user_passes_test(lambda u: u.is_superuser)
-def keyword_search(request):
-    return render(request, 'newsarticles/help.html', {})
