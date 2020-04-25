@@ -252,5 +252,5 @@ def help(request):
     return render(request, 'newsarticles/help.html', {})
 
 @user_passes_test(lambda u: u.is_superuser)
-def search_categories(request):
+def keyword_search(request):
     return render(request, 'newsarticles/help.html', {})

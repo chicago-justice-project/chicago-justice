@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^articles/(\d+)/updatecoding/$', newsarticles.views.code_article, name='code-article'),
     url(r'^articles/coderandom/$', newsarticles.views.random_article, name='random-article'),
     url(r'^articles/help/$', newsarticles.views.help, name='help'),
-    url(r'^articles/search/$', newsarticles.views.search_categories, name='search-categories'),
+    url(r'^articles/search/$', newsarticles.views.keyword_search, name='keyword-search'),
 
     # crime reports
     url(r'^crimereports/$', crimedata.views.crimeReportList, name='mainCrimeReportView'),
