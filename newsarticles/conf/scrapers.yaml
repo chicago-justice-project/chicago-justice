@@ -217,12 +217,13 @@
   body_selector: 'article .article-body'
 
 - news_source: wbez
-  index_url: http://feeds.feedburner.com/wbez
-  rss_index: True
+  index_url: https://www.wbez.org/latest-news
+  rss_index: False
+  index_url_selector: .t-headline a
   title_selector: article h1
-  author_selector: article .byline
-  body_selector: article .article_copy
-  exclude_selector: '#inpage_ad_unit, .inpage_newsletter_signup, .share_bar'
+  author_selector: article .t-byline
+  body_selector: article .c-prose
+  exclude_selector: '.ad-unit, .fit-outer'
 
 - news_source: wgn-tv
   index_url: http://wgntv.com/category/news/feed/
