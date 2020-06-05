@@ -1,0 +1,114 @@
+{% extends "common/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block title %}
+    Category Crosstab Search
+{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        var minDate = new Date({{ dateRange.minDate.year }}, {{ dateRange.minDate.month }} - 1, {{ dateRange.minDate.day }});
+        var maxDate = new Date({{ dateRange.maxDate.year }}, {{ dateRange.maxDate.month }} - 1, {{ dateRange.maxDate.day }});
+
+		$( "#id_startDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+        $( "#id_endDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+    });
+</script>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Search Articles</h3>
+  </div>
+  <div class="panel-body">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% if form.news_source.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.news_source.errors }}</div>
+    {% endif %}
+    {% if form.startDate.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.startDate.errors }}</div>
+    {% endif %}
+    {% if form.endDate.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.endDate.errors }}</div>
+    {% endif %}
+    {% if form.categoryRelevance.errors %}
+    <div class="alert alert-danager" role="alert">{{ form.categoryRelevance.errors }}</div>
+    {% endif %}
+    <form action="{% url 'mainArticleView' %}" method="post">
+    {% csrf_token %}
+      <div class="form-group">
+          <label for="news_source">{{ form.news_source.label }}</label>
+          {{ form.news_source }}
+      </div>
+      <div class="form-group">
+        <label for="category">{{ form.category.label }}</label>
+        {{ form.category }}
+      </div>
+      <div class="row">
+        <div class="col-xs-4">
+            <label for="categoryRelevance">{{ form.categoryRelevance.label }}</label>
+            {{ form.categoryRelevance }}
+            </div>
+            <div class="col-xs-4">
+        <label for="startDate">{{ form.startDate.label }}</label>
+        {{ form.startDate }}
+        </div>
+        <div class="col-xs-4">
+        <label for="endDate">{{ form.endDate.label }}</label>
+        {{ form.endDate }}
+        </div>
+        </div>
+        <input type="hidden" name="newSearch" value="True" />
+        <input type="hidden" name="clearSearch" value="False" />
+        <button class="btn btn-default">Search</button>
+        <button class="btn btn-default" onclick="this.form.reset(); return false;">Reset</button>
+        <button class="btn btn-default" onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
+    </form>
+  </div>
+</div>
+
+{% if articles %}
+  {% include "common/pagination_inc.html" with objectList=articles showExtra=1 objectLabel="Article(s)" %}
+  <table id="articleTable" class="table table-bordered">
+   <tr>
+    <th></th>
+    <th>Crime Related</th>
+    <th>Load Date</th>
+    <th>Source</th>
+    <th>Title</th>
+    <th>Link</th>
+    <th>Snippet</th>
+   </tr>
+   {% for article in articles.object_list %}
+     <tr>
+       <td class="col-md-1">
+         {% if user.is_authenticated %}
+         <a href="{% url 'code-article' article.id %}">Code Article</a>
+       </td>
+         {% else %}
+         <a href="{% url 'view-article' article.id %}">View Article</a>
+       </td>
+         {% endif %}
+       <td class="text-center col-md-1">
+         {% if article.is_relevant %}
+         <img src="{% static "good_checkmark.png" %}" alt="crime related" />
+         {% elif article.is_coded %}
+         <img src="{% static "bad_x.png" %}" alt="not crime related" />
+         {% endif %}
+       </td>
+       <td class="col-md-1">{{ article.created }}</td>
+       <td class="col-md-1">{{ article.news_source }}</td>
+       <td class="col-md-3">{{ article.title|safe }}</td>
+       <td class="col-md-2"><a href="{{ article.url }}">{{ article.url }}</a></td>
+       <td class="col-md-3">{{ article.bodytext|truncatewords:50 }}</td>
+     </tr>
+   {% endfor %}
+  </table>
+{% else %}
+  <div class="alert alert-danger" role="alert">No articles are available.</div>
+{% endif %}
+
+{% endblock %}

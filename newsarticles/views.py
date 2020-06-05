@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q, Max, Min
 from django.shortcuts import render, get_object_or_404
 from django import forms
-from newsarticles.models import Article, Category, NewsSource, UserCoding, SENTIMENT_CHOICES
+from newsarticles.models import Article, Category, NewsSource, UserCoding, TrainedCoding, SENTIMENT_CHOICES
 from newsarticles.forms import GroupedMultModelChoiceField
 
 
@@ -167,6 +167,55 @@ def articleList(request):
 
     return render(request, 'newsarticles/articleList.html', data)
 
+def categoryXTab(request):
+    form = ArticleSearchForm(request.POST)
+    clearSearch = request.POST.get('clearSearch', "False") == "False"
+    newSearch = request.POST.get('newSearch', "False") == "True"
+
+    if clearSearch and newSearch and form.is_valid():
+        news_source = form.cleaned_data['news_source']
+        startDate = form.cleaned_data['startDate']
+        endDate = form.cleaned_data['endDate']
+        categories = form.cleaned_data['category']
+        categoryRelevance = form.cleaned_data['categoryRelevance']
+
+        request.session['article_hasSearch'] = True
+
+    elif clearSearch and request.session.get('article_hasSearch', False):
+        request.session['article_hasSearch'] = True
+
+        news_source = request.session['article_news_source']
+        startDate = request.session['article_startDate']
+        endDate = request.session['article_endDate']
+        categories = request.session['article_category']
+        categoryRelevance = request.session['article_categoryRelevance']
+
+        form = ArticleSearchForm({
+            'news_source': news_source,
+            'startDate': startDate,
+            'endDate': endDate,
+            'categories': categories,
+            'categoryRelevance': categoryRelevance
+        })
+
+    else:
+        form = ArticleSearchForm()
+
+        news_source = None
+        startDate = None
+        endDate = None
+        categories = []
+        categoryRelevance = None
+
+        request.session['article_hasSearch'] = False
+
+    request.session['article_news_source'] = news_source
+    request.session['article_startDate'] = startDate
+    request.session['article_endDate'] = endDate
+    request.session['article_category'] = categories
+    request.session['article_categoryRelevance'] = categoryRelevance
+
+    category_list = TrainedCoding.objects.order_by('categories')
 
 def _paginate(iter, count, pagenum):
     paginator = Paginator(iter, count)
