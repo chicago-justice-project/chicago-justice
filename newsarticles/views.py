@@ -1,7 +1,7 @@
 import json
 import random
 from datetime import datetime
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -53,7 +53,6 @@ class ArticleSearchForm(forms.Form):
                                            min_value=0,
                                            decimal_places=2,
                                            widget=forms.NumberInput(attrs={'class':'form-control'}))
-
 
 def articleList(request):
     form = ArticleSearchForm(request.POST)
@@ -166,8 +165,37 @@ def articleList(request):
 
     return render(request, 'newsarticles/articleList.html', data)
 
+class CrosstabSearchForm(forms.Form):
+    news_source = forms.ModelMultipleChoiceField(label='News Source',
+                                         required=False,
+                                         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size':'10'}),
+                                         queryset=NewsSource.objects.all())
+
+    startDate = forms.DateField(label='Start Date',
+                                widget=forms.DateInput(format="%m/%d/%Y", attrs={'class':'form-control'}),
+                                required=False)
+
+    endDate = forms.DateField(label='End Date',
+                              widget=forms.DateInput(format="%m/%d/%Y", attrs={'class':'form-control'}),
+                              required=False)
+
+    category = GroupedMultModelChoiceField(label='Categories',
+                                           required=False,
+                                           queryset=Category.objects.active(),
+                                           group_by_field='kind',
+                                           group_label=Category.KINDS.get,
+                                           widget=forms.SelectMultiple(attrs={'class':'form-control', 'size':'10'}))
+
+    categoryRelevance = forms.DecimalField(label='Category Trained Relevance (0–1)',
+                                           required=False,
+                                           max_value=1,
+                                           min_value=0,
+                                           decimal_places=2,
+                                           widget=forms.NumberInput(attrs={'class':'form-control'}))
+
 def categoryXTab(request):
-    form = ArticleSearchForm(request.POST)
+    form = CrosstabSearchForm(request.POST)
+    # TODO: put these into the form itself
     clearSearch = request.POST.get('clearSearch', "False") == "False"
     newSearch = request.POST.get('newSearch', "False") == "True"
 
@@ -178,18 +206,18 @@ def categoryXTab(request):
         categories = form.cleaned_data['category']
         categoryRelevance = form.cleaned_data['categoryRelevance']
 
-        request.session['article_hasSearch'] = True
+        request.session['categoryXTab_hasSearch'] = True
 
-    elif clearSearch and request.session.get('article_hasSearch', False):
-        request.session['article_hasSearch'] = True
+    elif clearSearch and request.session.get('categoryXTab_hasSearch', False):
+        request.session['categoryXTab_hasSearch'] = True
 
-        news_source = request.session['article_news_source']
-        startDate = request.session['article_startDate']
-        endDate = request.session['article_endDate']
-        categories = request.session['article_category']
-        categoryRelevance = request.session['article_categoryRelevance']
+        news_source = request.session['categoryXTab_news_source']
+        startDate = request.session['categoryXTab_startDate']
+        endDate = request.session['categoryXTab_endDate']
+        categories = request.session['categoryXTab_category']
+        categoryRelevance = request.session['categoryXTab_categoryRelevance']
 
-        form = ArticleSearchForm({
+        form = CrosstabSearchForm({
             'news_source': news_source,
             'startDate': startDate,
             'endDate': endDate,
@@ -198,7 +226,7 @@ def categoryXTab(request):
         })
 
     else:
-        form = ArticleSearchForm()
+        form = CrosstabSearchForm()
 
         news_source = []
         startDate = None
@@ -206,13 +234,13 @@ def categoryXTab(request):
         categories = []
         categoryRelevance = None
 
-        request.session['article_hasSearch'] = False
+        request.session['categoryXTab_hasSearch'] = False
 
-    request.session['article_news_source'] = news_source
-    request.session['article_startDate'] = startDate
-    request.session['article_endDate'] = endDate
-    request.session['article_category'] = categories
-    request.session['article_categoryRelevance'] = categoryRelevance
+    request.session['categoryXTab_news_source'] = news_source
+    request.session['categoryXTab_startDate'] = startDate
+    request.session['categoryXTab_endDate'] = endDate
+    request.session['categoryXTab_category'] = categories
+    request.session['categoryXTab_categoryRelevance'] = categoryRelevance
 
     article_list = Article.objects.order_by()
     if news_source:
