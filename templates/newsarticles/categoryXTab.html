@@ -3,7 +3,7 @@
 {% load static from staticfiles %}
 
 {% block title %}
-    Category Crosstab Search
+    Crosstab Query
 {% endblock %}
 
 {% block content %}
@@ -17,9 +17,16 @@
     });
 </script>
 
+<p>Use the form below to search the database of articles to create a crosstab. The resulting crosstab shows the number
+    of articles within each category selected by the news sources selected in the form below. Start and end dates can be
+    specified, otherwise the entire history of articles is searched. Similarly, a certain minimum probability (between 0
+    and 1) can be specified that the selected categories must meet, otherwise all articles are returned for the selected
+    categories regardless of the probability of their belonging to that category. <b>This search is conducted only on
+        relevancy based on the trained model; user designated categories are not considered.</b></p>
+
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Create Category Crosstab</h3>
+    <h3 class="panel-title">Query Parameters</h3>
   </div>
   <div class="panel-body">
     {% if form.non_field_errors %}
