@@ -265,7 +265,12 @@ def categoryXTab(request):
         if source not in category_list:
             category_list[source] = {}
         for category in categories:
-            category_list[source][category] = article_list.filter(news_source=source).filter(trainedcoding__trainedcategoryrelevance__category=category).count()
+            category_query = article_list.filter(news_source=source)
+            if categoryRelevance:
+                category_query = category_query.filter(trainedcoding__trainedcategoryrelevance__category=category, trainedcoding__trainedcategoryrelevance__relevance__gte=categoryRelevance)
+            else:
+                category_query = category_query.filter(trainedcoding__trainedcategoryrelevance__category=category)
+            category_list[source][category] = category_query.count()
 
     data = {
         'category_list': category_list,
