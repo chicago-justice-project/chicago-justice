@@ -19,7 +19,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Search Articles</h3>
+    <h3 class="panel-title">Create Category Crosstab</h3>
   </div>
   <div class="panel-body">
     {% if form.non_field_errors %}
@@ -37,7 +37,7 @@
     {% if form.categoryRelevance.errors %}
     <div class="alert alert-danager" role="alert">{{ form.categoryRelevance.errors }}</div>
     {% endif %}
-    <form action="{% url 'mainArticleView' %}" method="post">
+    <form action="{% url 'categoryXTab' %}" method="post">
     {% csrf_token %}
       <div class="form-group">
           <label for="news_source">{{ form.news_source.label }}</label>
@@ -70,41 +70,22 @@
   </div>
 </div>
 
-{% if articles %}
-  {% include "common/pagination_inc.html" with objectList=articles showExtra=1 objectLabel="Article(s)" %}
-  <table id="articleTable" class="table table-bordered">
+{% if category_list %}
+  <table id="categoryCrossTab" class="table table-bordered">
+      <caption>{% if startDate %}<b>From:</b> {{ startDate|date:"SHORT_DATE_FORMAT" }} {% endif %}{%if endDate %}<b>To:</b> {{ endDate|date:"SHORT_DATE_FORMAT" }} {% endif %}<b>Category Relevance:</b> &ge;{% if categoryRelevance %}{{ categoryRelevance }}{% else %}0{% endif %}</caption>
    <tr>
-    <th></th>
-    <th>Crime Related</th>
-    <th>Load Date</th>
-    <th>Source</th>
-    <th>Title</th>
-    <th>Link</th>
-    <th>Snippet</th>
+    <th>News Source</th>
+    {% for category in categories %}
+    <th>{{ category }}</th>
+    {% endfor %}
    </tr>
-   {% for article in articles.object_list %}
-     <tr>
-       <td class="col-md-1">
-         {% if user.is_authenticated %}
-         <a href="{% url 'code-article' article.id %}">Code Article</a>
-       </td>
-         {% else %}
-         <a href="{% url 'view-article' article.id %}">View Article</a>
-       </td>
-         {% endif %}
-       <td class="text-center col-md-1">
-         {% if article.is_relevant %}
-         <img src="{% static "good_checkmark.png" %}" alt="crime related" />
-         {% elif article.is_coded %}
-         <img src="{% static "bad_x.png" %}" alt="not crime related" />
-         {% endif %}
-       </td>
-       <td class="col-md-1">{{ article.created }}</td>
-       <td class="col-md-1">{{ article.news_source }}</td>
-       <td class="col-md-3">{{ article.title|safe }}</td>
-       <td class="col-md-2"><a href="{{ article.url }}">{{ article.url }}</a></td>
-       <td class="col-md-3">{{ article.bodytext|truncatewords:50 }}</td>
-     </tr>
+   {% for source, category in category_list.items %}
+   <tr>
+       <td>{{ source }}</td>
+       {% for cat, value in category.items %}
+       <td>{{ value }}</td>
+       {% endfor %}
+   </tr>
    {% endfor %}
   </table>
 {% else %}

@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q, Max, Min
 from django.shortcuts import render, get_object_or_404
 from django import forms
-from newsarticles.models import Article, Category, NewsSource, UserCoding, TrainedCoding, SENTIMENT_CHOICES
+from newsarticles.models import Article, Category, NewsSource, UserCoding, SENTIMENT_CHOICES
 from newsarticles.forms import GroupedMultModelChoiceField
 
 
@@ -16,10 +16,9 @@ class ArticleSearchForm(forms.Form):
     showAll = forms.BooleanField(label='Include User-Coded Articles Identified as Non-Crime Related',
                                  initial=False, required=False)
 
-    news_source = forms.ModelChoiceField(label='News Source',
+    news_source = forms.ModelMultipleChoiceField(label='News Source',
                                          required=False,
-                                         empty_label='All Sources',
-                                         widget=forms.Select(attrs={'class':'form-control'}),
+                                         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size':'10'}),
                                          queryset=NewsSource.objects.all())
 
     startDate = forms.DateField(label='Start Date',
@@ -107,7 +106,7 @@ def articleList(request):
         form = ArticleSearchForm()
 
         showAll = False
-        news_source = None
+        news_source = []
         startDate = None
         endDate = None
         searchTerms = ''
@@ -137,7 +136,7 @@ def articleList(request):
     if not showAll:
         article_list = article_list.exclude_irrelevant()
     if news_source:
-        article_list = article_list.filter(news_source=news_source)
+        article_list = article_list.filter(news_source__in=news_source)
     if startDate != None:
         startDate = datetime.strptime(
             "%s 00:00:00" % startDate, "%Y-%m-%d %H:%M:%S")
@@ -201,7 +200,7 @@ def categoryXTab(request):
     else:
         form = ArticleSearchForm()
 
-        news_source = None
+        news_source = []
         startDate = None
         endDate = None
         categories = []
@@ -215,7 +214,42 @@ def categoryXTab(request):
     request.session['article_category'] = categories
     request.session['article_categoryRelevance'] = categoryRelevance
 
-    category_list = TrainedCoding.objects.order_by('categories')
+    article_list = Article.objects.order_by()
+    if news_source:
+        article_list = article_list.filter(news_source__in=news_source)
+    if startDate != None:
+        startDate = datetime.strptime("%s 00:00:00" % startDate, "%Y-%m-%d %H:%M:%S")
+        article_list = article_list.filter(created__gte=startDate)
+    if endDate != None:
+        endDate = datetime.strptime("%s 23:59:59" % endDate, "%Y-%m-%d %H:%M:%S")
+        article_list = article_list.filter(created__lte=endDate)
+    if categories:
+        article_list = article_list.filter_categories(categories)
+    if categoryRelevance and categories:
+        article_list = article_list.filter_trained_categories(categories, categoryRelevance)
+
+    dateRange = Article.objects.all().aggregate(minDate=Min('created'),
+                                               maxDate=Max('created'))
+
+    category_list = {}
+
+    for source in news_source:
+        if source not in category_list:
+            category_list[source] = {}
+        for category in categories:
+            category_list[source][category] = article_list.filter(news_source=source).filter(trainedcoding__trainedcategoryrelevance__category=category).count()
+
+    data = {
+        'category_list': category_list,
+        'categories': categories,
+        'startDate': startDate,
+        'endDate': endDate,
+        'categoryRelevance': categoryRelevance,
+        'form': form,
+        'dateRange': dateRange,
+    }
+
+    return render(request, 'newsarticles/categoryXTab.html', data)
 
 def _paginate(iter, count, pagenum):
     paginator = Paginator(iter, count)
