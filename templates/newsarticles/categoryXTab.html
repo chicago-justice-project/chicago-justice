@@ -1,0 +1,102 @@
+{% extends "common/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block title %}
+    Crosstab Query
+{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        var minDate = new Date({{ dateRange.minDate.year }}, {{ dateRange.minDate.month }} - 1, {{ dateRange.minDate.day }});
+        var maxDate = new Date({{ dateRange.maxDate.year }}, {{ dateRange.maxDate.month }} - 1, {{ dateRange.maxDate.day }});
+
+		$( "#id_startDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+        $( "#id_endDate" ).datepicker({ minDate: minDate, maxDate: maxDate });
+    });
+</script>
+
+<p>Use the form below to search the database of articles to create a crosstab. The resulting crosstab shows the number
+    of articles within each category selected by the news sources selected in the form below. Start and end dates can be
+    specified, otherwise the entire history of articles is searched. Similarly, a certain minimum probability (between 0
+    and 1) can be specified that the selected categories must meet, otherwise all articles are returned for the selected
+    categories regardless of the probability of their belonging to that category. <b>This search is conducted only on
+        relevancy based on the trained model; user designated categories are not considered.</b></p>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Query Parameters</h3>
+  </div>
+  <div class="panel-body">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% if form.news_source.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.news_source.errors }}</div>
+    {% endif %}
+    {% if form.startDate.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.startDate.errors }}</div>
+    {% endif %}
+    {% if form.endDate.errors %}
+    <div class="alert alert-danger" role="alert">{{ form.endDate.errors }}</div>
+    {% endif %}
+    {% if form.categoryRelevance.errors %}
+    <div class="alert alert-danager" role="alert">{{ form.categoryRelevance.errors }}</div>
+    {% endif %}
+    <form action="{% url 'categoryXTab' %}" method="post">
+    {% csrf_token %}
+      <div class="form-group">
+          <label for="news_source">{{ form.news_source.label }}</label>
+          {{ form.news_source }}
+      </div>
+      <div class="form-group">
+        <label for="category">{{ form.category.label }}</label>
+        {{ form.category }}
+      </div>
+      <div class="row">
+        <div class="col-xs-4">
+            <label for="categoryRelevance">{{ form.categoryRelevance.label }}</label>
+            {{ form.categoryRelevance }}
+            </div>
+            <div class="col-xs-4">
+        <label for="startDate">{{ form.startDate.label }}</label>
+        {{ form.startDate }}
+        </div>
+        <div class="col-xs-4">
+        <label for="endDate">{{ form.endDate.label }}</label>
+        {{ form.endDate }}
+        </div>
+        </div>
+        <input type="hidden" name="newSearch" value="True" />
+        <input type="hidden" name="clearSearch" value="False" />
+        <button class="btn btn-default">Search</button>
+        <button class="btn btn-default" onclick="this.form.reset(); return false;">Reset</button>
+        <button class="btn btn-default" onclick="this.form.clearSearch.value='True'; this.form.submit(); return false; ">Clear</button>
+    </form>
+  </div>
+</div>
+
+{% if category_list %}
+  <table id="categoryCrossTab" class="table table-bordered">
+      <caption>{% if startDate %}<b>From:</b> {{ startDate|date:"SHORT_DATE_FORMAT" }} {% endif %}{%if endDate %}<b>To:</b> {{ endDate|date:"SHORT_DATE_FORMAT" }} {% endif %}<b>Category Relevance:</b> &ge;{% if categoryRelevance %}{{ categoryRelevance }}{% else %}0{% endif %}</caption>
+   <tr>
+    <th>News Source</th>
+    {% for category in categories %}
+    <th>{{ category }}</th>
+    {% endfor %}
+   </tr>
+   {% for source, category in category_list.items %}
+   <tr>
+       <td>{{ source }}</td>
+       {% for cat, value in category.items %}
+       <td>{{ value }}</td>
+       {% endfor %}
+   </tr>
+   {% endfor %}
+  </table>
+{% else %}
+  <div class="alert alert-danger" role="alert">No articles are available.</div>
+{% endif %}
+
+{% endblock %}

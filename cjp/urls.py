@@ -44,6 +44,7 @@ urlpatterns = [
 
     # stats
     url(r'^stats/totalCounts$', stats.views.totalCounts, name='statsTotalCounts'),
+    url(r'^stats/categorySearch$', newsarticles.views.categoryXTab, name='categoryXTab')
 ]
 
 if settings.DEBUG:
