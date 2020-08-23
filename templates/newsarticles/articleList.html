@@ -92,7 +92,6 @@
   <table id="articleTable" class="table table-bordered">
    <tr>
     <th></th>
-    <th>Crime Related</th>
     <th>Load Date</th>
     <th>Source</th>
     <th>Title</th>
@@ -109,13 +108,6 @@
          <a href="{% url 'view-article' article.id %}">View Article</a>
        </td>
          {% endif %}
-       <td class="text-center col-md-1">
-         {% if article.is_relevant %}
-         <img src="{% static "good_checkmark.png" %}" alt="crime related" />
-         {% elif article.is_coded %}
-         <img src="{% static "bad_x.png" %}" alt="not crime related" />
-         {% endif %}
-       </td>
        <td class="col-md-1">{{ article.created }}</td>
        <td class="col-md-1">{{ article.news_source }}</td>
        <td class="col-md-3">{{ article.title|safe }}</td>
