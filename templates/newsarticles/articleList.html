@@ -92,6 +92,7 @@
   <table id="articleTable" class="table table-bordered">
    <tr>
     <th></th>
+    <th>Load Time</th>
     <th>Load Date</th>
     <th>Source</th>
     <th>Title</th>
@@ -108,7 +109,8 @@
          <a href="{% url 'view-article' article.id %}">View Article</a>
        </td>
          {% endif %}
-       <td class="col-md-1">{{ article.created }}</td>
+       <td class="col-md-1">{{ article.created|date:"P" }}</td>
+       <td class="col-md-1">{{ article.created|date:"F j, Y" }}</td>
        <td class="col-md-1">{{ article.news_source }}</td>
        <td class="col-md-3">{{ article.title|safe }}</td>
        <td class="col-md-2"><a href="{{ article.url }}">{{ article.url }}</a></td>
