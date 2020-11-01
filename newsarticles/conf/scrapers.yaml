@@ -66,6 +66,8 @@
 - news_source: cbs-local
   index_url: http://chicago.cbslocal.com/feed/
   rss_articles: True
+  title_selector: h1.title
+  body_selector: .main-story-wrapper
 
 - news_source: chicago-city-wire
   index_url: https://chicagocitywire.com/stories.rss
@@ -77,6 +79,8 @@
 - news_source: chicago-defender
   index_url: http://chicagodefender.com/feed/
   rss_articles: True
+  title_selector: h1.entry-title
+  body_selector: .entry-content
 
 - news_source: chicago-magazine
   index_url: http://www.chicagomag.com/rss/
@@ -171,9 +175,9 @@
 - news_source: medill
   index_url: http://news.medill.northwestern.edu/chicago/feed/
   rss_index: True
-  title_selector: article .entry-title
-  body_selector: article .entry-content
-  exclude_selector: .sharedaddy
+  title_selector: h3.elementor-heading-title
+  body_selector: .elementor-widget-theme-post-content
+  exclude_selector: .elementor-share-btn
 
 - news_source: nbc-local
   index_url: http://www.nbcchicago.com/news/local/?rss=y
