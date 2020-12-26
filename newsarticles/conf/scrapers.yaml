@@ -213,12 +213,13 @@
   rss_articles: True
 
 - news_source: state-journal-register
-  index_url: http://www.sj-r.com/news?template=rss&mime=xml
-  rss_index: True
-  index_url_selector: id
-  title_selector: 'article .headline'
-  author_selector: 'article .byline-item'
-  body_selector: 'article .article-body'
+  index_url: https://www.sj-r.com/news/
+  rss_index: False
+  index_url_selector: a.gnt_m_flm_a
+  title_selector: article h1
+  author_selector: article .gnt_ar_by
+  body_selector: article .gnt_ar_b
+  exclude_selector: 'aside'
 
 - news_source: wbez
   index_url: https://www.wbez.org/latest-news

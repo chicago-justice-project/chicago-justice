@@ -34,7 +34,10 @@ def parse_html_links(soup, url, link_selector):
 
     links = set()
     for tag in results:
-        link = tag['href']
+        try: # If rel is 'nofollow' there will be no 'href' tag
+            link = tag['href']
+        except:
+            continue
         if not link:
             continue
         if link.startswith('/'):
