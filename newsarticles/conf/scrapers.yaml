@@ -83,12 +83,12 @@
   body_selector: .entry-content
 
 - news_source: chicago-magazine
-  index_url: http://www.chicagomag.com/rss/
+  index_url: https://www.chicagomag.com/feed/
   rss_index: True
-  title_selector: h1.headline
-  author_selector: .byline
-  body_selector: '.content.post'
-  exclude_selector: '#share-mini, #share, #related-articles, .comments-block, #footer-newsletter-subscribe'
+  title_selector: .art-head
+  author_selector: .art-byline
+  body_selector: .article-body
+  exclude_selector: '#share-mini, #share, #related-articles, .comments-block, #footer-newsletter-subscribe, .article-tags, .ad-space, .comments-area'
 
 - news_source: chicago-now
   index_url: http://www.chicagonow.com/rss/global
