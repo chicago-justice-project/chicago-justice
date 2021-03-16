@@ -76,6 +76,9 @@ SECRET_KEY = get_env_variable('SECRET_KEY')
 # Show the debug_toolbar to the following IPs
 INTERNAL_IPS = ['127.0.0.1']
 
+# Setup Google Analytics
+GOOGLE_ANALYTICS_KEY = get_env_variable('GOOGLE_ANALYTICS_KEY')
+
 MIDDLEWARE = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -99,6 +102,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cjp.context_processors.google_analytics',
             ],
         },
     }
