@@ -76,6 +76,14 @@
   body_selector: main .fz-18
   author_selector: .author
 
+- news_source: chicago-contrarian
+  index_url: https://www.chicagocontrarian.com/blog
+  rss_index: False
+  index_url_selector: .blog-thumbnail a
+  title_selector: h1.blog-post-title
+  author_selector: .blog-category
+  body_selector: .blog-post
+
 - news_source: chicago-defender
   index_url: http://chicagodefender.com/feed/
   rss_articles: True
