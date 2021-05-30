@@ -157,21 +157,21 @@
   author_selector: .plainByline
   body_selector: '[itemprop="articleBody"]'
 
-- news_source: daily-line
-  index_url: http://thedailyline.net/
-  rss_index: False
-  index_url_selector: a.title, .post-title a
-  title_selector: article .post-title
-  author_selector: 'article [rel="author"]'
-  body_selector: article .post-entry
-  exclude_selector: .sharedaddy, .powerpress_links
+#- news_source: daily-line
+#  index_url: http://thedailyline.net/
+#  rss_index: False
+#  index_url_selector: a.title, .post-title a
+#  title_selector: article .post-title
+#  author_selector: 'article [rel="author"]'
+#  body_selector: article .post-entry
+#  exclude_selector: .sharedaddy, .powerpress_links
 
-- news_source: dnainfo-chicago
-  index_url: https://www.dnainfo.com/chicago/topics/crime-mayhem.rss
-  rss_index: True
-  title_selector: .story-headline
-  author_selector: .reporter-display .name
-  body_selector: .story .entry
+#- news_source: dnainfo-chicago
+#  index_url: https://www.dnainfo.com/chicago/topics/crime-mayhem.rss
+#  rss_index: True
+#  title_selector: .story-headline
+#  author_selector: .reporter-display .name
+#  body_selector: .story .entry
 
 - news_source: fox-chicago
   index_url: http://www.fox32chicago.com/news/local
