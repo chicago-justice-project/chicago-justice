@@ -106,12 +106,11 @@
   body_selector: '.post-content'
 
 - news_source: chicago-reader
-  index_url: https://www.chicagoreader.com/chicago/Rss.xml?category=939135&topic=939182
+  index_url: https://chicagoreader.com/feed
   rss_index: True
-  title_selector: .postTitle a
-  author_selector: '[rel="author"]'
-  body_selector: .postBody
-  exclude_selector: .contentImageCenter
+  title_selector: h1.entry-title
+  author_selector: .byline .author
+  body_selector: .entry-content
 
 - news_source: chicago-reporter
   index_url: http://chicagoreporter.com/feed/
