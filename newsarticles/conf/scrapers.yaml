@@ -116,9 +116,9 @@
   index_url: http://chicagoreporter.com/feed/
   rss_index: True
   fake_user_agent: True
-  title_selector: .entry-title
-  author_selector: '[rel="author"]'
-  body_selector: '[itemprop="articleBody"]'
+  title_selector: h1.entry-title
+  author_selector: .byline .author
+  body_selector: .entry-content
 
 - news_source: chicago-sun-times
   index_url: https://chicago.suntimes.com/rss/index.xml
