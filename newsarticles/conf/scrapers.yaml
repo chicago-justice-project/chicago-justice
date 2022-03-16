@@ -64,10 +64,11 @@
   body_selector: .storycontent
 
 - news_source: cbs-local
-  index_url: http://chicago.cbslocal.com/feed/
-  rss_articles: True
-  title_selector: h1.title
-  body_selector: .main-story-wrapper
+  index_url: https://www.cbsnews.com/chicago/latest/rss/main
+  rss_index: True
+  title_selector: h1.content__title
+  body_selector: .content__body
+  exclude_selector: .component--type-recirculation
 
 - news_source: chicago-city-wire
   index_url: https://chicagocitywire.com/stories.rss
@@ -123,9 +124,9 @@
 - news_source: chicago-sun-times
   index_url: https://chicago.suntimes.com/rss/index.xml
   rss_index: True
-  title_selector: h1.c-page-title
-  author_selector: .c-byline__item a
-  body_selector: .c-entry-content
+  title_selector: h1.Page-headline
+  author_selector: .Page-authors
+  body_selector: .Page-articleBody
 
 - news_source: chicago-tribune
   index_url: http://www.chicagotribune.com/rss2.0.xml
