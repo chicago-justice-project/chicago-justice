@@ -35,7 +35,7 @@ DATABASES = {
         'NAME': 'cjpweb_prd',
         'USER': 'cjpuser',
         'PASSWORD': 'cjpuser',
-        'HOST': 'chicagojustice.cbeugrz1koxf.us-east-1.rds.amazonaws.com',
+        'HOST': 'chicagojustice-pg13.cbeugrz1koxf.us-east-1.rds.amazonaws.com',
         'PORT': '',
     }
 }
