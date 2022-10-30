@@ -35,13 +35,14 @@
 - news_source: abc-local
   index_url: http://abc7chicago.com/feed/
   rss_index: True
-  title_selector: .headline
-  author_selector: '[rel="author"]'
-  body_selector: .body-text
+  title_selector: h1
+  body_selector: article
 
 - news_source: beachwood-reporter
-  index_url: http://www.beachwoodreporter.com/atom.xml
+  index_url: https://feeds.feedburner.com/beachwoodreporter/zqxvladr8pp
   rss_articles: True
+  title_selector: h1.post-title
+  body_selector: .entry-content
 
 - news_source: better-government-association
   index_url: http://www.bettergov.org/feed/all/rss.xml
@@ -99,12 +100,12 @@
   body_selector: .article-body
   exclude_selector: '#share-mini, #share, #related-articles, .comments-block, #footer-newsletter-subscribe, .article-tags, .ad-space, .comments-area'
 
-- news_source: chicago-now
-  index_url: http://www.chicagonow.com/rss/global
-  rss_index: True
-  title_selector: h2.post-title
-  author_selector: .author-name
-  body_selector: '.post-content'
+#- news_source: chicago-now
+#  index_url: http://www.chicagonow.com/rss/global
+#  rss_index: True
+#  title_selector: h2.post-title
+#  author_selector: .author-name
+#  body_selector: '.post-content'
 
 - news_source: chicago-reader
   index_url: https://chicagoreader.com/feed
