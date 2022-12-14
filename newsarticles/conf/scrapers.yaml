@@ -47,9 +47,10 @@
 - news_source: better-government-association
   index_url: http://www.bettergov.org/feed/all/rss.xml
   rss_index: True
-  title_selector: h1.headline
-  author_selector: .name
-  body_selector: '.field-body'
+  title_selector: h1.entry-title
+  author_selector: .author
+  body_selector: .entry-content
+  exclude_selector: 'aside'
 
 - news_source: block-club-chicago
   index_url: https://blockclubchicago.org/feed/
