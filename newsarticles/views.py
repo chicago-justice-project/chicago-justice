@@ -1,6 +1,6 @@
 import json
 import random
-from datetime import datetime
+from datetime import date, datetime
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
@@ -388,7 +388,7 @@ def code_article(request, pk):
 
 @login_required
 def random_article(request):
-    uncoded_relevant_article_pks = Article.objects.uncoded().relevant_cpd_trained().values_list('pk', flat=True)
+    uncoded_relevant_article_pks = Article.objects.uncoded().filter(created__gt=date(2020, 1, 1)).filter_trained_categories([13,26]).values_list('pk', flat=True)
     selected_pk = random.choice(uncoded_relevant_article_pks)
 
     return HttpResponseRedirect(reverse('code-article', args=(selected_pk,)))
