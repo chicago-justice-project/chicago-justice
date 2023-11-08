@@ -146,9 +146,9 @@
   body_selector: .storycontent
 
 - news_source: crains
-  index_url: http://www.chicagobusiness.com/news
+  index_url: https://www.chicagobusiness.com/news
   rss_index: False
-  index_url_selector: .top-stories-title a, .feature-article-headline a
+  index_url_selector: h4.mb-2
   title_selector: '[itemprop="headline"]'
   author_selector: '[itemprop="author"]'
   body_selector: '[itemprop="articleBody"]'
