@@ -184,7 +184,7 @@
   body_selector: .article-body
 
 - news_source: medill
-  index_url: http://news.medill.northwestern.edu/chicago/feed/
+  index_url: https://news.medill.northwestern.edu/chicago/feed/
   rss_index: True
   title_selector: h3.elementor-heading-title
   body_selector: .elementor-widget-theme-post-content
