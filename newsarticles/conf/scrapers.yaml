@@ -13,7 +13,7 @@
 # exclude_selector: CSS selector for elements to remove from the body.
 
 - news_source: cwb-chicago
-  index_url: http://www.cwbchicago.com/feed
+  index_url: https://www.cwbchicago.com/feed
   rss_index: true
   title_selector: .entry-title
   body_selector: .entry-content
