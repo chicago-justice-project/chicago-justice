@@ -141,17 +141,18 @@
 - news_source: columbia-chronicle
   index_url: http://columbiachronicle.com/feed/
   rss_index: True
-  title_selector: .storyheadline
-  author_selector: .storybyline
-  body_selector: .storycontent
+  title_selector: .sno-story-headline
+  author_selector: .sno-story-byline
+  body_selector: .sno-story-body-content
 
 - news_source: crains
   index_url: https://www.chicagobusiness.com/news
   rss_index: False
   index_url_selector: h4.mb-2
-  title_selector: '[itemprop="headline"]'
-  author_selector: '[itemprop="author"]'
-  body_selector: '[itemprop="articleBody"]'
+  fake_user_agent: True
+  title_selector: h1.leading-8
+  author_selector: .author-name
+  body_selector: .body-text
 
 - news_source: daily-herald
   index_url: http://www.dailyherald.com/rss/feed/?feed=news_chicago
