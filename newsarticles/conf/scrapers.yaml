@@ -55,9 +55,10 @@
 - news_source: block-club-chicago
   index_url: https://blockclubchicago.org/feed/
   rss_index: True
-  title_selector: h1.article-header__article-title
-  author_selector: .post-byline__author
-  body_selector: .article-content
+  title_selector: h1.entry-title
+  author_selector: .author
+  body_selector: .entry-content
+  exclude_selector: .pp-podcast
 
 - news_source: capitol-fax
   index_url: https://capitolfax.com/feed/
