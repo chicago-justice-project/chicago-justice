@@ -28,7 +28,10 @@ class UserCodingAdmin(admin.ModelAdmin):
     list_display = ('user', 'article', 'date')
     search_fields = ['user__username']
     fields = ('article', 'date', 'user', 'relevant',
-              'categories', 'locations', 'sentiment')
+              'categories', 'locations', 'vict_age',
+              'vict_race', 'vict_sex', 'vict_name',
+              'offend_age', 'offend_race', 'offend_sex',
+              'offend_name', 'offend_weap', 'sentiment')
     readonly_fields = ('article', 'date')
 
 

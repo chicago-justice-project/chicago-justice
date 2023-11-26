@@ -174,6 +174,18 @@ class UserCoding(models.Model):
     sentiment = models.IntegerField(
         blank=True, null=True, choices=SENTIMENT_CHOICES)
 
+    # Fields for victim/offender trait information
+    vict_age = models.CharField(max_length=32, blank=True)
+    vict_race = models.CharField(max_length=128, blank=True)
+    vict_sex = models.CharField(max_length=32, blank=True)
+    vict_name = models.CharField(max_length=128, blank=True)
+
+    offend_age = models.CharField(max_length=32, blank=True)
+    offend_race = models.CharField(max_length=128, blank=True)
+    offend_sex = models.CharField(max_length=32, blank=True)
+    offend_name = models.CharField(max_length=128, blank=True)
+    offend_weap = models.CharField(max_length=128, blank=True)
+
     class Meta:
         unique_together = (("article", "user"),)
 
