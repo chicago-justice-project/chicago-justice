@@ -36,7 +36,7 @@
   index_url: http://abc7chicago.com/feed/
   rss_index: True
   title_selector: h1
-  body_selector: article
+  body_selector: '[data-testid="prism-article-body"]'
 
 - news_source: beachwood-reporter
   index_url: https://feeds.feedburner.com/beachwoodreporter/zqxvladr8pp
