@@ -329,6 +329,51 @@ class UserCodingSubmitForm(forms.Form):
                                     required=False,
                                     widget=forms.HiddenInput(attrs={'id': 'locsHiddenInput'}))
 
+    offend_age = forms.CharField(initial="",
+                                 required=False,
+                                 label='Offender age',
+                                 max_length=32)
+
+    offend_race = forms.CharField(initial="",
+                                  required=False,
+                                  label='Offender race',
+                                  max_length=128)
+
+    offend_sex = forms.CharField(initial="",
+                                 required=False,
+                                 label='Offender sex',
+                                 max_length=32)
+
+    offend_name = forms.CharField(initial="",
+                                  required=False,
+                                  label='Offender name',
+                                  max_length=128)
+
+    offend_weap = forms.CharField(initial="",
+                                  required=False,
+                                  label='Weapon',
+                                  max_length=128)
+
+    vict_age = forms.CharField(initial="",
+                               required=False,
+                               label='Victim age',
+                               max_length=32)
+
+    vict_race = forms.CharField(initial="",
+                               required=False,
+                               label='Victim race',
+                               max_length=128)
+
+    vict_sex = forms.CharField(initial="",
+                               required=False,
+                               label='Victim sex',
+                               max_length=32)
+
+    vict_name = forms.CharField(initial="",
+                               required=False,
+                               label='Victim name',
+                               max_length=128)
+
     sentiment = forms.TypedChoiceField(
         choices=SENTIMENT_CHOICES,
         required=False,
