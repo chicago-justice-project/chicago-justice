@@ -407,6 +407,15 @@ def code_article(request, pk):
                     'relevant': form.cleaned_data['relevant'],
                     'locations': form.cleaned_data['location_data'],
                     'sentiment': form.cleaned_data['sentiment'],
+                    'offend_age': form.cleaned_data['offend_age'],
+                    'offend_race': form.cleaned_data['offend_race'],
+                    'offend_sex': form.cleaned_data['offend_sex'],
+                    'offend_name': form.cleaned_data['offend_name'],
+                    'offend_weap': form.cleaned_data['offend_weap'],
+                    'vict_age': form.cleaned_data['vict_age'],
+                    'vict_race': form.cleaned_data['vict_race'],
+                    'vict_sex': form.cleaned_data['vict_sex'],
+                    'vict_name': form.cleaned_data['vict_name'],
                 }
             )
 
@@ -421,6 +430,15 @@ def code_article(request, pk):
                 'relevant': article.usercoding.relevant,
                 'location_data': article.usercoding.locations,
                 'sentiment': article.usercoding.sentiment,
+                'offend_age': article.usercoding.offend_age,
+                'offend_race': article.usercoding.offend_race,
+                'offend_sex': article.usercoding.offend_sex,
+                'offend_name': article.usercoding.offend_name,
+                'offend_weap': article.usercoding.offend_weap,
+                'vict_age': article.usercoding.vict_age,
+                'vict_race': article.usercoding.vict_race,
+                'vict_sex': article.usercoding.vict_sex,
+                'vict_name': article.usercoding.vict_name,
             }
         else:
             initial_data = None
