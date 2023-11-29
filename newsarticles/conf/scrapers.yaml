@@ -156,7 +156,7 @@
   body_selector: .body-text
 
 - news_source: daily-herald
-  index_url: http://www.dailyherald.com/rss/feed/?feed=news_chicago
+  index_url: https://www.dailyherald.com/rss/feed/
   rss_index: True
   title_selector: '#head'
   author_selector: .plainByline
