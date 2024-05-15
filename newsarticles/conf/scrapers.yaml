@@ -134,7 +134,7 @@
 - news_source: chicago-tribune
   index_url: http://www.chicagotribune.com/rss2.0.xml
   rss_index: True
-  title_selector: .dfm-title
+  title_selector: h1.entry-title
   author_selector: .author-name
   body_selector: .body-copy
   exclude_selector: .wp-embedded-content
@@ -147,20 +147,21 @@
   body_selector: .sno-story-body-content
 
 - news_source: crains
-  index_url: https://www.chicagobusiness.com/news
+  index_url: https://www.chicagobusiness.com/topic/news
   rss_index: False
-  index_url_selector: h4.mb-2
+  index_url_selector: h2.mb-3.5
   fake_user_agent: True
   title_selector: h1.leading-8
   author_selector: .author-name
   body_selector: .body-text
 
 - news_source: daily-herald
-  index_url: https://www.dailyherald.com/rss/feed/
-  rss_index: True
-  title_selector: '#head'
-  author_selector: .plainByline
-  body_selector: '[itemprop="articleBody"]'
+  index_url: https://www.dailyherald.com/
+  rss_index: False
+  index_url_selector: .mb-5
+  title_selector: .article__headline
+  author_selector: .bylineNameLink
+  body_selector: .article-restofcontent
 
 #- news_source: daily-line
 #  index_url: http://thedailyline.net/
@@ -214,6 +215,7 @@
   title_selector: .article-header .hed
   body_selector: .article-body
   author_selector: .article-header .name
+  exclude_selector: .article-body__top-notes, .promo-newsletter-signup-2, .promo-newsletter-see-all-2
 
 #- news_source: second-city-cop
 #  index_url: http://secondcitycop.blogspot.com/feeds/posts/default?alt=rss
