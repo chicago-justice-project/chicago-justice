@@ -160,6 +160,17 @@ SENTIMENT_CHOICES = (
     (-1, 'Negative'),
 )
 
+RACE_CHOICES = (
+    (None, ""),
+    ("WH", "White"),
+    ("BAA", "Black or African American"),
+    ("AIAN", "American Indian or Alaska Native"),
+    ("ASIA", "Asian"),
+    ("NHPI", "Native Hawaiian or Other Pacific Islander"),
+    ("OTH", "Other"),
+    ("UND", "Undetermined"),
+)
+
 
 class UserCoding(models.Model):
     article = models.OneToOneField(Article, db_index=True)
@@ -176,7 +187,7 @@ class UserCoding(models.Model):
 
     # Fields for victim/offender trait information
     vict_age = models.CharField(max_length=32, blank=True)
-    vict_race = models.CharField(max_length=128, blank=True)
+    vict_race = models.CharField(max_length=128, choices=RACE_CHOICES)
     vict_sex = models.CharField(max_length=32, blank=True)
     vict_name = models.CharField(max_length=128, blank=True)
 

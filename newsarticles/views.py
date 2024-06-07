@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q, Max, Min
 from django.shortcuts import render, get_object_or_404
 from django import forms
-from newsarticles.models import Article, Category, NewsSource, UserCoding, SENTIMENT_CHOICES
+from newsarticles.models import Article, Category, NewsSource, UserCoding, SENTIMENT_CHOICES, RACE_CHOICES
 from newsarticles.forms import GroupedMultModelChoiceField
 
 
@@ -334,10 +334,10 @@ class UserCodingSubmitForm(forms.Form):
                                  label='Offender age',
                                  max_length=32)
 
-    offend_race = forms.CharField(initial="",
-                                  required=False,
-                                  label='Offender race',
-                                  max_length=128)
+    offend_race = forms.ChoiceField(choices=RACE_CHOICES,
+                                         required=False,
+                                         label='Offender race',
+                                         )
 
     offend_sex = forms.CharField(initial="",
                                  required=False,
