@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+import pdb
+
 from django.utils.encoding import python_2_unicode_compatible
 from itertools import groupby
 from collections import OrderedDict
@@ -162,7 +165,7 @@ SENTIMENT_CHOICES = (
 
 RACE_CHOICES = (
     (None, ""),
-    ("WH", "White"),
+    ("WHI", "White"),
     ("BAA", "Black or African American"),
     ("AIAN", "American Indian or Alaska Native"),
     ("ASIA", "Asian"),
@@ -171,6 +174,49 @@ RACE_CHOICES = (
     ("UND", "Undetermined"),
 )
 
+ETHN_CHOICES = (
+    (None, ""),
+    ("HISPA", "Hispanic or Latino"),
+    ("NOHIS", "Not Hispanic or Latino"),
+    ("UND", "Undetermined"),
+)
+
+SEX_CHOICES = (
+    (None, ""),
+    ("MALE", "Male"),
+    ("FEMALE", "Female"),
+    ("TRANM", "Transgender Male"),
+    ("TRANF", "Transgender Female"),
+    ("UND", "Undetermined"),
+)
+
+WEAP_CHOICES = (
+    (None, ""),
+    ("FIRE", "Firearms (handguns, rifles, shotguns)"),
+    ("KNIF", "Knives/cutting instruments"),
+    ("OTH", "Other weapon"),
+    ("PERS", "Personal weapons"),
+    ("ARM", "Strong-arm (hands/fists/other)"),
+    ("UND", "Undetermined"),
+)
+
+
+
+def generate_age_choices():
+    AGE_CHOICES_1 = (
+        (None, ""),
+        ("UND12", "Under 12"),
+    )
+
+    AGE_CHOICES_2 = tuple((str(i), str(i)) for i in range(1, 70))
+
+    AGE_CHOICES_3 = (
+        ("OVR71", "Over 71"),
+    )
+
+    AGE_CHOICES = AGE_CHOICES_1 + AGE_CHOICES_2 + AGE_CHOICES_3
+
+    return AGE_CHOICES
 
 class UserCoding(models.Model):
     article = models.OneToOneField(Article, db_index=True)
@@ -186,16 +232,18 @@ class UserCoding(models.Model):
         blank=True, null=True, choices=SENTIMENT_CHOICES)
 
     # Fields for victim/offender trait information
-    vict_age = models.CharField(max_length=32, blank=True)
+    vict_age = models.CharField(max_length=32, choices=generate_age_choices())
     vict_race = models.CharField(max_length=128, choices=RACE_CHOICES)
-    vict_sex = models.CharField(max_length=32, blank=True)
+    vict_ethn = models.CharField(max_length=32, choices=ETHN_CHOICES)
+    vict_sex = models.CharField(max_length=32, choices=SEX_CHOICES)
     vict_name = models.CharField(max_length=128, blank=True)
 
-    offend_age = models.CharField(max_length=32, blank=True)
-    offend_race = models.CharField(max_length=128, blank=True)
-    offend_sex = models.CharField(max_length=32, blank=True)
+    offend_age = models.CharField(max_length=32, choices=generate_age_choices())
+    offend_race = models.CharField(max_length=128, choices=RACE_CHOICES)
+    offend_ethn = models.CharField(max_length=32, choices=ETHN_CHOICES)
+    offend_sex = models.CharField(max_length=32, choices=SEX_CHOICES)
     offend_name = models.CharField(max_length=128, blank=True)
-    offend_weap = models.CharField(max_length=128, blank=True)
+    offend_weap = models.CharField(max_length=128, choices=WEAP_CHOICES)
 
     class Meta:
         unique_together = (("article", "user"),)
