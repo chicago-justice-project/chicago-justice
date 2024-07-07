@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q, Max, Min
 from django.shortcuts import render, get_object_or_404
 from django import forms
-from newsarticles.models import Article, Category, NewsSource, UserCoding, SENTIMENT_CHOICES, RACE_CHOICES
+from newsarticles.models import Article, Category, NewsSource, UserCoding, SENTIMENT_CHOICES, RACE_CHOICES, ETHNICITY_CHOICES, SEX_CHOICES, WEAP_CHOICES
 from newsarticles.forms import GroupedMultModelChoiceField
 
 
@@ -329,45 +329,42 @@ class UserCodingSubmitForm(forms.Form):
                                     required=False,
                                     widget=forms.HiddenInput(attrs={'id': 'locsHiddenInput'}))
 
-    offend_age = forms.CharField(initial="",
-                                 required=False,
-                                 label='Offender age',
-                                 max_length=32)
+    offend_age = forms.IntegerField(initial=None,
+                                    required=False,
+                                    label='Offender age (999 if undetermined)',
+                                    max_value=999,
+                                    min_value=0)
 
     offend_race = forms.ChoiceField(choices=RACE_CHOICES,
                                          required=False,
-                                         label='Offender race',
-                                         )
+                                         label='Offender race')
 
-    offend_sex = forms.CharField(initial="",
+    offend_sex = forms.ChoiceField(choices=SEX_CHOICES,
                                  required=False,
-                                 label='Offender sex',
-                                 max_length=32)
+                                 label='Offender sex')
 
     offend_name = forms.CharField(initial="",
                                   required=False,
                                   label='Offender name',
                                   max_length=128)
 
-    offend_weap = forms.CharField(initial="",
+    offend_weap = forms.ChoiceField(choices=WEAP_CHOICES,
                                   required=False,
-                                  label='Weapon',
-                                  max_length=128)
+                                  label='Weapon')
 
-    vict_age = forms.CharField(initial="",
-                               required=False,
-                               label='Victim age',
-                               max_length=32)
+    vict_age = forms.IntegerField(initial=None,
+                                  required=False,
+                                  label='Victim age (999 if undetermined)',
+                                  max_value=999,
+                                  min_value=0)
 
-    vict_race = forms.CharField(initial="",
+    vict_race = forms.ChoiceField(choices=RACE_CHOICES,
                                required=False,
-                               label='Victim race',
-                               max_length=128)
+                               label='Victim race')
 
-    vict_sex = forms.CharField(initial="",
+    vict_sex = forms.ChoiceField(choices=SEX_CHOICES,
                                required=False,
-                               label='Victim sex',
-                               max_length=32)
+                               label='Victim sex')
 
     vict_name = forms.CharField(initial="",
                                required=False,

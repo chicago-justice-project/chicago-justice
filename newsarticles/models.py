@@ -174,7 +174,7 @@ RACE_CHOICES = (
     ("UND", "Undetermined"),
 )
 
-ETHN_CHOICES = (
+ETHNICITY_CHOICES = (
     (None, ""),
     ("HISPA", "Hispanic or Latino"),
     ("NOHIS", "Not Hispanic or Latino"),
@@ -200,24 +200,6 @@ WEAP_CHOICES = (
     ("UND", "Undetermined"),
 )
 
-
-
-def generate_age_choices():
-    AGE_CHOICES_1 = (
-        (None, ""),
-        ("UND12", "Under 12"),
-    )
-
-    AGE_CHOICES_2 = tuple((str(i), str(i)) for i in range(1, 70))
-
-    AGE_CHOICES_3 = (
-        ("OVR71", "Over 71"),
-    )
-
-    AGE_CHOICES = AGE_CHOICES_1 + AGE_CHOICES_2 + AGE_CHOICES_3
-
-    return AGE_CHOICES
-
 class UserCoding(models.Model):
     article = models.OneToOneField(Article, db_index=True)
     date = models.DateTimeField(auto_now=True)
@@ -232,18 +214,18 @@ class UserCoding(models.Model):
         blank=True, null=True, choices=SENTIMENT_CHOICES)
 
     # Fields for victim/offender trait information
-    vict_age = models.CharField(max_length=32, choices=generate_age_choices())
-    vict_race = models.CharField(max_length=128, choices=RACE_CHOICES)
-    vict_ethn = models.CharField(max_length=32, choices=ETHN_CHOICES)
-    vict_sex = models.CharField(max_length=32, choices=SEX_CHOICES)
+    vict_age = models.CharField(max_length=32, blank=True)
+    vict_race = models.CharField(max_length=128, choices=RACE_CHOICES, default=None)
+    vict_ethnicity = models.CharField(max_length=32, choices=ETHNICITY_CHOICES, default=None, null=True)
+    vict_sex = models.CharField(max_length=32, choices=SEX_CHOICES, default=None)
     vict_name = models.CharField(max_length=128, blank=True)
 
-    offend_age = models.CharField(max_length=32, choices=generate_age_choices())
-    offend_race = models.CharField(max_length=128, choices=RACE_CHOICES)
-    offend_ethn = models.CharField(max_length=32, choices=ETHN_CHOICES)
-    offend_sex = models.CharField(max_length=32, choices=SEX_CHOICES)
+    offend_age = models.CharField(max_length=32, blank=True)
+    offend_race = models.CharField(max_length=128, choices=RACE_CHOICES, default=None)
+    offend_ethnicity = models.CharField(max_length=32, choices=ETHNICITY_CHOICES, default=None, null=True)
+    offend_sex = models.CharField(max_length=32, choices=SEX_CHOICES, default=None)
     offend_name = models.CharField(max_length=128, blank=True)
-    offend_weap = models.CharField(max_length=128, choices=WEAP_CHOICES)
+    offend_weap = models.CharField(max_length=128, choices=WEAP_CHOICES, default=None)
 
     class Meta:
         unique_together = (("article", "user"),)
