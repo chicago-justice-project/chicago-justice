@@ -29,8 +29,8 @@ class UserCodingAdmin(admin.ModelAdmin):
     search_fields = ['user__username']
     fields = ('article', 'date', 'user', 'relevant',
               'categories', 'locations', 'vict_age',
-              'vict_race', 'vict_sex', 'vict_name',
-              'offend_age', 'offend_race', 'offend_sex',
+              'vict_race', 'vict_ethnicity', 'vict_sex', 'vict_name',
+              'offend_age', 'offend_race', 'offend_ethnicity', 'offend_sex',
               'offend_name', 'offend_weap', 'sentiment')
     readonly_fields = ('article', 'date')
 

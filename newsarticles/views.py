@@ -339,6 +339,10 @@ class UserCodingSubmitForm(forms.Form):
                                          required=False,
                                          label='Offender race')
 
+    offend_ethnicity = forms.ChoiceField(choices=ETHNICITY_CHOICES,
+                                         required=False,
+                                         label='Offender ethnicity')
+
     offend_sex = forms.ChoiceField(choices=SEX_CHOICES,
                                  required=False,
                                  label='Offender sex')
@@ -361,6 +365,10 @@ class UserCodingSubmitForm(forms.Form):
     vict_race = forms.ChoiceField(choices=RACE_CHOICES,
                                required=False,
                                label='Victim race')
+
+    vict_ethnicity = forms.ChoiceField(choices=ETHNICITY_CHOICES,
+                                       required=False,
+                                       label='Victim ethnicity')
 
     vict_sex = forms.ChoiceField(choices=SEX_CHOICES,
                                required=False,
@@ -406,11 +414,13 @@ def code_article(request, pk):
                     'sentiment': form.cleaned_data['sentiment'],
                     'offend_age': form.cleaned_data['offend_age'],
                     'offend_race': form.cleaned_data['offend_race'],
+                    'offend_ethnicity': form.cleaned_data['offend_ethnicity'],
                     'offend_sex': form.cleaned_data['offend_sex'],
                     'offend_name': form.cleaned_data['offend_name'],
                     'offend_weap': form.cleaned_data['offend_weap'],
                     'vict_age': form.cleaned_data['vict_age'],
                     'vict_race': form.cleaned_data['vict_race'],
+                    'vict_ethnicity': form.cleaned_data['vict_ethnicity'],
                     'vict_sex': form.cleaned_data['vict_sex'],
                     'vict_name': form.cleaned_data['vict_name'],
                 }
@@ -429,11 +439,13 @@ def code_article(request, pk):
                 'sentiment': article.usercoding.sentiment,
                 'offend_age': article.usercoding.offend_age,
                 'offend_race': article.usercoding.offend_race,
+                'offend_ethnicity': article.usercoding.offend_ethnicity,
                 'offend_sex': article.usercoding.offend_sex,
                 'offend_name': article.usercoding.offend_name,
                 'offend_weap': article.usercoding.offend_weap,
                 'vict_age': article.usercoding.vict_age,
                 'vict_race': article.usercoding.vict_race,
+                'vict_ethnicity': article.usercoding.vict_ethnicity,
                 'vict_sex': article.usercoding.vict_sex,
                 'vict_name': article.usercoding.vict_name,
             }

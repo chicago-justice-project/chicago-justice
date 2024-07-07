@@ -214,15 +214,15 @@ class UserCoding(models.Model):
         blank=True, null=True, choices=SENTIMENT_CHOICES)
 
     # Fields for victim/offender trait information
-    vict_age = models.PositiveIntegerField(blank=True, null=True)
+    vict_age = models.PositiveIntegerField(blank=True)
     vict_race = models.CharField(max_length=128, choices=RACE_CHOICES, default=None)
-    vict_ethnicity = models.CharField(max_length=32, choices=ETHNICITY_CHOICES, default=None, null=True)
+    vict_ethnicity = models.CharField(max_length=32, choices=ETHNICITY_CHOICES, default=None)
     vict_sex = models.CharField(max_length=32, choices=SEX_CHOICES, default=None)
     vict_name = models.CharField(max_length=128, blank=True)
 
     offend_age = models.PositiveIntegerField(blank=True, null=True)
     offend_race = models.CharField(max_length=128, choices=RACE_CHOICES, default=None)
-    offend_ethnicity = models.CharField(max_length=32, choices=ETHNICITY_CHOICES, default=None, null=True)
+    offend_ethnicity = models.CharField(max_length=32, choices=ETHNICITY_CHOICES, default=None)
     offend_sex = models.CharField(max_length=32, choices=SEX_CHOICES, default=None)
     offend_name = models.CharField(max_length=128, blank=True)
     offend_weap = models.CharField(max_length=128, choices=WEAP_CHOICES, default=None)
