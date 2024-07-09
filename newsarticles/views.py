@@ -318,17 +318,6 @@ class UserCodingSubmitForm(forms.Form):
                                   required=False,
                                   label='Relevant')
 
-    categories = GroupedMultModelChoiceField(label='Categories',
-                                             required=False,
-                                             queryset=Category.objects.active(),
-                                             widget=forms.CheckboxSelectMultiple(),
-                                             group_by_field='kind',
-                                             group_label=Category.KINDS.get)
-
-    location_data = forms.CharField(initial="[]",
-                                    required=False,
-                                    widget=forms.HiddenInput(attrs={'id': 'locsHiddenInput'}))
-
     offend_age = forms.IntegerField(initial=None,
                                     required=False,
                                     label='Offender age (999 if undetermined)',
@@ -378,6 +367,17 @@ class UserCodingSubmitForm(forms.Form):
                                required=False,
                                label='Victim name',
                                max_length=128)
+
+    categories = GroupedMultModelChoiceField(label='Categories',
+                                             required=False,
+                                             queryset=Category.objects.active(),
+                                             widget=forms.CheckboxSelectMultiple(),
+                                             group_by_field='kind',
+                                             group_label=Category.KINDS.get)
+
+    location_data = forms.CharField(initial="[]",
+                                    required=False,
+                                    widget=forms.HiddenInput(attrs={'id': 'locsHiddenInput'}))
 
     sentiment = forms.TypedChoiceField(
         choices=SENTIMENT_CHOICES,
