@@ -54,6 +54,7 @@ def manage(request, action = None):
                 is_staff = False,
                 is_active = True,
                 is_superuser = False,
+                code_count = 0,
             )
             user.set_password(cleanedData.get('password'))
             user.save()
