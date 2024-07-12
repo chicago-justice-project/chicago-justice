@@ -42,7 +42,10 @@
                 <li><a href="{% url 'mainArticleView' %}">Articles</a></li>
                 <li><a href="{% url 'random-article' %}">Code Random Article</a></li>
                 <li><a href="{% url 'mainCrimeReportView' %}">Crime Reports</a></li>
-                <li><a href="{% url 'statsTotalCounts' %}">Scraper Counts</a></li>
+                <!-- <li><a href="{% url 'statsTotalCounts' %}">Scraper Counts</a></li> -->
+                {% if user.is_superuser %}
+                <li><a href="{% url 'statsUserCounts' %}">User Counts</a></li>
+                {% endif %}
                 <li><a href="{% url 'categoryXTab' %}">Crosstab Query</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}">Logout</a></li>
