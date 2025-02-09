@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='usercoding',
             name='article',
-            field=models.OneToOneField(to='newsarticles.Article'),
+            field=models.OneToOneField(to='newsarticles.Article', on_delete=models.SET_NULL),
         ),
         migrations.AddField(
             model_name='usercoding',

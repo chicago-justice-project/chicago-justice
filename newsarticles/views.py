@@ -3,7 +3,7 @@ import random
 from datetime import date, datetime
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.db.models import Q, Max, Min
 from django.shortcuts import render, get_object_or_404
