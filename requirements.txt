@@ -1,4 +1,3 @@
-#absl-py
 astroid
 beautifulsoup4
 bleach
@@ -31,7 +30,7 @@ mccabe
 nltk
 numpy
 pandas
-protobuf
+protobuf==3.20.*
 psycopg2
 pyasn1
 pyasn1-modules
@@ -47,10 +46,10 @@ scikit-learn
 Shapely
 six
 sqlparse
-#tagnews
+tagnews
+tensorboard
 tensorflow
 tensorflow-macos
-tensorflow-tensorboard
 urllib3
 Werkzeug
 wrapt
