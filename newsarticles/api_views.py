@@ -2,7 +2,7 @@ from newsarticles.models import Article, Category, TrainedCoding
 from newsarticles.api_serializers import ArticleSerializer, CategorySerializer, TrainedCodingSerializer
 from rest_framework import viewsets, routers
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -14,7 +14,7 @@ class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Article.objects.select_related('news_source').order_by('created')
     serializer_class = ArticleSerializer
 
-    @detail_route(methods=['put'], url_path='trained-coding')
+    @action(methods=['put'], url_path='trained-coding', detail="True")
     def set_trained_coding(self, request, pk=None):
         data = request.data.copy()
 

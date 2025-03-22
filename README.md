@@ -12,7 +12,7 @@ installation, like [Postgres.app](http://postgresapp.com/).
 Alternatively, you may use [Homebrew](https://brew.sh/):
 
 ```shell
-brew install postgres
+brew install postgresql
 brew services start postgresql
 ```
 
@@ -83,6 +83,30 @@ Then, you can edit the file in your preferred editor.
 
 #### Create a python virtual environment
 
+There are two methods to creating a virtual environment:
+
+##### PyEnv
+
+Install PyEnv as according to the repository's [installation instructions](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
+
+Addtionally, install pyenv-virtualenv for managing virtual environments within different Python versions. Installation instructions found [here](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
+
+Next, let's install Python 3.8 (or an alternative version if you'd like).
+
+```shell
+pyenv install 3.8
+pyenv global 3.8
+```
+
+Now, we're able to set up our virtual environment:
+
+```shell
+pyenv virtualenv 3.8 name-of-my-virtual-env
+pyenv activate name-of-my-virtual-env
+```
+
+##### VirtualEnv
+
 Alternatively, you can create a virtual environment to house the environment
 variables and the app's dependencies.
 
@@ -151,6 +175,13 @@ dependencies:
 ```shell
 pip install -r requirements.txt
 ```
+
+### Using the Article-Tagging Package Locally
+
+For development purposes, changes to the [article-tagging](https://github.com/chicago-justice-project/article-tagging) package may be required. This requires packaging the project locally to be used in this project.
+
+This can be done via:
+`pip install -e PATH_TO_ARTICLE_TAGGING_REPO`
 
 ### Initialize Django models and start server
 

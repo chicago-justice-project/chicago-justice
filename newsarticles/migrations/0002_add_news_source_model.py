@@ -33,12 +33,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='newsscraper',
             name='news_source',
-            field=models.ForeignKey(to='newsarticles.NewsSource'),
+            field=models.ForeignKey(to='newsarticles.NewsSource', on_delete=models.SET_NULL),
         ),
         migrations.AddField(
             model_name='article',
             name='news_source',
-            field=models.ForeignKey(to='newsarticles.NewsSource', null=True, db_index=True),
+            field=models.ForeignKey(to='newsarticles.NewsSource', null=True, db_index=True, on_delete=models.SET_NULL),
         ),
         migrations.AlterField(
             model_name='article',

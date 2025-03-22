@@ -1,8 +1,5 @@
 from __future__ import unicode_literals
 
-import pdb
-
-from django.utils.encoding import python_2_unicode_compatible
 from itertools import groupby
 from collections import OrderedDict
 
@@ -18,7 +15,6 @@ def validate_only_one_instance(obj):
         raise ValidationError("Can only create 1 {} instance".format(model.__name__))
 
 
-@python_2_unicode_compatible
 class NewsSource(models.Model):
     name = models.CharField(max_length=256)
     short_name = models.CharField(max_length=256, db_index=True)
@@ -36,7 +32,6 @@ class CategoryQuerySet(models.QuerySet):
         return self.filter(active=True)
 
 
-@python_2_unicode_compatible
 class Category(models.Model):
 
     KINDS = OrderedDict([
@@ -63,12 +58,11 @@ class Category(models.Model):
         ordering = ['kind', 'abbreviation']
 
 
-@python_2_unicode_compatible
 class ScraperResult(models.Model):
     """
     A single run of a scraper.
     """
-    news_source = models.ForeignKey(NewsSource, db_index=True)
+    news_source = models.ForeignKey(NewsSource, db_index=True, on_delete=models.PROTECT)
 
     completed_time = models.DateTimeField(auto_now_add=True)
     success = models.BooleanField()
@@ -111,12 +105,11 @@ class ArticleQuerySet(models.QuerySet):
         return self.filter(trainedcoding__trainedcategoryrelevance__category__in=categories, trainedcoding__trainedcategoryrelevance__relevance__gte=relevance)
 
 
-@python_2_unicode_compatible
 class Article(models.Model):
     """
     Base article contents. Should never change after initial scraping
     """
-    news_source = models.ForeignKey(NewsSource, null=True, db_index=True)
+    news_source = models.ForeignKey(NewsSource, null=True, db_index=True, on_delete=models.SET_NULL)
     url = models.CharField(max_length=1024, unique=True, db_index=True)
     title = models.TextField()
     author = models.CharField(max_length=1024, default="", blank=True)
@@ -128,7 +121,7 @@ class Article(models.Model):
     objects = ArticleQuerySet.as_manager()
 
     # Fields from classification/coding- move to UserCoding
-    relevant = models.NullBooleanField(db_index=True)
+    relevant = models.BooleanField(db_index=True, null=True)
     categories = models.ManyToManyField(Category, blank=True)
 
     def __str__(self):
@@ -201,7 +194,7 @@ WEAP_CHOICES = (
 )
 
 class UserCoding(models.Model):
-    article = models.OneToOneField(Article, db_index=True)
+    article = models.OneToOneField(Article, db_index=True, null=True, on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, db_index=True, null=True, blank=True,
                              on_delete=models.SET_NULL)
@@ -232,7 +225,7 @@ class UserCoding(models.Model):
 
 
 class TrainedCoding(models.Model):
-    article = models.OneToOneField(Article, db_index=True)
+    article = models.OneToOneField(Article, db_index=True, null=True, on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now=True)
     model_info = models.TextField()
 
@@ -245,7 +238,7 @@ class TrainedCoding(models.Model):
 
 
 class TrainedLocation(models.Model):
-    coding = models.ForeignKey(TrainedCoding)
+    coding = models.ForeignKey(TrainedCoding, null=True, on_delete=models.SET_NULL)
     text = models.TextField()
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
@@ -255,19 +248,19 @@ class TrainedLocation(models.Model):
 
 
 class TrainedCategoryRelevance(models.Model):
-    coding = models.ForeignKey(TrainedCoding)
-    category = models.ForeignKey(Category)
+    coding = models.ForeignKey(TrainedCoding, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
     relevance = models.FloatField()
 
 
 class TrainedSentiment(models.Model):
-    coding = models.ForeignKey(TrainedCoding)
+    coding = models.ForeignKey(TrainedCoding, null=True, on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now=True)
     api_response = models.TextField()
 
 class TrainedSentimentEntities(models.Model):
-    coding = models.ForeignKey(TrainedCoding)
-    response = models.ForeignKey(TrainedSentiment)
+    coding = models.ForeignKey(TrainedCoding, null=True, on_delete=models.SET_NULL)
+    response = models.ForeignKey(TrainedSentiment, null=True, on_delete=models.SET_NULL)
     index = models.IntegerField(null=True, blank=True)
     entity = models.TextField(blank=True)
     sentiment = models.FloatField(null=True, blank=True)

@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         cfg_file = open(CONFIG_PATH, 'r')
-        all_scrapers = yaml.load(cfg_file)
+        all_scrapers = yaml.safe_load(cfg_file)
 
         if options['scraper']:
             scraper_name = options['scraper']

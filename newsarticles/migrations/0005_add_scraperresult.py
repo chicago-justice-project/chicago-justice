@@ -47,6 +47,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='scraperresult',
             name='news_source',
-            field=models.ForeignKey(to='newsarticles.NewsSource'),
+            field=models.ForeignKey(to='newsarticles.NewsSource', on_delete=models.SET_NULL),
         ),
     ]
