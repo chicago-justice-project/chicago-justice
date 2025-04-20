@@ -17,8 +17,8 @@ class Command(BaseCommand):
 
         if options['download_dir']:
             dest = options['download_dir']
-            nltk.download('punkt', download_dir=dest)
+            nltk.download('punkt_tab', download_dir=dest)
             nltk.download('wordnet', download_dir=dest)
         else:
-            nltk.download('punkt')
+            nltk.download('punkt_tab')
             nltk.download('wordnet')
