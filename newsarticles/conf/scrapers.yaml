@@ -225,7 +225,11 @@
 
 - news_source: south-side-weekly
   index_url: http://southsideweekly.com/feed/
-  rss_articles: True
+  rss_index: True
+  title_selector: .entry-title
+  body_selector: .entry-content
+  author_selector: .author
+  exclude_selector: .newspack-popup, .wpnbha
 
 - news_source: state-journal-register
   index_url: https://www.sj-r.com/news/
