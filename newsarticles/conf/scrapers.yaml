@@ -211,11 +211,11 @@
 - news_source: propublica-illinois
   index_url: https://www.propublica.org/archive/illinois/
   rss_index: False
-  index_url_selector: .river .hed a
-  title_selector: .article-header .hed
+  index_url_selector: .story-river-item__hed a
+  title_selector: .opener__hed
   body_selector: .article-body
-  author_selector: .article-header .name
-  exclude_selector: .article-body__top-notes, .promo-newsletter-signup-2, .promo-newsletter-see-all-2
+  author_selector: .article-meta-2__byline .name
+  exclude_selector: .article-body__top-notes, .story-promo-group, .promo-newsletter-signup-2, .promo-newsletter-see-all-2, .bb-ad
 
 #- news_source: second-city-cop
 #  index_url: http://secondcitycop.blogspot.com/feeds/posts/default?alt=rss
