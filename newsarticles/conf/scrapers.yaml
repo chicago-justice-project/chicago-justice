@@ -243,19 +243,20 @@
 - news_source: wbez
   index_url: https://www.wbez.org/latest-news
   rss_index: False
-  index_url_selector: .t-headline a
-  title_selector: article h1
-  author_selector: article .t-byline
-  body_selector: article .c-prose
-  exclude_selector: '.ad-unit, .fit-outer'
+  index_url_selector: .PagePromo-title a.Link
+  title_selector: .Page-headline
+  author_selector: .Page-byline
+  body_selector: .RichTextArticleBody
+  exclude_selector: .RTEAdModule
 
-- news_source: wgn-tv
-  index_url: http://wgntv.com/category/news/feed/
-  rss_index: True
-  title_selector: h1.article-title
-  author_selector: '[rel="author"]'
-  body_selector: .article-content
-  exclude_selector: .related-module, .article-content-cta-group, .ooyala-container, .ooyala-bob-wrapper
+#- news_source: wgn-tv
+#  index_url: https://wgntv.com/news/
+#  rss_index: False
+#  index_url_selector: .article-list__article-title a
+#  title_selector: .article-title
+#  author_selector: .article-authors
+#  body_selector: .article-content
+#  exclude_selector: .ad-unit
 
 #- news_source: windy-city-times
 #  index_url: http://www.windycitymediagroup.com/feedmaker.php
@@ -266,12 +267,15 @@
 - news_source: wls-am
   index_url: http://www.wlsam.com/feed/
   rss_index: True
-  title_selector: .Clean-Single article .entry-title
-  body_selector: '[itemprop="text"]'
+  title_selector: h1
+  author_selector: .sc-author
+  body_selector: .mainArticle
 
 - news_source: wttw
-  index_url: https://feeds.feedburner.com/ChicagoTonight
-  rss_index: True
+  index_url: https://news.wttw.com
+  rss_index: False
+  index_url_selector: .upcoming-article-title a, .article-title a
   title_selector: .article-title
   author_selector: .node-article .submitted a
-  body_selector: .main-container .node-article .content
+  body_selector: .content .node-article
+  exclude_selector: .article-category, .article-title, .submitted, .social-share-container, .image-container
