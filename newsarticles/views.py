@@ -427,7 +427,7 @@ def code_article(request, pk):
             )
 
             # ManyToMany relationships need to be added after the record is created
-            user_coding.categories = form.cleaned_data['categories']
+            user_coding.categories.set(form.cleaned_data['categories'])
 
             return HttpResponseRedirect(reverse('random-article'))
     else:
@@ -460,7 +460,7 @@ def code_article(request, pk):
 
 @login_required
 def random_article(request):
-    uncoded_relevant_article_pks = Article.objects.uncoded().filter(created__gt=date(2023, 1, 1)).filter(created__lt=date(2023, 6, 30)).filter_trained_categories([9,10,13,26]).values_list('pk', flat=True)
+    uncoded_relevant_article_pks = Article.objects.uncoded().values_list('pk', flat=True)
     selected_pk = random.choice(uncoded_relevant_article_pks)
 
     return HttpResponseRedirect(reverse('code-article', args=(selected_pk,)))
