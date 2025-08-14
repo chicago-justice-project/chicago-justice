@@ -37,7 +37,7 @@ class UpdateUserForm(UserForm):
     inactive = forms.BooleanField(label="Inactive User", required=False)
 
 def manage(request, action = None):
-    if not (request.user.is_authenticated() and request.user.is_superuser):
+    if not (request.user.is_authenticated and request.user.is_superuser):
         return redirect(CJP_ROOT)
 
     addUserForm = AddUserForm()
@@ -67,7 +67,7 @@ def manage(request, action = None):
 
 
 def userUpdate(request, userId):
-    if not (request.user.is_authenticated() and request.user.is_superuser):
+    if not (request.user.is_authenticated and request.user.is_superuser):
         return redirect(CJP_ROOT)
 
     updateSuccess = False

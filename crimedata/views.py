@@ -284,7 +284,7 @@ def crimeReportExport(request):
         'web_nibrs',
     ]
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         fields += [
             'orig_rd',
             'orig_dateocc',
