@@ -41,7 +41,7 @@ class TrainedCategoryRelevanceInline(admin.TabularInline):
     can_delete = False
     readonly_fields = ('category', 'relevance',)
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         False
 
 
@@ -52,7 +52,7 @@ class TrainedLocationInline(admin.TabularInline):
     readonly_fields = ('text', 'latitude', 'longitude',
                        'confidence', 'neighborhood')
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         False
 
 
@@ -61,7 +61,7 @@ class TrainedSentimentInline(admin.TabularInline):
     fields = ('date', 'api_response')
     readonly_fields = ('date',)
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         False
 
 
@@ -71,7 +71,7 @@ class TrainedSentimentEntitiesInline(admin.TabularInline):
     can_delete = False
     readonly_fields = ('response', 'index', 'entity', 'sentiment')
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         False
 
 
