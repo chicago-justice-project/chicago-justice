@@ -43,9 +43,9 @@ urlpatterns = [
     re_path(r'^crimereports/(\d+)/$', crimedata.views.crimeReportView, name='viewSingleCrimeReport'),
 
     # stats
-    path(r'^stats/totalCounts$', stats.views.totalCounts, name='statsTotalCounts'),
-    path(r'^stats/categorySearch$', newsarticles.views.categoryXTab, name='categoryXTab'),
-    path(r'^stats/userCounts$', stats.views.userCounts, name='statsUserCounts')
+    re_path(r'^stats/totalCounts$', stats.views.totalCounts, name='statsTotalCounts'),
+    re_path(r'^stats/categorySearch$', newsarticles.views.categoryXTab, name='categoryXTab'),
+    re_path(r'^stats/userCounts$', stats.views.userCounts, name='statsUserCounts')
 ]
 
 if settings.DEBUG:

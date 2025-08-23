@@ -302,7 +302,7 @@ def view_article(request, pk):
 
     display_text = article.bodytext
 
-    is_preview = not request.user.is_authenticated()
+    is_preview = not request.user.is_authenticated
     if is_preview:
         display_text = display_text[:PREVIEW_LENGTH] + '...'
 
