@@ -21,8 +21,8 @@ DATABASES = {
         'NAME': get_env_variable('DATABASE_NAME'),                      # Or path to database file if using sqlite3.
         'USER': get_env_variable('DATABASE_USER'),                      # Not used with sqlite3.
         'PASSWORD': get_env_variable('DATABASE_PASSWORD'),                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),           # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': os.environ.get('DATABASE_PORT', ''),                    # Set to empty string for default. Not used with sqlite3.
     }
 }
 
