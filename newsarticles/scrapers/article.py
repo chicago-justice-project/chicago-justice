@@ -72,6 +72,7 @@ class ArticleScraper(object):
         self.author_selector = config.get('author_selector', None)
         self.exclude_selector = config.get('exclude_selector', None)
         self.keyword_filter = config.get('keyword_filter', None)
+        self.url_exclude = config.get('url_exclude', None)  # List of URL patterns to exclude
 
         self.html2text = html2text.HTML2Text()
         self.html2text.body_width = 80
@@ -202,8 +203,17 @@ class ArticleScraper(object):
                 continue
             yield self.process_rss_article(rss_article)
 
+    def url_matches_exclude(self, url):
+        '''Check if URL matches any exclusion pattern.'''
+        if not self.url_exclude:
+            return False
+        return any(pattern in url for pattern in self.url_exclude)
+
     def read_html_articles(self, urls, skip_existing):
         for url in urls:
+            if self.url_matches_exclude(url):
+                LOG.debug('Skipping URL due to exclusion pattern: %s', url)
+                continue
             yield self.process_link(url, skip_existing)
 
     def process_rss_article(self, rss_article):
