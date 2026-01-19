@@ -149,9 +149,10 @@
 - news_source: crains
   index_url: https://www.chicagobusiness.com/topic/news
   rss_index: False
-  index_url_selector: h2.mb-3.5
+  index_url_selector: h2[class*="mb-3"] a
   fake_user_agent: True
-  title_selector: h1.leading-8
+  use_cookies: True
+  title_selector: h1[class*="leading"]
   author_selector: .author-name
   body_selector: .body-text
 
