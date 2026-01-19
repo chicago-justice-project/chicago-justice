@@ -14,3 +14,4 @@ google-account.json
 
 # PyCharm Files
 .idea/*
+venv/
