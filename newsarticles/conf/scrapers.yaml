@@ -72,6 +72,8 @@
   title_selector: h1.content__title
   body_selector: .content__body
   exclude_selector: .component--type-recirculation
+  url_exclude:
+    - /video/
 
 - news_source: chicago-city-wire
   index_url: https://chicagocitywire.com/stories.rss
