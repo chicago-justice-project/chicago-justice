@@ -5,6 +5,8 @@ import html2text
 import django.db
 
 from django.core.exceptions import ObjectDoesNotExist
+import feedparser
+
 from newsarticles.models import Article, NewsSource, ScraperResult
 from .util import get_rss_links, parse_html_links, load_html, get_rss_articles
 from newsarticles.tagging import tag_article
@@ -69,6 +71,8 @@ class ArticleScraper(object):
         self.body_selector = config.get('body_selector', None)
         self.author_selector = config.get('author_selector', None)
         self.exclude_selector = config.get('exclude_selector', None)
+        self.keyword_filter = config.get('keyword_filter', None)
+        self.url_exclude = config.get('url_exclude', None)  # List of URL patterns to exclude
 
         self.html2text = html2text.HTML2Text()
         self.html2text.body_width = 80
@@ -144,7 +148,7 @@ class ArticleScraper(object):
             return self.read_rss_articles(skip_existing)
 
         if self.rss_index:
-            urls = get_rss_links(self.index_url, self.index_url_selector)
+            urls = self.get_filtered_rss_links()
         else:
             soup = load_html(self.index_url,
                              headers=self.get_headers(),
@@ -153,12 +157,63 @@ class ArticleScraper(object):
 
         return self.read_html_articles(urls, skip_existing)
 
+    def get_filtered_rss_links(self):
+        '''Get links from RSS feed, applying keyword filter if configured.'''
+        feed = feedparser.parse(self.index_url)
+        links = []
+        for item in feed.entries:
+            if self.keyword_filter and not self.rss_matches_filter(item):
+                LOG.debug('Skipping article due to keyword filter: %s', item.get('title', item.get('link')))
+                continue
+            link = item.get(self.index_url_selector)
+            if link:
+                links.append(link)
+        return links
+
+    def matches_keyword_filter(self, text):
+        '''Check if text contains any of the configured keywords (case-insensitive).
+        Returns True if no filter is configured or if any keyword matches.'''
+        if not self.keyword_filter:
+            return True
+        if not text:
+            return False
+        text_lower = text.lower()
+        return any(keyword.lower() in text_lower for keyword in self.keyword_filter)
+
+    def rss_matches_filter(self, rss_article):
+        '''Check if an RSS article matches the keyword filter based on title, description, and content.'''
+        if not self.keyword_filter:
+            return True
+        title = getattr(rss_article, 'title', '') or ''
+        summary = getattr(rss_article, 'summary', '') or ''
+        description = getattr(rss_article, 'description', '') or ''
+        # Check content:encoded field (feedparser stores as 'content' list)
+        content = ''
+        if hasattr(rss_article, 'content') and rss_article.content:
+            content = rss_article.content[0].get('value', '')
+        return (self.matches_keyword_filter(title) or
+                self.matches_keyword_filter(summary) or
+                self.matches_keyword_filter(description) or
+                self.matches_keyword_filter(content))
+
     def read_rss_articles(self, skip_existing):
         for rss_article in get_rss_articles(self.index_url):
+            if not self.rss_matches_filter(rss_article):
+                LOG.debug('Skipping article due to keyword filter: %s', rss_article.title)
+                continue
             yield self.process_rss_article(rss_article)
+
+    def url_matches_exclude(self, url):
+        '''Check if URL matches any exclusion pattern.'''
+        if not self.url_exclude:
+            return False
+        return any(pattern in url for pattern in self.url_exclude)
 
     def read_html_articles(self, urls, skip_existing):
         for url in urls:
+            if self.url_matches_exclude(url):
+                LOG.debug('Skipping URL due to exclusion pattern: %s', url)
+                continue
             yield self.process_link(url, skip_existing)
 
     def process_rss_article(self, rss_article):

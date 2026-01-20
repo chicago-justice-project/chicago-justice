@@ -72,6 +72,8 @@
   title_selector: h1.content__title
   body_selector: .content__body
   exclude_selector: .component--type-recirculation
+  url_exclude:
+    - /video/
 
 - news_source: chicago-city-wire
   index_url: https://chicagocitywire.com/stories.rss
@@ -149,9 +151,10 @@
 - news_source: crains
   index_url: https://www.chicagobusiness.com/topic/news
   rss_index: False
-  index_url_selector: h2.mb-3.5
+  index_url_selector: h2[class*="mb-3"] a
   fake_user_agent: True
-  title_selector: h1.leading-8
+  use_cookies: True
+  title_selector: h1[class*="leading"]
   author_selector: .author-name
   body_selector: .body-text
 
@@ -185,6 +188,8 @@
   index_url_selector: h3.title a
   title_selector: h1.headline
   body_selector: .article-body
+  url_exclude:
+    - /video/
 
 - news_source: medill
   index_url: https://news.medill.northwestern.edu/chicago/feed/
@@ -209,13 +214,18 @@
   exclude_selector: .story-continued, .story-interrupt, .story-intro
 
 - news_source: propublica-illinois
-  index_url: https://www.propublica.org/archive/illinois/
-  rss_index: False
-  index_url_selector: .story-river-item__hed a
+  index_url: https://www.propublica.org/feeds/propublica/main
+  rss_index: True
   title_selector: .opener__hed
   body_selector: .article-body
   author_selector: .article-meta-2__byline .name
   exclude_selector: .article-body__top-notes, .story-promo-group, .promo-newsletter-signup-2, .promo-newsletter-see-all-2, .bb-ad
+  keyword_filter:
+    - chicago
+    - illinois
+    - cook county
+    - cpd
+    - chicago police
 
 #- news_source: second-city-cop
 #  index_url: http://secondcitycop.blogspot.com/feeds/posts/default?alt=rss
@@ -234,6 +244,7 @@
 - news_source: state-journal-register
   index_url: https://www.sj-r.com/news/
   rss_index: False
+  fake_user_agent: True
   index_url_selector: a.gnt_m_flm_a
   title_selector: article h1
   author_selector: article .gnt_ar_by
