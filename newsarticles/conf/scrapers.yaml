@@ -283,9 +283,11 @@
   body_selector: .mainArticle
 
 - news_source: wttw
-  index_url: https://news.wttw.com/rss.xml
-  rss_index: True
+  index_url: https://news.wttw.com
+  rss_index: False
   fake_user_agent: True
-  title_selector: h1
-  body_selector: .node__content .field--name-body
-  exclude_selector: .field--name-field-campaign-link, .field--name-field-campaign-image, .field--name-field-campaign-date
+  index_url_selector: .upcoming-article-title a, .article-title a
+  title_selector: .article-title
+  author_selector: .node-article .submitted a
+  body_selector: .content .node-article
+  exclude_selector: .article-category, .article-title, .submitted, .social-share-container, .image-container
